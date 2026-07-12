@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Engineering Hub — SESMine Intelligence</title>
+  <meta name="description" content="10,000+ mining equipment specifications, CAD library, vendor comparison and engineering standards from 480+ global OEMs." />
+  <link rel="canonical" href="https://www.sesmine.com/hubs/engineering-hub.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    .eq-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: border-color var(--ease-base), box-shadow var(--ease-base), transform var(--ease-base);
+      cursor: pointer;
+    }
+    .eq-card:hover {
+      border-color: var(--border-cyan);
+      box-shadow: var(--shadow-cyan);
+      transform: translateY(-2px);
+    }
+    .eq-card__img {
+      height: 160px;
+      overflow: hidden;
+      position: relative;
+    }
+    .eq-card__img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .eq-card:hover .eq-card__img img { transform: scale(1.05); }
+    .eq-card__body { padding: 1.25rem; }
+
+    .spec-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border-100);
+      font-size: 0.8125rem;
+    }
+    .spec-row:last-child { border-bottom: none; }
+    .spec-row__label { color: var(--text-500); font-weight: 500; }
+    .spec-row__val   { font-family: var(--font-mono); color: var(--text-200); font-weight: 600; }
+
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-100);
+      background: transparent;
+      color: var(--text-400);
+      cursor: pointer;
+      transition: all var(--ease-fast);
+      white-space: nowrap;
+    }
+    .category-pill:hover  { color: var(--text-100); border-color: var(--border-200); background: rgba(255,255,255,0.04); }
+    .category-pill.active { background: var(--coal-700); color: var(--cyan-400); border-color: var(--border-cyan); }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="../index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="../hub-preview.html" class="active">Hubs</a></li>
+        <li><a href="../products/ai-predictor.html">AI Tools</a></li>
+        <li><a href="../products/equipment-database.html">Equipment</a></li>
+        <li><a href="../news.html">News</a></li>
+        <li><a href="../pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="../auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="../auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- Hero -->
+    <section style="background:var(--coal-950);padding:4rem 0 3rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(0,188,212,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-500);margin-bottom:1.5rem;">
+          <a href="../index.html" style="color:var(--text-500);">Home</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <a href="../hub-preview.html" style="color:var(--text-500);">Hubs</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <span style="color:var(--cyan-400);">Engineering Hub</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+          <div>
+            <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(0,188,212,0.08);border:1px solid rgba(0,188,212,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan-400);margin-bottom:1.25rem;">
+              <i class="fa-solid fa-gear fa-xs"></i> Hub 02 — Engineering
+            </div>
+            <h1 class="animate-fadeInUp" style="font-size:clamp(1.875rem,3.5vw,2.75rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1rem;">
+              Reduce Equipment<br />
+              <span style="color:var(--cyan-400);">Downtime by 22%.</span>
+            </h1>
+            <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-300);line-height:1.75;margin-bottom:1.75rem;max-width:460px;">
+              Access the world's largest database of mining machinery specifications, CAD models, maintenance schedules and vendor comparison tools — from 480+ global OEMs.
+            </p>
+            <div class="animate-fadeInUp delay-2" style="display:flex;gap:0.875rem;flex-wrap:wrap;">
+              <a href="../auth/signup.html" class="btn btn--primary btn--lg">
+                <i class="fa-solid fa-rocket"></i> Access Full Hub
+              </a>
+              <a href="#equipment-db" class="btn btn--ghost btn--lg">
+                <i class="fa-solid fa-database"></i> Browse Equipment
+              </a>
+            </div>
+          </div>
+          <div class="animate-fadeIn delay-2">
+            <div class="img-frame img-frame--glow" style="height:320px;">
+              <img
+                src="https://images.unsplash.com/photo-1565043666747-69f6646db940?w=800&q=80"
+                alt="Large mining haul truck and heavy equipment on open pit mine site"
+                style="width:100%;height:100%;object-fit:cover;"
+                loading="eager"
+              />
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(8,11,15,0.7) 0%,transparent 60%);pointer-events:none;"></div>
+              <div style="position:absolute;bottom:1rem;left:1rem;right:1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;">
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--cyan-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Specs</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--cyan-400);">10K+</div>
+                </div>
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--amber-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">OEMs</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--amber-400);">480+</div>
+                </div>
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--emerald-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Downtime ↓</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--emerald-400);">22%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category filter + Equipment grid -->
+    <section id="equipment-db" style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Equipment Database</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0;">10,000+ Equipment Specifications</h2>
+          </div>
+          <div class="input-wrap reveal" style="width:280px;">
+            <i class="fa-solid fa-search input-icon"></i>
+            <input type="text" class="form-input" placeholder="Search equipment, OEM, model…" id="eqSearch" oninput="filterEquipment()" />
+          </div>
+        </div>
+
+        <!-- Category pills -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;" class="reveal delay-1">
+          <button class="category-pill active" onclick="setCategory('all',this)"><i class="fa-solid fa-layer-group fa-xs"></i> All Categories</button>
+          <button class="category-pill" onclick="setCategory('haulage',this)"><i class="fa-solid fa-truck fa-xs"></i> Haulage</button>
+          <button class="category-pill" onclick="setCategory('drilling',this)"><i class="fa-solid fa-circle-dot fa-xs"></i> Drilling</button>
+          <button class="category-pill" onclick="setCategory('loading',this)"><i class="fa-solid fa-forklift fa-xs"></i> Loading</button>
+          <button class="category-pill" onclick="setCategory('processing',this)"><i class="fa-solid fa-industry fa-xs"></i> Processing</button>
+          <button class="category-pill" onclick="setCategory('ventilation',this)"><i class="fa-solid fa-wind fa-xs"></i> Ventilation</button>
+          <button class="category-pill" onclick="setCategory('autonomous',this)"><i class="fa-solid fa-robot fa-xs"></i> Autonomous</button>
+        </div>
+
+        <!-- Equipment cards -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;" id="equipmentGrid">
+
+          <div class="eq-card reveal stagger" data-cat="haulage">
+            <div class="eq-card__img">
+              <img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=400&q=80" alt="Caterpillar 797F ultra-class haul truck" loading="lazy" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;"><span class="badge badge--neutral" style="font-size:0.625rem;backdrop-filter:blur(8px);">Haulage</span></div>
+            </div>
+            <div class="eq-card__body">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">Caterpillar</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.75rem;">797F Haul Truck</div>
+              <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                <div class="spec-row"><span class="spec-row__label">Payload</span><span class="spec-row__val">363 t</span></div>
+                <div class="spec-row"><span class="spec-row__label">Engine</span><span class="spec-row__val">4,000 HP</span></div>
+                <div class="spec-row"><span class="spec-row__label">GVW</span><span class="spec-row__val">623.7 t</span></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:0.875rem;">
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">Full Specs</a>
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">CAD Files</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="eq-card reveal stagger" data-cat="drilling">
+            <div class="eq-card__img">
+              <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80" alt="Atlas Copco Pit Viper 351 rotary blasthole drill" loading="lazy" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;"><span class="badge badge--neutral" style="font-size:0.625rem;backdrop-filter:blur(8px);">Drilling</span></div>
+            </div>
+            <div class="eq-card__body">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">Epiroc</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.75rem;">Pit Viper 351</div>
+              <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                <div class="spec-row"><span class="spec-row__label">Hole Diameter</span><span class="spec-row__val">270–445 mm</span></div>
+                <div class="spec-row"><span class="spec-row__label">Depth</span><span class="spec-row__val">54.9 m</span></div>
+                <div class="spec-row"><span class="spec-row__label">Pulldown</span><span class="spec-row__val">667 kN</span></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:0.875rem;">
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">Full Specs</a>
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">CAD Files</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="eq-card reveal stagger" data-cat="loading">
+            <div class="eq-card__img">
+              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=80" alt="Komatsu PC8000 hydraulic mining excavator" loading="lazy" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;"><span class="badge badge--neutral" style="font-size:0.625rem;backdrop-filter:blur(8px);">Loading</span></div>
+            </div>
+            <div class="eq-card__body">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">Komatsu</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.75rem;">PC8000 Excavator</div>
+              <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                <div class="spec-row"><span class="spec-row__label">Bucket Capacity</span><span class="spec-row__val">42 m³</span></div>
+                <div class="spec-row"><span class="spec-row__label">Operating Weight</span><span class="spec-row__val">810 t</span></div>
+                <div class="spec-row"><span class="spec-row__label">Engine Output</span><span class="spec-row__val">3,880 kW</span></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:0.875rem;">
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">Full Specs</a>
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">CAD Files</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="eq-card reveal stagger" data-cat="autonomous">
+            <div class="eq-card__img">
+              <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80" alt="Autonomous haulage system truck in operation" loading="lazy" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;">
+                <span class="badge badge--violet" style="font-size:0.625rem;backdrop-filter:blur(8px);"><i class="fa-solid fa-robot fa-xs"></i> Autonomous</span>
+              </div>
+            </div>
+            <div class="eq-card__body">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">Komatsu</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.75rem;">930E-5 AHS</div>
+              <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                <div class="spec-row"><span class="spec-row__label">Payload</span><span class="spec-row__val">291 t</span></div>
+                <div class="spec-row"><span class="spec-row__label">AHS System</span><span class="spec-row__val">FrontRunner™</span></div>
+                <div class="spec-row"><span class="spec-row__label">Availability</span><span class="spec-row__val">92.4%</span></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:0.875rem;">
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">Full Specs</a>
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">CAD Files</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="eq-card reveal stagger" data-cat="processing">
+            <div class="eq-card__img">
+              <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80" alt="SAG mill processing plant at gold mine" loading="lazy" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;"><span class="badge badge--neutral" style="font-size:0.625rem;backdrop-filter:blur(8px);">Processing</span></div>
+            </div>
+            <div class="eq-card__body">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">FLSmidth</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.75rem;">SAG Mill 40' × 22'</div>
+              <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                <div class="spec-row"><span class="spec-row__label">Diameter</span><span class="spec-row__val">12.2 m</span></div>
+                <div class="spec-row"><span class="spec-row__label">Drive Power</span><span class="spec-row__val">28 MW</span></div>
+                <div class="spec-row"><span class="spec-row__label">Throughput</span><span class="spec-row__val">4,200 t/h</span></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:0.875rem;">
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">Full Specs</a>
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">CAD Files</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="eq-card reveal stagger" data-cat="haulage">
+            <div class="eq-card__img">
+              <img src="https://images.unsplash.com/photo-1565043666747-69f6646db940?w=400&q=80" alt="Liebherr T 284 mining haul truck" loading="lazy" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;"><span class="badge badge--neutral" style="font-size:0.625rem;backdrop-filter:blur(8px);">Haulage</span></div>
+            </div>
+            <div class="eq-card__body">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">Liebherr</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.75rem;">T 284 Haul Truck</div>
+              <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                <div class="spec-row"><span class="spec-row__label">Payload</span><span class="spec-row__val">363 t</span></div>
+                <div class="spec-row"><span class="spec-row__label">Engine</span><span class="spec-row__val">3,650 HP</span></div>
+                <div class="spec-row"><span class="spec-row__label">Drive</span><span class="spec-row__val">AC Electric</span></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:0.875rem;">
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">Full Specs</a>
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">CAD Files</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="eq-card reveal stagger" data-cat="drilling">
+            <div class="eq-card__img">
+              <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80" alt="Sandvik DR461i rotary blasthole drill" loading="lazy" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;"><span class="badge badge--neutral" style="font-size:0.625rem;backdrop-filter:blur(8px);">Drilling</span></div>
+            </div>
+            <div class="eq-card__body">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">Sandvik</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.75rem;">DR461i Rotary Drill</div>
+              <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                <div class="spec-row"><span class="spec-row__label">Hole Diameter</span><span class="spec-row__val">152–406 mm</span></div>
+                <div class="spec-row"><span class="spec-row__label">Mast Height</span><span class="spec-row__val">18.3 m</span></div>
+                <div class="spec-row"><span class="spec-row__label">Pulldown</span><span class="spec-row__val">489 kN</span></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:0.875rem;">
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">Full Specs</a>
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">CAD Files</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="eq-card reveal stagger" data-cat="loading">
+            <div class="eq-card__img">
+              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=80" alt="Hitachi EX8000 face shovel mining excavator" loading="lazy" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;"><span class="badge badge--neutral" style="font-size:0.625rem;backdrop-filter:blur(8px);">Loading</span></div>
+            </div>
+            <div class="eq-card__body">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">Hitachi</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.75rem;">EX8000 Face Shovel</div>
+              <div style="display:flex;flex-direction:column;gap:0.25rem;">
+                <div class="spec-row"><span class="spec-row__label">Bucket Capacity</span><span class="spec-row__val">45 m³</span></div>
+                <div class="spec-row"><span class="spec-row__label">Operating Weight</span><span class="spec-row__val">800 t</span></div>
+                <div class="spec-row"><span class="spec-row__label">Engine</span><span class="spec-row__val">4 × 1,491 kW</span></div>
+              </div>
+              <div style="display:flex;gap:0.5rem;margin-top:0.875rem;">
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">Full Specs</a>
+                <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">CAD Files</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Load more -->
+        <div style="text-align:center;margin-top:2.5rem;" class="reveal">
+          <a href="../auth/signup.html" class="btn btn--ghost btn--lg">
+            <i class="fa-solid fa-plus"></i> Load More Equipment (9,992+ remaining)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- OEM Stats + Image -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+          <div class="reveal">
+            <div class="img-frame" style="height:300px;">
+              <img
+                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80"
+                alt="Mining engineer using tablet to access equipment specifications on site"
+                style="width:100%;height:100%;object-fit:cover;"
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <div>
+            <div class="section-label reveal">OEM Coverage</div>
+            <h2 class="section-title reveal delay-1">480+ Manufacturers. One Database.</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+              From Caterpillar and Komatsu to niche underground specialists — every major OEM's technical documentation, maintenance schedules and CAD files are indexed and searchable.
+            </p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;margin-bottom:1.75rem;" class="reveal delay-2">
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--cyan-400);">10K+</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Equipment specifications</div>
+              </div>
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--amber-400);">480+</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Global OEMs indexed</div>
+              </div>
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--emerald-400);">22%</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Avg. downtime reduction</div>
+              </div>
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--violet-400);">CAD</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">DWG, DXF, STEP, IFC</div>
+              </div>
+            </div>
+            <a href="../auth/signup.html" class="btn btn--primary reveal delay-3">
+              <i class="fa-solid fa-rocket"></i> Access Full Engineering Hub
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;text-align:center;">
+      <div class="container">
+        <h2 class="reveal" style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">Access the Full Engineering Hub</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:440px;margin:0 auto 2rem;">10,000+ specs, CAD files, vendor comparisons and maintenance data — all searchable in one platform.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="../auth/signup.html" class="btn btn--primary btn--xl"><i class="fa-solid fa-rocket"></i> Start Free Trial</a>
+          <a href="../hub-preview.html" class="btn btn--ghost btn--xl"><i class="fa-solid fa-layer-group"></i> All Hubs</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="economics-hub.html">Economics</a><a href="engineering-hub.html">Engineering</a><a href="innovation-hub.html">Innovation</a><a href="procurement-hub.html">Procurement</a><a href="safety-hub.html">Safety</a><a href="sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="../products/ai-predictor.html">AI Predictor</a><a href="../products/equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="../pricing.html">Pricing</a><a href="../contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="../auth/login.html">Sign In</a><a href="../auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/config.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    // Ticker
+    const COMM = [{name:'Gold',price:3142.50,chg:+0.8},{name:'Copper',price:9847,chg:+1.2},{name:'Lithium',price:14200,chg:+2.1},{name:'Silver',price:31.84,chg:-0.3},{name:'Nickel',price:18240,chg:+0.6},{name:'Iron Ore',price:108.40,chg:+0.5},{name:'Cobalt',price:26800,chg:-1.1},{name:'Zinc',price:2840,chg:+0.4}];
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      t.innerHTML = [...COMM,...COMM].map(c => {
+        const up = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => { COMM.forEach(c => { c.price = Math.max(1,c.price+(Math.random()-0.49)*c.price*0.002); c.chg = parseFloat((c.chg+(Math.random()-0.5)*0.08).toFixed(2)); }); renderTicker(); }, 8000);
+
+    // Category filter
+    function setCategory(cat, btn) {
+      document.querySelectorAll('.category-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('#equipmentGrid .eq-card').forEach(card => {
+        const show = cat === 'all' || card.dataset.cat === cat;
+        card.style.opacity = show ? '1' : '0.2';
+        card.style.pointerEvents = show ? 'all' : 'none';
+        card.style.transition = 'opacity 0.3s ease';
+      });
+    }
+
+    // Search filter
+    function filterEquipment() {
+      const q = document.getElementById('eqSearch').value.toLowerCase();
+      document.querySelectorAll('#equipmentGrid .eq-card').forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

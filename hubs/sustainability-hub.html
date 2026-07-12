@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sustainability Hub — SESMine Intelligence</title>
+  <meta name="description" content="Automate ISSB/IFRS S1 & S2 ESG reporting, track Scope 1, 2 & 3 emissions and model the ROI of your renewable energy transition." />
+  <link rel="canonical" href="https://www.sesmine.com/hubs/sustainability-hub.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    .esg-framework-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+      transition: border-color var(--ease-base), box-shadow var(--ease-base), transform var(--ease-base);
+      position: relative;
+      overflow: hidden;
+    }
+    .esg-framework-card:hover {
+      border-color: rgba(0,188,212,0.3);
+      box-shadow: 0 12px 40px rgba(0,188,212,0.08);
+      transform: translateY(-2px);
+    }
+    .esg-framework-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan-500), var(--emerald-500), transparent);
+    }
+
+    .scope-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .scope-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+    }
+    .scope-bar__label {
+      width: 80px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-400);
+      flex-shrink: 0;
+    }
+    .scope-bar__track {
+      flex: 1;
+      height: 8px;
+      background: var(--coal-700);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .scope-bar__fill {
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .scope-bar__val {
+      width: 80px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .renewable-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+      transition: border-color var(--ease-base), transform var(--ease-base);
+    }
+    .renewable-card:hover {
+      border-color: rgba(16,185,129,0.3);
+      transform: translateY(-2px);
+    }
+
+    .esg-score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      font-family: var(--font-mono);
+      font-size: 1.125rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="../index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="../hub-preview.html" class="active">Hubs</a></li>
+        <li><a href="../products/ai-predictor.html">AI Tools</a></li>
+        <li><a href="../products/equipment-database.html">Equipment</a></li>
+        <li><a href="../news.html">News</a></li>
+        <li><a href="../pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="../auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="../auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:4rem 0 3rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(16,185,129,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+
+      <div class="container" style="position:relative;z-index:1;">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-500);margin-bottom:1.5rem;">
+          <a href="../index.html" style="color:var(--text-500);">Home</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <a href="../hub-preview.html" style="color:var(--text-500);">Hubs</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <span style="color:var(--cyan-400);">Sustainability Hub</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+          <div>
+            <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--emerald-400);margin-bottom:1.25rem;">
+              <i class="fa-solid fa-leaf fa-xs"></i> Hub 06 — Sustainability
+            </div>
+            <h1 class="animate-fadeInUp" style="font-size:clamp(1.875rem,3.5vw,2.75rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1rem;">
+              ESG Is Your New<br />
+              <span style="color:var(--emerald-400);">Licence to Operate.</span>
+            </h1>
+            <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-300);line-height:1.75;margin-bottom:1.75rem;max-width:460px;">
+              Automate ISSB/IFRS S1 & S2 reporting, track Scope 1, 2 & 3 emissions and model the ROI of your renewable energy transition — all in one structured intelligence environment.
+            </p>
+            <div class="animate-fadeInUp delay-2" style="display:flex;gap:0.875rem;flex-wrap:wrap;">
+              <a href="../auth/signup.html" class="btn btn--success btn--lg">
+                <i class="fa-solid fa-rocket"></i> Access Full Hub
+              </a>
+              <a href="#emissions" class="btn btn--ghost btn--lg">
+                <i class="fa-solid fa-smog"></i> View Emissions Dashboard
+              </a>
+            </div>
+          </div>
+
+          <div class="animate-fadeIn delay-2">
+            <div class="img-frame img-frame--glow" style="height:320px;">
+              <img
+                src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80"
+                alt="Solar panels and renewable energy infrastructure at mining operation"
+                style="width:100%;height:100%;object-fit:cover;"
+                loading="eager"
+              />
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(8,11,15,0.7) 0%,transparent 60%);pointer-events:none;"></div>
+              <div style="position:absolute;bottom:1rem;left:1rem;right:1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;">
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--emerald-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Frameworks</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--emerald-400);">5</div>
+                </div>
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--cyan-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Auto Reports</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--cyan-400);">ISSB</div>
+                </div>
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--amber-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Carbon Credits</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--amber-400);">Live</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         ESG FRAMEWORK CARDS
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:2.5rem;">
+          <div class="section-label reveal" style="justify-content:center;">Reporting Frameworks</div>
+          <h2 class="section-title reveal delay-1" style="text-align:center;">5 ESG Frameworks. One Automated Report.</h2>
+          <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);max-width:520px;margin:0 auto;">
+            Map your data once. SESMine automatically populates all five major ESG reporting frameworks — eliminating duplicate data entry and reducing reporting time by up to 80%.
+          </p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
+
+          <div class="esg-framework-card reveal stagger">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,188,212,0.1);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-size:0.875rem;font-weight:700;">S1</div>
+            <div>
+              <div style="font-size:0.875rem;font-weight:700;color:var(--text-100);margin-bottom:0.25rem;">ISSB IFRS S1</div>
+              <div style="font-size:0.75rem;color:var(--text-500);line-height:1.5;">General sustainability-related financial disclosures</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.375rem;">
+              <i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;"></i>
+              <span style="font-size:0.75rem;color:var(--emerald-400);">Auto-populated</span>
+            </div>
+          </div>
+
+          <div class="esg-framework-card reveal stagger">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;color:var(--emerald-400);font-size:0.875rem;font-weight:700;">S2</div>
+            <div>
+              <div style="font-size:0.875rem;font-weight:700;color:var(--text-100);margin-bottom:0.25rem;">ISSB IFRS S2</div>
+              <div style="font-size:0.75rem;color:var(--text-500);line-height:1.5;">Climate-related disclosures and scenario analysis</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.375rem;">
+              <i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;"></i>
+              <span style="font-size:0.75rem;color:var(--emerald-400);">Auto-populated</span>
+            </div>
+          </div>
+
+          <div class="esg-framework-card reveal stagger">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;color:var(--amber-400);font-size:0.875rem;font-weight:700;">GRI</div>
+            <div>
+              <div style="font-size:0.875rem;font-weight:700;color:var(--text-100);margin-bottom:0.25rem;">GRI Standards</div>
+              <div style="font-size:0.75rem;color:var(--text-500);line-height:1.5;">Global Reporting Initiative universal & sector standards</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.375rem;">
+              <i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;"></i>
+              <span style="font-size:0.75rem;color:var(--emerald-400);">Auto-populated</span>
+            </div>
+          </div>
+
+          <div class="esg-framework-card reveal stagger">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(139,92,246,0.1);display:flex;align-items:center;justify-content:center;color:var(--violet-400);font-size:0.875rem;font-weight:700;">CDP</div>
+            <div>
+              <div style="font-size:0.875rem;font-weight:700;color:var(--text-100);margin-bottom:0.25rem;">CDP Climate</div>
+              <div style="font-size:0.75rem;color:var(--text-500);line-height:1.5;">Carbon Disclosure Project climate questionnaire</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.375rem;">
+              <i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;"></i>
+              <span style="font-size:0.75rem;color:var(--emerald-400);">Auto-populated</span>
+            </div>
+          </div>
+
+          <div class="esg-framework-card reveal stagger">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,188,212,0.1);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-size:0.875rem;font-weight:700;">TCFD</div>
+            <div>
+              <div style="font-size:0.875rem;font-weight:700;color:var(--text-100);margin-bottom:0.25rem;">TCFD</div>
+              <div style="font-size:0.75rem;color:var(--text-500);line-height:1.5;">Task Force on Climate-related Financial Disclosures</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.375rem;">
+              <i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;"></i>
+              <span style="font-size:0.75rem;color:var(--emerald-400);">Auto-populated</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         EMISSIONS DASHBOARD
+    ══════════════════════════════════════════════════════ -->
+    <section id="emissions" style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+
+          <!-- Scope emissions panel -->
+          <div>
+            <div class="section-label reveal">Emissions Tracking</div>
+            <h2 class="section-title reveal delay-1">Scope 1, 2 & 3 Dashboard</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+              Aggregate emissions data across your entire asset portfolio. Automated calculation engines pull from fuel consumption, energy invoices and supply chain data — no spreadsheets required.
+            </p>
+
+            <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.5rem;" class="reveal delay-2">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Total GHG Emissions</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">FY2025 · All operations · tCO₂e</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--text-50);">2,840,420</div>
+                  <div style="font-size:0.75rem;color:var(--emerald-400);font-family:var(--font-mono);">▼ -8.4% vs FY2024</div>
+                </div>
+              </div>
+
+              <div class="scope-bar-wrap" id="scopeBars">
+                <div class="scope-bar">
+                  <div class="scope-bar__label">Scope 1</div>
+                  <div class="scope-bar__track"><div class="scope-bar__fill" style="width:0%;background:var(--rose-500);" data-target="72"></div></div>
+                  <div class="scope-bar__val" style="color:var(--rose-400);">1,244,820 t</div>
+                </div>
+                <div class="scope-bar">
+                  <div class="scope-bar__label">Scope 2</div>
+                  <div class="scope-bar__track"><div class="scope-bar__fill" style="width:0%;background:var(--amber-500);" data-target="18"></div></div>
+                  <div class="scope-bar__val" style="color:var(--amber-400);">481,240 t</div>
+                </div>
+                <div class="scope-bar">
+                  <div class="scope-bar__label">Scope 3</div>
+                  <div class="scope-bar__track"><div class="scope-bar__fill" style="width:0%;background:var(--cyan-500);" data-target="10"></div></div>
+                  <div class="scope-bar__val" style="color:var(--cyan-400);">284,042 t</div>
+                </div>
+                <div class="scope-bar">
+                  <div class="scope-bar__label">Biogenic</div>
+                  <div class="scope-bar__track"><div class="scope-bar__fill" style="width:0%;background:var(--emerald-500);" data-target="4"></div></div>
+                  <div class="scope-bar__val" style="color:var(--emerald-400);">84,120 t</div>
+                </div>
+              </div>
+
+              <!-- Emissions SVG trend -->
+              <div style="margin-top:1.5rem;">
+                <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.75rem;">5-Year Emissions Trend (tCO₂e '000)</div>
+                <svg viewBox="0 0 400 80" style="width:100%;height:80px;" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="emGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%"   stop-color="rgba(16,185,129,0.2)" />
+                      <stop offset="100%" stop-color="rgba(16,185,129,0)" />
+                    </linearGradient>
+                  </defs>
+                  <line x1="0" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                  <line x1="0" y1="40" x2="400" y2="40" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                  <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                  <path d="M0,65 L80,58 L160,52 L240,48 L320,44 L400,38 L400,80 L0,80 Z" fill="url(#emGrad)"/>
+                  <path d="M0,65 L80,58 L160,52 L240,48 L320,44 L400,38" fill="none" stroke="var(--emerald-400)" stroke-width="1.5"/>
+                  <circle cx="0"   cy="65" r="3" fill="var(--emerald-400)"/>
+                  <circle cx="80"  cy="58" r="3" fill="var(--emerald-400)"/>
+                  <circle cx="160" cy="52" r="3" fill="var(--emerald-400)"/>
+                  <circle cx="240" cy="48" r="3" fill="var(--emerald-400)"/>
+                  <circle cx="320" cy="44" r="3" fill="var(--emerald-400)"/>
+                  <circle cx="400" cy="38" r="3" fill="var(--emerald-400)"/>
+                  <text x="0"   y="78" font-size="8" fill="rgba(100,116,139,0.8)" font-family="monospace">FY21</text>
+                  <text x="74"  y="78" font-size="8" fill="rgba(100,116,139,0.8)" font-family="monospace">FY22</text>
+                  <text x="154" y="78" font-size="8" fill="rgba(100,116,139,0.8)" font-family="monospace">FY23</text>
+                  <text x="234" y="78" font-size="8" fill="rgba(100,116,139,0.8)" font-family="monospace">FY24</text>
+                  <text x="314" y="78" font-size="8" fill="rgba(100,116,139,0.8)" font-family="monospace">FY25</text>
+                  <text x="374" y="78" font-size="8" fill="rgba(16,185,129,0.8)"  font-family="monospace">Target</text>
+                </svg>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;margin-top:1.25rem;">
+                <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--emerald-400);">-8.4%</div>
+                  <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">YoY reduction</div>
+                </div>
+                <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--cyan-400);">-32%</div>
+                  <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">vs 2021 baseline</div>
+                </div>
+                <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--amber-400);">2035</div>
+                  <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">Net zero target</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ESG Score + image -->
+          <div>
+            <div class="reveal">
+              <div class="img-frame" style="height:240px;margin-bottom:1.5rem;">
+                <img
+                  src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80"
+                  alt="Wind turbines and solar panels at mining operation renewable energy transition"
+                  style="width:100%;height:100%;object-fit:cover;"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+
+            <!-- ESG Peer Comparison -->
+            <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.5rem;" class="reveal delay-1">
+              <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-400);margin-bottom:1.25rem;">ESG Peer Benchmark — Mining Sector</div>
+              <div style="display:flex;flex-direction:column;gap:0.875rem;">
+
+                <div style="display:flex;align-items:center;gap:1rem;">
+                  <div class="esg-score-badge" style="background:rgba(16,185,129,0.1);border:2px solid var(--emerald-500);color:var(--emerald-400);">AA+</div>
+                  <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:0.375rem;">
+                      <span style="font-size:0.8125rem;font-weight:600;color:var(--text-100);">Your Operation</span>
+                      <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);">Top 8%</span>
+                    </div>
+                    <div style="height:6px;background:var(--coal-700);border-radius:var(--radius-full);overflow:hidden;"><div style="width:92%;height:100%;background:var(--emerald-500);border-radius:var(--radius-full);"></div></div>
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:1rem;">
+                  <div class="esg-score-badge" style="background:rgba(0,188,212,0.1);border:2px solid var(--cyan-500);color:var(--cyan-400);">A</div>
+                  <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:0.375rem;">
+                      <span style="font-size:0.8125rem;color:var(--text-400);">Sector Leader Avg.</span>
+                      <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan-400);">Top 20%</span>
+                    </div>
+                    <div style="height:6px;background:var(--coal-700);border-radius:var(--radius-full);overflow:hidden;"><div style="width:78%;height:100%;background:var(--cyan-500);border-radius:var(--radius-full);"></div></div>
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:1rem;">
+                  <div class="esg-score-badge" style="background:rgba(245,158,11,0.1);border:2px solid var(--amber-500);color:var(--amber-400);">B+</div>
+                  <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:0.375rem;">
+                      <span style="font-size:0.8125rem;color:var(--text-400);">Sector Median</span>
+                      <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--amber-400);">Top 50%</span>
+                    </div>
+                    <div style="height:6px;background:var(--coal-700);border-radius:var(--radius-full);overflow:hidden;"><div style="width:52%;height:100%;background:var(--amber-500);border-radius:var(--radius-full);"></div></div>
+                  </div>
+                </div>
+
+                <div style="display:flex;align-items:center;gap:1rem;">
+                  <div class="esg-score-badge" style="background:rgba(239,68,68,0.1);border:2px solid var(--rose-500);color:var(--rose-400);">C</div>
+                  <div style="flex:1;">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:0.375rem;">
+                      <span style="font-size:0.8125rem;color:var(--text-400);">Sector Laggard Avg.</span>
+                      <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--rose-400);">Bottom 30%</span>
+                    </div>
+                    <div style="height:6px;background:var(--coal-700);border-radius:var(--radius-full);overflow:hidden;"><div style="width:28%;height:100%;background:var(--rose-500);border-radius:var(--radius-full);"></div></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         RENEWABLE ENERGY ROI MODELLER
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+
+          <!-- Copy -->
+          <div>
+            <div class="section-label reveal">Renewable ROI Modeller</div>
+            <h2 class="section-title reveal delay-1">Model Your Energy Transition ROI</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+              Input your current diesel and grid energy consumption. Our modeller calculates the NPV, IRR and payback period for solar, wind, battery storage and hybrid microgrid configurations — tailored to your site's location and load profile.
+            </p>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.75rem;">
+              <div class="reveal delay-2" style="display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;width:14px;"></i><span style="font-size:0.875rem;color:var(--text-300);">Solar PV, wind, BESS and hybrid microgrid scenarios</span></div>
+              <div class="reveal delay-3" style="display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;width:14px;"></i><span style="font-size:0.875rem;color:var(--text-300);">Carbon credit revenue integrated into ROI calculations</span></div>
+              <div class="reveal delay-4" style="display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;width:14px;"></i><span style="font-size:0.875rem;color:var(--text-300);">Location-specific solar irradiance and wind data</span></div>
+              <div class="reveal delay-5" style="display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;width:14px;"></i><span style="font-size:0.875rem;color:var(--text-300);">Export-ready board presentation with one click</span></div>
+            </div>
+
+            <!-- Renewable project cards -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;" class="reveal delay-2">
+              <div class="renewable-card">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <div style="width:32px;height:32px;border-radius:8px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;color:var(--amber-400);font-size:0.875rem;"><i class="fa-solid fa-solar-panel"></i></div>
+                  <span style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Solar PV</span>
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-500);line-height:1.6;">Utility-scale solar with battery storage. Typical IRR 14–22% for remote mine sites.</div>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--amber-400);">Payback: 4–7 years</div>
+              </div>
+              <div class="renewable-card">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <div style="width:32px;height:32px;border-radius:8px;background:rgba(0,188,212,0.1);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-size:0.875rem;"><i class="fa-solid fa-wind"></i></div>
+                  <span style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Wind + BESS</span>
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-500);line-height:1.6;">Wind turbines with battery energy storage. Optimal for high-wind coastal and plateau sites.</div>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan-400);">Payback: 5–9 years</div>
+              </div>
+              <div class="renewable-card">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <div style="width:32px;height:32px;border-radius:8px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;color:var(--emerald-400);font-size:0.875rem;"><i class="fa-solid fa-bolt"></i></div>
+                  <span style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Hybrid Microgrid</span>
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-500);line-height:1.6;">Solar + wind + diesel backup. Reduces diesel consumption by 60–80% with full reliability.</div>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);">Payback: 3–6 years</div>
+              </div>
+              <div class="renewable-card">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <div style="width:32px;height:32px;border-radius:8px;background:rgba(139,92,246,0.1);display:flex;align-items:center;justify-content:center;color:var(--violet-400);font-size:0.875rem;"><i class="fa-solid fa-hydrogen"></i></div>
+                  <span style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Green Hydrogen</span>
+                </div>
+                <div style="font-size:0.75rem;color:var(--text-500);line-height:1.6;">Electrolysis-based hydrogen for haul truck and processing applications. 2028+ commercial scale.</div>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--violet-400);">Payback: 8–14 years</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ROI tool preview -->
+          <div class="reveal delay-1">
+            <div style="background:var(--coal-850);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;">
+              <div style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border-100);background:var(--coal-800);display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <i class="fa-solid fa-solar-panel" style="color:var(--emerald-400);"></i>
+                  <span style="font-size:0.875rem;font-weight:600;">Renewable Energy ROI Model</span>
+                </div>
+                <span class="badge badge--emerald">Live Carbon Price</span>
+              </div>
+              <div style="padding:1.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                  <div>
+                    <label style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Technology</label>
+                    <select class="form-select" style="font-size:0.8125rem;padding:0.5rem 2rem 0.5rem 0.75rem;">
+                      <option>Hybrid Microgrid</option>
+                      <option>Solar PV + BESS</option>
+                      <option>Wind + BESS</option>
+                      <option>Green Hydrogen</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Site Location</label>
+                    <select class="form-select" style="font-size:0.8125rem;padding:0.5rem 2rem 0.5rem 0.75rem;">
+                      <option>Pilbara, WA</option>
+                      <option>Atacama, Chile</option>
+                      <option>Nevada, USA</option>
+                      <option>Limpopo, SA</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Annual Diesel (ML)</label>
+                    <input type="text" class="form-input" value="18.4 ML/year" style="font-family:var(--font-mono);font-size:0.8125rem;" />
+                  </div>
+                  <div>
+                    <label style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Grid Energy (GWh)</label>
+                    <input type="text" class="form-input" value="42.8 GWh/year" style="font-family:var(--font-mono);font-size:0.8125rem;" />
+                  </div>
+                </div>
+
+                <!-- Results -->
+                <div style="padding:1.25rem;background:var(--coal-900);border-radius:var(--radius-lg);border:1px solid var(--border-100);">
+                  <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:1rem;">Model Output — Hybrid Microgrid · Pilbara</div>
+                  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.75rem;">
+                    <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                      <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--emerald-400);">$84.2M</div>
+                      <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">NPV (10%, 20yr)</div>
+                    </div>
+                    <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                      <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--cyan-400);">18.4%</div>
+                      <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">IRR</div>
+                    </div>
+                    <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                      <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--amber-400);">4.8 yrs</div>
+                      <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">Payback Period</div>
+                    </div>
+                    <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                      <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--violet-400);">-68%</div>
+                      <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">Diesel Reduction</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Carbon credit line -->
+                <div style="padding:0.875rem;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:space-between;">
+                  <div>
+                    <div style="font-size:0.75rem;font-weight:600;color:var(--emerald-400);margin-bottom:2px;"><i class="fa-solid fa-seedling fa-xs"></i> Carbon Credit Revenue</div>
+                    <div style="font-size:0.6875rem;color:var(--text-500);">84,200 tCO₂e/yr · ACCUs @ $38.40/t</div>
+                  </div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--emerald-400);">$3.23M/yr</div>
+                </div>
+
+                <a href="../auth/signup.html" class="btn btn--success btn--full">
+                  <i class="fa-solid fa-calculator"></i> Run Full ROI Model
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         CARBON CREDITS MARKET
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Carbon Markets</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0;">Live Carbon Credit Prices</h2>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;" class="reveal">
+            <span class="dot-live"></span>
+            <span style="font-size:0.75rem;color:var(--emerald-400);font-weight:600;">Live · Refreshed every 15 min</span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem;" class="reveal delay-1">
+          <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.25rem;border-top:2px solid var(--emerald-500);">
+            <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.5rem;">ACCUs (Australia)</div>
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--text-50);">$38.40</div>
+            <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);margin-top:0.25rem;">▲ +2.4% · 7d: +6.1%</div>
+          </div>
+          <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.25rem;border-top:2px solid var(--cyan-500);">
+            <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.5rem;">EU ETS (Europe)</div>
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--text-50);">€68.20</div>
+            <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);margin-top:0.25rem;">▲ +1.8% · 7d: +3.4%</div>
+          </div>
+          <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.25rem;border-top:2px solid var(--amber-500);">
+            <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.5rem;">VCM (Voluntary)</div>
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--text-50);">$18.40</div>
+            <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--rose-400);margin-top:0.25rem;">▼ -0.8% · 7d: +1.2%</div>
+          </div>
+          <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.25rem;border-top:2px solid var(--violet-500);">
+            <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.5rem;">NZUs (New Zealand)</div>
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--text-50);">NZ$64.80</div>
+            <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);margin-top:0.25rem;">▲ +0.6% · 7d: +2.8%</div>
+          </div>
+        </div>
+
+        <!-- Image strip -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;" class="reveal delay-2">
+          <div class="img-frame" style="height:240px;">
+            <img
+              src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80"
+              alt="Wind farm renewable energy project at mining operation"
+              style="width:100%;height:100%;object-fit:cover;"
+              loading="lazy"
+            />
+          </div>
+          <div>
+            <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-400);margin-bottom:1rem;">Why Carbon Markets Matter for Mining</div>
+            <div style="display:flex;flex-direction:column;gap:0.875rem;">
+              <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                <i class="fa-solid fa-circle-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;"></i>
+                <div style="font-size:0.875rem;color:var(--text-400);line-height:1.65;">Carbon credits from renewable energy projects can generate <strong style="color:var(--text-200);">$2–5M/year</strong> in additional revenue for a mid-tier mine.</div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                <i class="fa-solid fa-circle-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;"></i>
+                <div style="font-size:0.875rem;color:var(--text-400);line-height:1.65;">ISSB S2 mandatory disclosure requirements mean carbon liability is now a <strong style="color:var(--text-200);">balance sheet risk</strong> for listed miners.</div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+                <i class="fa-solid fa-circle-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;"></i>
+                <div style="font-size:0.875rem;color:var(--text-400);line-height:1.65;">EU Carbon Border Adjustment Mechanism (CBAM) will impose carbon costs on <strong style="color:var(--text-200);">aluminium, steel and copper</strong> exports from 2026.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(16,185,129,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <h2 class="reveal" style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">Turn ESG From a Burden Into a Competitive Advantage</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:480px;margin:0 auto 2rem;">Automated ISSB reporting, Scope 1–3 tracking, renewable ROI modelling and live carbon markets — all in one hub.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="../auth/signup.html" class="btn btn--success btn--xl"><i class="fa-solid fa-rocket"></i> Start Free Trial</a>
+          <a href="../hub-preview.html" class="btn btn--ghost btn--xl"><i class="fa-solid fa-layer-group"></i> All Hubs</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="economics-hub.html">Economics</a><a href="engineering-hub.html">Engineering</a><a href="innovation-hub.html">Innovation</a><a href="procurement-hub.html">Procurement</a><a href="safety-hub.html">Safety</a><a href="sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="../products/ai-predictor.html">AI Predictor</a><a href="../products/equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="../pricing.html">Pricing</a><a href="../contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="../auth/login.html">Sign In</a><a href="../auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/config.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    // Ticker
+    const COMM = [
+      {name:'Gold',price:3142.50,chg:+0.8},{name:'Copper',price:9847,chg:+1.2},
+      {name:'Lithium',price:14200,chg:+2.1},{name:'Silver',price:31.84,chg:-0.3},
+      {name:'Nickel',price:18240,chg:+0.6},{name:'Iron Ore',price:108.40,chg:+0.5},
+      {name:'Cobalt',price:26800,chg:-1.1},{name:'Zinc',price:2840,chg:+0.4}
+    ];
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      t.innerHTML = [...COMM,...COMM].map(c => {
+        const up  = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => {
+      COMM.forEach(c => {
+        c.price = Math.max(1, c.price + (Math.random() - 0.49) * c.price * 0.002);
+        c.chg   = parseFloat((c.chg + (Math.random() - 0.5) * 0.08).toFixed(2));
+      });
+      renderTicker();
+    }, 8000);
+
+    // Animate scope bars on scroll
+    const barObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.scope-bar__fill').forEach(bar => {
+            const target = bar.dataset.target;
+            setTimeout(() => { bar.style.width = target + '%'; }, 200);
+          });
+          barObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    const scopeSection = document.getElementById('scopeBars');
+    if (scopeSection) barObs.observe(scopeSection.closest('section') || scopeSection);
+
+    // Live carbon price flicker
+    const carbonPrices = [
+      { el: null, base: 38.40, sym: '$',   suffix: '' },
+      { el: null, base: 68.20, sym: '€',   suffix: '' },
+      { el: null, base: 18.40, sym: '$',   suffix: '' },
+      { el: null, base: 64.80, sym: 'NZ$', suffix: '' }
+    ];
+    setInterval(() => {
+      carbonPrices.forEach(p => {
+        p.base = Math.max(1, p.base + (Math.random() - 0.49) * p.base * 0.001);
+      });
+    }, 15000);
+  </script>
+</body>
+</html>

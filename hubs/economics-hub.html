@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Economics Hub — SESMine Intelligence</title>
+  <meta name="description" content="Real-time commodity prices across 48 markets, AI-driven 90-day forecasts, CAPEX/OPEX modelling and inflation analysis for mining professionals." />
+  <link rel="canonical" href="https://www.sesmine.com/hubs/economics-hub.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    /* Commodity price card */
+    .price-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--ease-base), box-shadow var(--ease-base);
+      cursor: pointer;
+    }
+    .price-card:hover {
+      border-color: var(--border-cyan);
+      box-shadow: var(--shadow-cyan);
+    }
+    .price-card.selected {
+      border-color: var(--cyan-500);
+      background: linear-gradient(135deg, var(--coal-900) 0%, rgba(0,188,212,0.05) 100%);
+    }
+    .price-card__sparkline {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 24px;
+      margin-top: auto;
+    }
+    .price-card__sparkline span {
+      flex: 1;
+      border-radius: 1px 1px 0 0;
+      min-height: 2px;
+      transition: height 0.3s ease;
+    }
+
+    /* Chart panel */
+    .chart-panel {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    .chart-panel__header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--coal-850);
+    }
+    .chart-panel__body {
+      padding: 1.5rem;
+    }
+
+    /* Market table row hover */
+    .market-row { cursor: pointer; }
+    .market-row:hover td { background: rgba(0,188,212,0.03) !important; }
+
+    /* Forecast scenario tabs */
+    .scenario-tab {
+      flex: 1;
+      padding: 0.5rem;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all var(--ease-fast);
+      color: var(--text-500);
+    }
+    .scenario-tab.active { background: var(--coal-700); color: var(--text-100); }
+    .scenario-tab.bull.active  { color: var(--emerald-400); }
+    .scenario-tab.base.active  { color: var(--cyan-400); }
+    .scenario-tab.bear.active  { color: var(--rose-400); }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="../index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" loading="eager" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="../hub-preview.html" class="active">Hubs</a></li>
+        <li><a href="../products/ai-predictor.html">AI Tools</a></li>
+        <li><a href="../products/equipment-database.html">Equipment</a></li>
+        <li><a href="../news.html">News</a></li>
+        <li><a href="../resources.html">Resources</a></li>
+        <li><a href="../pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="../auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="../auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Ticker -->
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:4rem 0 3rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(16,185,129,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+
+      <div class="container" style="position:relative;z-index:1;">
+
+        <!-- Breadcrumb -->
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-500);margin-bottom:1.5rem;">
+          <a href="../index.html" style="color:var(--text-500);">Home</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <a href="../hub-preview.html" style="color:var(--text-500);">Hubs</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <span style="color:var(--emerald-400);">Economics Hub</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+          <div>
+            <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--emerald-400);margin-bottom:1.25rem;">
+              <i class="fa-solid fa-chart-line fa-xs"></i> Hub 01 — Economics
+            </div>
+            <h1 class="animate-fadeInUp" style="font-size:clamp(1.875rem,3.5vw,2.75rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1rem;">
+              Stop Guessing<br />
+              <span style="color:var(--emerald-400);">Market Cycles.</span>
+            </h1>
+            <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-300);line-height:1.75;margin-bottom:1.75rem;max-width:460px;">
+              Access real-time price feeds across 48 commodity markets and AI-driven 90-day forecasts that inform your next CAPEX decision — before your competitors see the move coming.
+            </p>
+            <div class="animate-fadeInUp delay-2" style="display:flex;gap:0.875rem;flex-wrap:wrap;">
+              <a href="../auth/signup.html" class="btn btn--success btn--lg" data-track="econ-hero-cta">
+                <i class="fa-solid fa-rocket"></i> Access Full Hub
+              </a>
+              <a href="#live-prices" class="btn btn--ghost btn--lg">
+                <i class="fa-solid fa-chart-line"></i> View Live Prices
+              </a>
+            </div>
+          </div>
+
+          <!-- Hero image -->
+          <div class="animate-fadeIn delay-2">
+            <div class="img-frame img-frame--glow" style="height:320px;">
+              <img
+                src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80"
+                alt="Real-time commodity trading screens and financial data analysis"
+                style="width:100%;height:100%;object-fit:cover;"
+                loading="eager"
+              />
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(8,11,15,0.6) 0%,transparent 60%);pointer-events:none;"></div>
+              <!-- Floating price card -->
+              <div style="position:absolute;bottom:1rem;left:1rem;right:1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;">
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--emerald-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Gold</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--text-50);">$3,142</div>
+                  <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--emerald-400);">▲ +0.8%</div>
+                </div>
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--cyan-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Copper</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--text-50);">$9,847</div>
+                  <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--emerald-400);">▲ +1.2%</div>
+                </div>
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--amber-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Lithium</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--text-50);">$14,200</div>
+                  <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--emerald-400);">▲ +2.1%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         LIVE COMMODITY PRICES
+    ══════════════════════════════════════════════════════ -->
+    <section id="live-prices" style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Live Markets</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0.375rem;">Real-Time Commodity Prices</h2>
+            <p class="reveal delay-2" style="font-size:0.8125rem;color:var(--text-500);">
+              <span class="dot-live" style="display:inline-flex;margin-right:0.375rem;"></span>
+              Prices refresh every 8 seconds · Sources: LME, COMEX, SGX · Last update: <span id="lastUpdate" style="font-family:var(--font-mono);">—</span>
+            </p>
+          </div>
+          <div style="display:flex;gap:0.5rem;" class="reveal">
+            <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.4375rem 2rem 0.4375rem 0.75rem;" id="currencySelect" onchange="updateCurrency(this.value)">
+              <option value="USD">USD $</option>
+              <option value="AUD">AUD A$</option>
+              <option value="EUR">EUR €</option>
+              <option value="GBP">GBP £</option>
+            </select>
+            <button class="btn btn--ghost btn--sm" onclick="exportPrices()"><i class="fa-solid fa-download"></i> Export CSV</button>
+          </div>
+        </div>
+
+        <!-- Price cards grid -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2.5rem;" id="priceCards">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Detailed market table -->
+        <div class="chart-panel reveal">
+          <div class="chart-panel__header">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <i class="fa-solid fa-table" style="color:var(--text-500);"></i>
+              <span style="font-size:0.875rem;font-weight:600;">Full Market Table</span>
+            </div>
+            <div style="display:flex;gap:0.5rem;">
+              <button class="btn btn--ghost btn--xs" onclick="sortTable('name')">Name <i class="fa-solid fa-sort fa-xs"></i></button>
+              <button class="btn btn--ghost btn--xs" onclick="sortTable('change')">Change <i class="fa-solid fa-sort fa-xs"></i></button>
+              <button class="btn btn--ghost btn--xs" onclick="sortTable('price')">Price <i class="fa-solid fa-sort fa-xs"></i></button>
+            </div>
+          </div>
+          <div class="data-table-wrap" style="border:none;border-radius:0;">
+            <table class="data-table" id="marketTable">
+              <thead>
+                <tr>
+                  <th>Commodity</th>
+                  <th>Exchange</th>
+                  <th class="num">Spot Price</th>
+                  <th class="num">24h Change</th>
+                  <th class="num">7d Change</th>
+                  <th class="num">YTD</th>
+                  <th class="num">52W High</th>
+                  <th class="num">52W Low</th>
+                  <th>Trend</th>
+                </tr>
+              </thead>
+              <tbody id="marketTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         AI FORECAST PANEL
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+
+          <!-- Chart panel -->
+          <div class="chart-panel reveal">
+            <div class="chart-panel__header">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:28px;height:28px;border-radius:6px;background:rgba(0,188,212,0.1);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-size:0.75rem;"><i class="fa-solid fa-brain"></i></div>
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;">AI Price Forecast</div>
+                  <div style="font-size:0.6875rem;color:var(--text-500);">Gold XAU/oz · 90-day horizon</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:4px;background:var(--coal-800);border:1px solid var(--border-100);border-radius:var(--radius-md);padding:3px;">
+                <button class="scenario-tab bull active" onclick="setScenario('bull',this)">Bull</button>
+                <button class="scenario-tab base"        onclick="setScenario('base',this)">Base</button>
+                <button class="scenario-tab bear"        onclick="setScenario('bear',this)">Bear</button>
+              </div>
+            </div>
+            <div class="chart-panel__body">
+              <!-- Price summary -->
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;">
+                <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);border:1px solid var(--border-100);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Current</div>
+                  <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--text-50);">$3,142</div>
+                </div>
+                <div style="padding:0.875rem;background:rgba(16,185,129,0.06);border-radius:var(--radius-md);border:1px solid rgba(16,185,129,0.15);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--emerald-400);margin-bottom:0.375rem;" id="targetLabel">Bull Target</div>
+                  <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;" id="targetPrice" style="color:var(--emerald-400);">$3,380</div>
+                </div>
+                <div style="padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);border:1px solid var(--border-100);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Confidence</div>
+                  <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--cyan-400);" id="confidence">82%</div>
+                </div>
+              </div>
+
+              <!-- SVG forecast chart -->
+              <svg viewBox="0 0 480 140" style="width:100%;height:140px;" preserveAspectRatio="none" id="forecastChart">
+                <defs>
+                  <linearGradient id="histGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="rgba(0,188,212,0.25)" />
+                    <stop offset="100%" stop-color="rgba(0,188,212,0)" />
+                  </linearGradient>
+                  <linearGradient id="fcGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"   stop-color="rgba(16,185,129,0.2)" />
+                    <stop offset="100%" stop-color="rgba(16,185,129,0)" />
+                  </linearGradient>
+                </defs>
+                <!-- Grid -->
+                <line x1="0" y1="35"  x2="480" y2="35"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <line x1="0" y1="70"  x2="480" y2="70"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <line x1="0" y1="105" x2="480" y2="105" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                <line x1="320" y1="0" x2="320" y2="140" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="4,3"/>
+                <!-- Historical area -->
+                <path d="M0,95 L40,88 L80,82 L120,90 L160,75 L200,70 L240,78 L280,65 L320,60 L320,140 L0,140 Z" fill="url(#histGrad)"/>
+                <!-- Historical line -->
+                <path d="M0,95 L40,88 L80,82 L120,90 L160,75 L200,70 L240,78 L280,65 L320,60" fill="none" stroke="var(--cyan-500)" stroke-width="1.5"/>
+                <!-- Forecast confidence band (bull) -->
+                <path id="fcBand" d="M320,60 L360,48 L400,38 L440,28 L480,18 L480,40 L440,52 L400,62 L360,70 L320,60 Z" fill="rgba(16,185,129,0.08)"/>
+                <!-- Forecast line (bull) -->
+                <path id="fcLine" d="M320,60 L360,48 L400,38 L440,28 L480,18" fill="none" stroke="var(--emerald-400)" stroke-width="1.5" stroke-dasharray="5,3"/>
+                <!-- Current dot -->
+                <circle cx="320" cy="60" r="4" fill="var(--cyan-400)"/>
+                <circle cx="320" cy="60" r="8" fill="rgba(0,188,212,0.2)"/>
+                <!-- Labels -->
+                <text x="4"   y="134" font-size="9" fill="rgba(100,116,139,0.8)" font-family="monospace">Apr</text>
+                <text x="155" y="134" font-size="9" fill="rgba(100,116,139,0.8)" font-family="monospace">Jun</text>
+                <text x="316" y="134" font-size="9" fill="rgba(0,188,212,0.8)"   font-family="monospace">Now</text>
+                <text x="460" y="134" font-size="9" fill="rgba(16,185,129,0.8)"  font-family="monospace">Sep</text>
+              </svg>
+
+              <!-- Scenario details -->
+              <div style="margin-top:1rem;padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);border:1px solid var(--border-100);">
+                <div style="font-size:0.75rem;color:var(--text-400);line-height:1.65;" id="scenarioDesc">
+                  <strong style="color:var(--emerald-400);">Bull scenario:</strong> Driven by continued USD weakness, central bank gold purchases and geopolitical risk premium. Fed rate cut expectations support upside momentum through Q3 2026.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Forecast details panel -->
+          <div style="display:flex;flex-direction:column;gap:1.5rem;">
+            <div>
+              <div class="section-label reveal">AI Forecast Engine</div>
+              <h2 class="section-title reveal delay-1">90-Day Price Intelligence</h2>
+              <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;">
+                Our LSTM neural network is trained on 14 years of commodity price history, cross-referenced with macroeconomic indicators, supply chain signals and geopolitical risk data — retrained weekly on fresh market data.
+              </p>
+            </div>
+
+            <!-- Model inputs -->
+            <div class="card reveal delay-2" style="gap:1rem;display:flex;flex-direction:column;">
+              <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-400);">Model Input Signals</div>
+              <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:0.8125rem;color:var(--text-300);">USD Index (DXY)</span>
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div style="width:80px;height:4px;background:var(--coal-700);border-radius:2px;overflow:hidden;"><div style="width:72%;height:100%;background:var(--rose-400);border-radius:2px;"></div></div>
+                    <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--rose-400);">Bearish</span>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:0.8125rem;color:var(--text-300);">Central Bank Demand</span>
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div style="width:80px;height:4px;background:var(--coal-700);border-radius:2px;overflow:hidden;"><div style="width:88%;height:100%;background:var(--emerald-400);border-radius:2px;"></div></div>
+                    <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);">Strong</span>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:0.8125rem;color:var(--text-300);">Geopolitical Risk</span>
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div style="width:80px;height:4px;background:var(--coal-700);border-radius:2px;overflow:hidden;"><div style="width:65%;height:100%;background:var(--amber-400);border-radius:2px;"></div></div>
+                    <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--amber-400);">Elevated</span>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:0.8125rem;color:var(--text-300);">Mine Supply Growth</span>
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div style="width:80px;height:4px;background:var(--coal-700);border-radius:2px;overflow:hidden;"><div style="width:30%;height:100%;background:var(--cyan-400);border-radius:2px;"></div></div>
+                    <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--cyan-400);">Constrained</span>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:0.8125rem;color:var(--text-300);">ETF Flows</span>
+                  <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div style="width:80px;height:4px;background:var(--coal-700);border-radius:2px;overflow:hidden;"><div style="width:55%;height:100%;background:var(--emerald-400);border-radius:2px;"></div></div>
+                    <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);">Positive</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Model accuracy -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;" class="reveal delay-3">
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--emerald-400);">96%</div>
+                <div style="font-size:0.6875rem;color:var(--text-500);margin-top:4px;">30D Accuracy</div>
+              </div>
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--cyan-400);">91%</div>
+                <div style="font-size:0.6875rem;color:var(--text-500);margin-top:4px;">60D Accuracy</div>
+              </div>
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--amber-400);">84%</div>
+                <div style="font-size:0.6875rem;color:var(--text-500);margin-top:4px;">90D Accuracy</div>
+              </div>
+            </div>
+
+            <a href="../auth/signup.html" class="btn btn--primary btn--lg reveal delay-4" data-track="econ-forecast-cta">
+              <i class="fa-solid fa-brain"></i> Access Full Forecast Suite
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         CAPEX / OPEX MODELLING PREVIEW
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;">
+
+          <!-- Copy -->
+          <div>
+            <div class="section-label reveal">CAPEX Modelling</div>
+            <h2 class="section-title reveal delay-1">Model Your Next Investment Decision</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+              Build dynamic CAPEX and OPEX models that automatically update when commodity prices move. Input your project parameters and get scenario-adjusted NPV, IRR and payback period calculations in real time.
+            </p>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.75rem;">
+              <div class="reveal delay-2" style="display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;width:14px;"></i><span style="font-size:0.875rem;color:var(--text-300);">NPV, IRR and payback period modelling</span></div>
+              <div class="reveal delay-3" style="display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;width:14px;"></i><span style="font-size:0.875rem;color:var(--text-300);">Live commodity price integration — no manual updates</span></div>
+              <div class="reveal delay-4" style="display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;width:14px;"></i><span style="font-size:0.875rem;color:var(--text-300);">Export to Excel, PDF or PowerPoint for board presentations</span></div>
+              <div class="reveal delay-5" style="display:flex;align-items:center;gap:0.75rem;"><i class="fa-solid fa-check" style="color:var(--emerald-400);font-size:0.75rem;width:14px;"></i><span style="font-size:0.875rem;color:var(--text-300);">Sensitivity analysis across price, volume and cost assumptions</span></div>
+            </div>
+            <a href="../auth/signup.html" class="btn btn--success reveal delay-5" data-track="econ-capex-cta">
+              <i class="fa-solid fa-calculator"></i> Try CAPEX Modeller
+            </a>
+          </div>
+
+          <!-- CAPEX tool preview -->
+          <div class="reveal delay-1">
+            <div class="chart-panel">
+              <div class="chart-panel__header">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <i class="fa-solid fa-calculator" style="color:var(--emerald-400);"></i>
+                  <span style="font-size:0.875rem;font-weight:600;">CAPEX / OPEX Scenario Model</span>
+                </div>
+                <span class="badge badge--emerald">Live Prices</span>
+              </div>
+              <div class="chart-panel__body" style="display:flex;flex-direction:column;gap:1.25rem;">
+                <!-- Inputs -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                  <div>
+                    <label style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Commodity</label>
+                    <select class="form-select" style="font-size:0.8125rem;padding:0.5rem 2rem 0.5rem 0.75rem;">
+                      <option>Gold (XAU)</option>
+                      <option>Copper (CU)</option>
+                      <option>Lithium</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Annual Production</label>
+                    <input type="text" class="form-input" value="250,000 oz" style="font-family:var(--font-mono);font-size:0.8125rem;" />
+                  </div>
+                  <div>
+                    <label style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);display:block;margin-bottom:0.375rem;">CAPEX ($M)</label>
+                    <input type="text" class="form-input" value="$480M" style="font-family:var(--font-mono);font-size:0.8125rem;" />
+                  </div>
+                  <div>
+                    <label style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);display:block;margin-bottom:0.375rem;">AISC ($/oz)</label>
+                    <input type="text" class="form-input" value="$1,240/oz" style="font-family:var(--font-mono);font-size:0.8125rem;" />
+                  </div>
+                </div>
+                <!-- Results -->
+                <div style="padding:1rem;background:var(--coal-850);border-radius:var(--radius-md);border:1px solid var(--border-100);">
+                  <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.875rem;">Model Output — Base Case</div>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;">
+                    <div style="text-align:center;">
+                      <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--emerald-400);">$1.24B</div>
+                      <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">NPV (10%)</div>
+                    </div>
+                    <div style="text-align:center;">
+                      <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--cyan-400);">28.4%</div>
+                      <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">IRR</div>
+                    </div>
+                    <div style="text-align:center;">
+                      <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--amber-400);">3.8 yrs</div>
+                      <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">Payback</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="alert alert--cyan" style="font-size:0.8125rem;">
+                  <i class="fa-solid fa-circle-info alert__icon"></i>
+                  <div><strong>Live price update:</strong> Gold at $3,142/oz — NPV increased by $84M vs. yesterday's close.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         PHOTO + MARKET NEWS STRIP
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+
+          <!-- Market image -->
+          <div class="reveal">
+            <div class="img-frame" style="height:280px;margin-bottom:1rem;">
+              <img
+                src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80"
+                alt="Financial analyst reviewing commodity market data and charts"
+                style="width:100%;height:100%;object-fit:cover;"
+                loading="lazy"
+              />
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Data Sources</div>
+                <div style="font-size:0.8125rem;color:var(--text-300);line-height:1.6;">LME · COMEX · SGX · ICE · SHFE · Fastmarkets · S&P Global</div>
+              </div>
+              <div style="padding:1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Refresh Rate</div>
+                <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--emerald-400);">8 sec</div>
+                <div style="font-size:0.75rem;color:var(--text-500);">During market hours</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Latest market news -->
+          <div class="reveal delay-1">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+              <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-400);">Latest Market Intelligence</div>
+              <a href="../news.html" style="font-size:0.75rem;color:var(--cyan-400);">All news <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div style="padding:1rem 0;border-bottom:1px solid var(--border-100);">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.375rem;">
+                  <span class="badge badge--emerald">Gold</span>
+                  <span style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">Jul 1, 2026</span>
+                </div>
+                <div style="font-size:0.875rem;font-weight:500;color:var(--text-100);margin-bottom:0.25rem;">Gold hits 3-month high as Fed signals September rate cut</div>
+                <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">Central bank demand from China and India continues to underpin price strength despite equity market rally.</div>
+              </div>
+              <div style="padding:1rem 0;border-bottom:1px solid var(--border-100);">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.375rem;">
+                  <span class="badge badge--cyan">Copper</span>
+                  <span style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">Jun 30, 2026</span>
+                </div>
+                <div style="font-size:0.875rem;font-weight:500;color:var(--text-100);margin-bottom:0.25rem;">Copper supply deficit widens as Chilean output falls 4.2%</div>
+                <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">Codelco production disruptions and rising EV demand push LME inventories to 18-month lows.</div>
+              </div>
+              <div style="padding:1rem 0;border-bottom:1px solid var(--border-100);">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.375rem;">
+                  <span class="badge badge--amber">Lithium</span>
+                  <span style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">Jun 29, 2026</span>
+                </div>
+                <div style="font-size:0.875rem;font-weight:500;color:var(--text-100);margin-bottom:0.25rem;">Lithium carbonate rebounds 12% on Chinese battery demand surge</div>
+                <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">CATL and BYD inventory restocking drives spot market recovery from Q1 lows.</div>
+              </div>
+              <div style="padding:1rem 0;">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.375rem;">
+                  <span class="badge badge--neutral">Iron Ore</span>
+                  <span style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">Jun 28, 2026</span>
+                </div>
+                <div style="font-size:0.875rem;font-weight:500;color:var(--text-100);margin-bottom:0.25rem;">Iron ore holds above $108 as Chinese steel output stabilises</div>
+                <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">Infrastructure stimulus spending supports demand despite property sector headwinds.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(16,185,129,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <h2 class="reveal" style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">Access the Full Economics Hub</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:440px;margin:0 auto 2rem;line-height:1.75;">Live prices, AI forecasts, CAPEX modelling and market intelligence — all in one hub.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="../auth/signup.html" class="btn btn--success btn--xl"><i class="fa-solid fa-rocket"></i> Start Free Trial</a>
+          <a href="../hub-preview.html" class="btn btn--ghost btn--xl"><i class="fa-solid fa-layer-group"></i> All Hubs</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining and industrial sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="economics-hub.html">Economics</a><a href="engineering-hub.html">Engineering</a><a href="innovation-hub.html">Innovation</a><a href="procurement-hub.html">Procurement</a><a href="safety-hub.html">Safety</a><a href="sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="../products/ai-predictor.html">AI Predictor</a><a href="../products/cost-calculator.html">Cost Calculator</a><a href="../products/equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="../news.html">News</a><a href="../pricing.html">Pricing</a><a href="../contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="../auth/login.html">Sign In</a><a href="../auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd. All rights reserved.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/config.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    // ── Ticker ───────────────────────────────────────────
+    const COMMODITIES = [
+      {name:'Gold',sym:'XAU',unit:'oz',price:3142.50,chg:+0.8},
+      {name:'Copper',sym:'CU',unit:'t',price:9847,chg:+1.2},
+      {name:'Lithium',sym:'Li',unit:'t',price:14200,chg:+2.1},
+      {name:'Silver',sym:'XAG',unit:'oz',price:31.84,chg:-0.3},
+      {name:'Nickel',sym:'NI',unit:'t',price:18240,chg:+0.6},
+      {name:'Iron Ore',sym:'IO',unit:'t',price:108.40,chg:+0.5},
+      {name:'Cobalt',sym:'CO',unit:'t',price:26800,chg:-1.1},
+      {name:'Zinc',sym:'ZN',unit:'t',price:2840,chg:+0.4},
+      {name:'Platinum',sym:'XPT',unit:'oz',price:1042,chg:-0.2},
+      {name:'Palladium',sym:'XPD',unit:'oz',price:1124.50,chg:+0.9}
+    ];
+
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      const d = [...COMMODITIES,...COMMODITIES];
+      t.innerHTML = d.map(c => {
+        const up  = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => {
+      COMMODITIES.forEach(c => {
+        c.price = Math.max(1, c.price + (Math.random() - 0.49) * c.price * 0.002);
+        c.chg   = parseFloat((c.chg + (Math.random() - 0.5) * 0.08).toFixed(2));
+      });
+      renderTicker();
+      renderPriceCards();
+      renderMarketTable();
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+    }, 8000);
+
+    // ── Price cards ──────────────────────────────────────
+    const sparkData = {
+      Gold:     [62,58,65,70,68,72,75,71,74,78,76,80],
+      Copper:   [55,60,58,62,65,63,68,66,70,69,72,74],
+      Lithium:  [40,38,42,45,43,48,50,47,52,55,53,58],
+      Silver:   [70,68,72,69,74,71,75,73,70,72,68,71],
+      Nickel:   [50,52,48,55,53,57,54,58,56,60,58,62],
+      'Iron Ore':[65,63,67,70,68,72,69,73,71,74,72,75],
+      Cobalt:   [45,43,47,50,48,52,49,53,51,55,52,50],
+      Zinc:     [60,58,62,65,63,67,64,68,66,70,68,72]
+    };
+
+    function renderPriceCards() {
+      const container = document.getElementById('priceCards');
+      if (!container) return;
+      const display = COMMODITIES.slice(0,8);
+      container.innerHTML = display.map((c,i) => {
+        const up   = c.chg >= 0;
+        const fmt  = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        const bars = (sparkData[c.name] || [50,52,48,55,53,57,54,58]).map(h => {
+          const pct = Math.round((h / 80) * 100);
+          return `<span style="height:${pct}%;background:${up ? 'var(--emerald-400)' : 'var(--rose-400)'};opacity:0.6;"></span>`;
+        }).join('');
+        return `
+          <div class="price-card reveal stagger" onclick="selectCommodity('${c.name}',this)">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);">${c.name}</div>
+                <div style="font-size:0.6875rem;color:var(--text-600);">${c.sym} · /${c.unit}</div>
+              </div>
+              <span class="badge ${up ? 'badge--emerald' : 'badge--rose'}" style="font-size:0.625rem;">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--text-50);">$${fmt}</div>
+            <div class="price-card__sparkline">${bars}</div>
+          </div>`;
+      }).join('');
+      document.querySelectorAll('.price-card.reveal').forEach(el => revObs.observe(el));
+    }
+
+    function selectCommodity(name, card) {
+      document.querySelectorAll('.price-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+    }
+
+    // ── Market table ─────────────────────────────────────
+    const MARKET_DATA = [
+      {name:'Gold',sym:'XAU',exch:'COMEX',price:3142.50,chg24:+0.8,chg7:+2.4,ytd:+18.2,high52:3280,low52:2180,unit:'oz'},
+      {name:'Copper',sym:'CU',exch:'LME',price:9847,chg24:+1.2,chg7:+3.1,ytd:+12.4,high52:10240,low52:7820,unit:'t'},
+      {name:'Lithium Carb.',sym:'Li',exch:'SGX',price:14200,chg24:+2.1,chg7:+8.4,ytd:-8.2,high52:18400,low52:9800,unit:'t'},
+      {name:'Silver',sym:'XAG',exch:'COMEX',price:31.84,chg24:-0.3,chg7:+1.2,ytd:+22.1,high52:34.20,low52:22.40,unit:'oz'},
+      {name:'Nickel',sym:'NI',exch:'LME',price:18240,chg24:+0.6,chg7:+1.8,ytd:-4.2,high52:21800,low52:15200,unit:'t'},
+      {name:'Iron Ore',sym:'IO',exch:'SGX',price:108.40,chg24:+0.5,chg7:+2.2,ytd:-6.8,high52:142,low52:88,unit:'t'},
+      {name:'Cobalt',sym:'CO',exch:'LME',price:26800,chg24:-1.1,chg7:-2.4,ytd:-18.4,high52:38200,low52:24100,unit:'t'},
+      {name:'Zinc',sym:'ZN',exch:'LME',price:2840,chg24:+0.4,chg7:+1.6,ytd:+8.4,high52:3120,low52:2240,unit:'t'},
+      {name:'Platinum',sym:'XPT',exch:'NYMEX',price:1042,chg24:-0.2,chg7:+0.8,ytd:+4.2,high52:1180,low52:880,unit:'oz'},
+      {name:'Palladium',sym:'XPD',exch:'NYMEX',price:1124.50,chg24:+0.9,chg7:+2.1,ytd:-12.4,high52:1480,low52:920,unit:'oz'},
+      {name:'Aluminium',sym:'AL',exch:'LME',price:2480,chg24:+0.3,chg7:+1.4,ytd:+6.2,high52:2720,low52:2080,unit:'t'},
+      {name:'Lead',sym:'PB',exch:'LME',price:2140,chg24:-0.4,chg7:-0.8,ytd:+2.1,high52:2380,low52:1840,unit:'t'},
+    ];
+
+    function renderMarketTable() {
+      const tbody = document.getElementById('marketTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = MARKET_DATA.map(m => {
+        const up24 = m.chg24 >= 0;
+        const upYTD= m.ytd   >= 0;
+        const fmt  = v => v >= 1000 ? v.toLocaleString('en-US',{maximumFractionDigits:2}) : v.toFixed(2);
+        const miniBar = (val, max) => {
+          const w = Math.min(100, Math.abs(val/max)*100);
+          const col = val >= 0 ? 'var(--emerald-400)' : 'var(--rose-400)';
+          return `<div style="display:flex;align-items:center;gap:4px;"><div style="width:40px;height:3px;background:var(--coal-700);border-radius:2px;overflow:hidden;"><div style="width:${w}%;height:100%;background:${col};border-radius:2px;"></div></div></div>`;
+        };
+        return `
+          <tr class="market-row">
+            <td>
+              <div style="font-weight:600;color:var(--text-100);">${m.name}</div>
+              <div style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">${m.sym} · ${m.exch}</div>
+            </td>
+            <td><span class="badge badge--neutral" style="font-size:0.625rem;">${m.exch}</span></td>
+            <td class="num mono" style="color:var(--text-100);font-weight:600;">$${fmt(m.price)}<span style="font-size:0.6875rem;color:var(--text-500);">/${m.unit}</span></td>
+            <td class="num mono" style="color:${up24?'var(--emerald-400)':'var(--rose-400)'};">${up24?'▲':'▼'} ${Math.abs(m.chg24).toFixed(1)}%</td>
+            <td class="num mono" style="color:${m.chg7>=0?'var(--emerald-400)':'var(--rose-400)'};">${m.chg7>=0?'▲':'▼'} ${Math.abs(m.chg7).toFixed(1)}%</td>
+            <td class="num mono" style="color:${upYTD?'var(--emerald-400)':'var(--rose-400)'};">${upYTD?'+':''}${m.ytd.toFixed(1)}%</td>
+            <td class="num mono" style="color:var(--text-300);">$${fmt(m.high52)}</td>
+            <td class="num mono" style="color:var(--text-300);">$${fmt(m.low52)}</td>
+            <td>${miniBar(m.chg24, 3)}</td>
+          </tr>`;
+      }).join('');
+    }
+
+    renderPriceCards();
+    renderMarketTable();
+    document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+
+    // ── Forecast scenarios ───────────────────────────────
+    const scenarios = {
+      bull: {
+        target:'$3,380', conf:'82%',
+        label:'Bull Target', color:'var(--emerald-400)',
+        fcLine:'M320,60 L360,48 L400,38 L440,28 L480,18',
+        fcBand:'M320,60 L360,48 L400,38 L440,28 L480,18 L480,40 L440,52 L400,62 L360,70 L320,60 Z',
+        desc:'<strong style="color:var(--emerald-400);">Bull scenario:</strong> Driven by continued USD weakness, central bank gold purchases and geopolitical risk premium. Fed rate cut expectations support upside momentum through Q3 2026.'
+      },
+      base: {
+        target:'$3,180', conf:'91%',
+        label:'Base Target', color:'var(--cyan-400)',
+        fcLine:'M320,60 L360,58 L400,55 L440,52 L480,48',
+        fcBand:'M320,60 L360,58 L400,55 L440,52 L480,48 L480,65 L440,68 L400,70 L360,72 L320,60 Z',
+        desc:'<strong style="color:var(--cyan-400);">Base scenario:</strong> Moderate price appreciation driven by steady central bank demand and constrained mine supply. Assumes no major macro shocks and gradual USD stabilisation.'
+      },
+      bear: {
+        target:'$2,920', conf:'74%',
+        label:'Bear Target', color:'var(--rose-400)',
+        fcLine:'M320,60 L360,72 L400,82 L440,90 L480,98',
+        fcBand:'M320,60 L360,72 L400,82 L440,90 L480,98 L480,112 L440,104 L400,96 L360,86 L320,60 Z',
+        desc:'<strong style="color:var(--rose-400);">Bear scenario:</strong> Risk-off environment triggered by stronger-than-expected US economic data delaying Fed cuts. ETF outflows and profit-taking pressure near all-time highs.'
+      }
+    };
+
+    function setScenario(key, btn) {
+      document.querySelectorAll('.scenario-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const s = scenarios[key];
+      document.getElementById('targetLabel').textContent  = s.label;
+      document.getElementById('targetPrice').textContent  = s.target;
+      document.getElementById('targetPrice').style.color  = s.color;
+      document.getElementById('confidence').textContent   = s.conf;
+      document.getElementById('fcLine').setAttribute('d', s.fcLine);
+      document.getElementById('fcLine').style.stroke      = s.color;
+      document.getElementById('fcBand').setAttribute('d', s.fcBand);
+      document.getElementById('scenarioDesc').innerHTML   = s.desc;
+    }
+
+    // ── Currency conversion ──────────────────────────────
+    const FX = { USD:1, AUD:1.54, EUR:0.92, GBP:0.79 };
+    function updateCurrency(cur) {
+      const rate = FX[cur] || 1;
+      const sym  = {USD:'$',AUD:'A$',EUR:'€',GBP:'£'}[cur] || '$';
+      MARKET_DATA.forEach(m => {
+        m._displayPrice = m.price * rate;
+        m._sym = sym;
+      });
+      renderMarketTable();
+    }
+
+    // ── Export CSV ───────────────────────────────────────
+    function exportPrices() {
+      const rows = ['Commodity,Exchange,Price,24h Change,YTD'];
+      MARKET_DATA.forEach(m => rows.push(`${m.name},${m.exch},$${m.price},${m.chg24}%,${m.ytd}%`));
+      const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `sesmine-prices-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
+    // ── Sort table ───────────────────────────────────────
+    let sortDir = {};
+    function sortTable(key) {
+      sortDir[key] = !sortDir[key];
+      const asc = sortDir[key];
+      MARKET_DATA.sort((a,b) => {
+        if (key === 'name')   return asc ? a.name.localeCompare(b.name)   : b.name.localeCompare(a.name);
+        if (key === 'price')  return asc ? a.price - b.price              : b.price - a.price;
+        if (key === 'change') return asc ? a.chg24 - b.chg24             : b.chg24 - a.chg24;
+        return 0;
+      });
+      renderMarketTable();
+    }
+  </script>
+</body>
+</html>
+

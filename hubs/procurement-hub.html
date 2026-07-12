@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procurement Hub — SESMine Intelligence</title>
+  <meta name="description" content="De-risk your mining supply chain. 5,000+ verified vendors, contract benchmarking, risk scoring and strategic sourcing across 84 countries." />
+  <link rel="canonical" href="https://www.sesmine.com/hubs/procurement-hub.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    .vendor-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: border-color var(--ease-base), box-shadow var(--ease-base), transform var(--ease-base);
+      position: relative;
+      overflow: hidden;
+    }
+    .vendor-card:hover {
+      border-color: rgba(245,158,11,0.3);
+      box-shadow: 0 12px 40px rgba(245,158,11,0.08);
+      transform: translateY(-2px);
+    }
+    .vendor-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--amber-500), transparent);
+    }
+
+    .risk-meter {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .risk-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .score-ring {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .contract-row {
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border-100);
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+      gap: 1rem;
+      align-items: center;
+      font-size: 0.8125rem;
+    }
+    .contract-row:last-child { border-bottom: none; }
+
+    .supply-alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+      padding: 1rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid transparent;
+    }
+    .supply-alert--high   { background: rgba(239,68,68,0.06);  border-color: rgba(239,68,68,0.2); }
+    .supply-alert--medium { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.2); }
+    .supply-alert--low    { background: rgba(16,185,129,0.06); border-color: rgba(16,185,129,0.2); }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="../index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="../hub-preview.html" class="active">Hubs</a></li>
+        <li><a href="../products/ai-predictor.html">AI Tools</a></li>
+        <li><a href="../products/equipment-database.html">Equipment</a></li>
+        <li><a href="../news.html">News</a></li>
+        <li><a href="../pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="../auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="../auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:4rem 0 3rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(245,158,11,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+
+      <div class="container" style="position:relative;z-index:1;">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-500);margin-bottom:1.5rem;">
+          <a href="../index.html" style="color:var(--text-500);">Home</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <a href="../hub-preview.html" style="color:var(--text-500);">Hubs</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <span style="color:var(--amber-400);">Procurement Hub</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+          <div>
+            <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--amber-400);margin-bottom:1.25rem;">
+              <i class="fa-solid fa-boxes-stacked fa-xs"></i> Hub 04 — Procurement
+            </div>
+            <h1 class="animate-fadeInUp" style="font-size:clamp(1.875rem,3.5vw,2.75rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1rem;">
+              De-Risk Your<br />
+              <span style="color:var(--amber-400);">Supply Chain.</span>
+            </h1>
+            <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-300);line-height:1.75;margin-bottom:1.75rem;max-width:460px;">
+              Benchmarked contract rates and vendor risk scoring for 5,000+ global suppliers across 84 countries — with real-time supply disruption alerts and strategic sourcing intelligence.
+            </p>
+            <div class="animate-fadeInUp delay-2" style="display:flex;gap:0.875rem;flex-wrap:wrap;">
+              <a href="../auth/signup.html" class="btn btn--amber btn--lg">
+                <i class="fa-solid fa-rocket"></i> Access Full Hub
+              </a>
+              <a href="#vendor-db" class="btn btn--ghost btn--lg">
+                <i class="fa-solid fa-building"></i> Browse Vendors
+              </a>
+            </div>
+          </div>
+
+          <div class="animate-fadeIn delay-2">
+            <div class="img-frame img-frame--glow" style="height:320px;">
+              <img
+                src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=800&q=80"
+                alt="Mining supply chain logistics and heavy equipment transport"
+                style="width:100%;height:100%;object-fit:cover;"
+                loading="eager"
+              />
+              <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(8,11,15,0.7) 0%,transparent 60%);pointer-events:none;"></div>
+              <div style="position:absolute;bottom:1rem;left:1rem;right:1rem;display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;">
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--amber-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Vendors</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--amber-400);">5K+</div>
+                </div>
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--cyan-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Countries</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--cyan-400);">84</div>
+                </div>
+                <div style="background:rgba(8,11,15,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-200);border-radius:8px;padding:0.625rem;border-top:2px solid var(--emerald-500);">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);">Avg. Saving</div>
+                  <div style="font-family:var(--font-mono);font-size:1rem;font-weight:600;color:var(--emerald-400);">12%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         SUPPLY CHAIN ALERTS
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:3rem 0;">
+      <div class="container">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Supply Chain Alerts</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0;font-size:1.5rem;">Active Disruption Intelligence</h2>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;" class="reveal">
+            <span class="dot-live"></span>
+            <span style="font-size:0.75rem;color:var(--emerald-400);font-weight:600;">Live monitoring · Updated hourly</span>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:0.75rem;" class="reveal delay-1">
+
+          <div class="supply-alert supply-alert--high">
+            <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;color:var(--rose-400);font-size:0.875rem;flex-shrink:0;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.375rem;flex-wrap:wrap;">
+                <span style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Copper Wire Rod — Chilean Port Strike</span>
+                <span class="badge badge--rose" style="font-size:0.625rem;">HIGH RISK</span>
+                <span style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">Jul 1, 2026 · 06:42 UTC</span>
+              </div>
+              <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.6;">Antofagasta port workers strike entering day 4. Estimated 84,000t copper wire rod shipments delayed. Alternative routing via Iquique adds 8–12 day lead time. 142 affected contracts identified in your vendor network.</div>
+            </div>
+            <a href="../auth/signup.html" class="btn btn--ghost btn--sm" style="flex-shrink:0;">View Impact</a>
+          </div>
+
+          <div class="supply-alert supply-alert--medium">
+            <div style="width:36px;height:36px;border-radius:8px;background:rgba(245,158,11,0.12);display:flex;align-items:center;justify-content:center;color:var(--amber-400);font-size:0.875rem;flex-shrink:0;"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.375rem;flex-wrap:wrap;">
+                <span style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Hydraulic Hose Assemblies — Lead Time Extension</span>
+                <span class="badge badge--amber" style="font-size:0.625rem;">MEDIUM RISK</span>
+                <span style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">Jun 30, 2026</span>
+              </div>
+              <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.6;">Parker Hannifin and Gates Corporation reporting 6–8 week lead time extension on high-pressure mining hose assemblies due to synthetic rubber shortage. Recommend pre-ordering Q4 requirements now.</div>
+            </div>
+            <a href="../auth/signup.html" class="btn btn--ghost btn--sm" style="flex-shrink:0;">View Impact</a>
+          </div>
+
+          <div class="supply-alert supply-alert--medium">
+            <div style="width:36px;height:36px;border-radius:8px;background:rgba(245,158,11,0.12);display:flex;align-items:center;justify-content:center;color:var(--amber-400);font-size:0.875rem;flex-shrink:0;"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.375rem;flex-wrap:wrap;">
+                <span style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Grinding Media Steel Balls — Price Spike +18%</span>
+                <span class="badge badge--amber" style="font-size:0.625rem;">MEDIUM RISK</span>
+                <span style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">Jun 28, 2026</span>
+              </div>
+              <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.6;">Chinese steel export restrictions driving 18% price increase on forged grinding media. Magotteaux and Molycop alternative suppliers available with 4-week lead time. Contract benchmark: $1,240/t vs. current market $1,462/t.</div>
+            </div>
+            <a href="../auth/signup.html" class="btn btn--ghost btn--sm" style="flex-shrink:0;">View Impact</a>
+          </div>
+
+          <div class="supply-alert supply-alert--low">
+            <div style="width:36px;height:36px;border-radius:8px;background:rgba(16,185,129,0.12);display:flex;align-items:center;justify-content:center;color:var(--emerald-400);font-size:0.875rem;flex-shrink:0;"><i class="fa-solid fa-circle-check"></i></div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.375rem;flex-wrap:wrap;">
+                <span style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Explosives (ANFO) — Supply Normalising</span>
+                <span class="badge badge--emerald" style="font-size:0.625rem;">LOW RISK</span>
+                <span style="font-size:0.6875rem;color:var(--text-500);font-family:var(--font-mono);">Jun 27, 2026</span>
+              </div>
+              <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.6;">Orica and Dyno Nobel reporting normalised supply after Q1 ammonium nitrate shortage. Lead times returning to 2–3 weeks standard. Spot prices down 8% from March peak.</div>
+            </div>
+            <a href="../auth/signup.html" class="btn btn--ghost btn--sm" style="flex-shrink:0;">View Details</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         VENDOR DATABASE
+    ══════════════════════════════════════════════════════ -->
+    <section id="vendor-db" style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Vendor Database</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0;">5,000+ Verified Global Suppliers</h2>
+          </div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;" class="reveal">
+            <div class="input-wrap" style="width:220px;">
+              <i class="fa-solid fa-search input-icon"></i>
+              <input type="text" class="form-input" placeholder="Search vendors…" style="font-size:0.8125rem;" />
+            </div>
+            <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.4375rem 2rem 0.4375rem 0.75rem;">
+              <option>All Categories</option>
+              <option>Explosives</option>
+              <option>Grinding Media</option>
+              <option>Hydraulics</option>
+              <option>Tyres & Rubber</option>
+              <option>Reagents</option>
+              <option>Electrical</option>
+            </select>
+            <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.4375rem 2rem 0.4375rem 0.75rem;">
+              <option>All Regions</option>
+              <option>Australia</option>
+              <option>Americas</option>
+              <option>Europe</option>
+              <option>Asia Pacific</option>
+              <option>Africa</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;" id="vendorGrid">
+
+          <!-- Vendor 1 -->
+          <div class="vendor-card reveal stagger">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:44px;height:44px;border-radius:10px;background:var(--coal-750);border:1px solid var(--border-100);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:700;color:var(--text-300);">ORI</div>
+                <div>
+                  <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);">Orica Limited</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Explosives & Blasting</div>
+                </div>
+              </div>
+              <div class="score-ring" style="background:rgba(16,185,129,0.1);border:2px solid var(--emerald-500);color:var(--emerald-400);">92</div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag">Explosives</span>
+              <span class="tag">ANFO</span>
+              <span class="tag">Emulsions</span>
+              <span class="tag">Initiating Systems</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);">
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--emerald-400);">92/100</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Risk Score</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">2–3 wks</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Lead Time</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">50+</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Countries</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="risk-meter">
+                <div class="risk-dot" style="background:var(--emerald-400);"></div>
+                <span style="font-size:0.75rem;color:var(--emerald-400);font-weight:600;">Low Risk</span>
+              </div>
+              <a href="../auth/signup.html" class="btn btn--ghost btn--xs">Full Profile <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+            </div>
+          </div>
+
+          <!-- Vendor 2 -->
+          <div class="vendor-card reveal stagger">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:44px;height:44px;border-radius:10px;background:var(--coal-750);border:1px solid var(--border-100);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:700;color:var(--text-300);">MAG</div>
+                <div>
+                  <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);">Magotteaux</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Grinding Media & Wear Parts</div>
+                </div>
+              </div>
+              <div class="score-ring" style="background:rgba(16,185,129,0.1);border:2px solid var(--emerald-500);color:var(--emerald-400);">88</div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag">Grinding Balls</span>
+              <span class="tag">Mill Liners</span>
+              <span class="tag">Wear Parts</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);">
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--emerald-400);">88/100</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Risk Score</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">4–6 wks</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Lead Time</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">40+</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Countries</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="risk-meter">
+                <div class="risk-dot" style="background:var(--emerald-400);"></div>
+                <span style="font-size:0.75rem;color:var(--emerald-400);font-weight:600;">Low Risk</span>
+              </div>
+              <a href="../auth/signup.html" class="btn btn--ghost btn--xs">Full Profile <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+            </div>
+          </div>
+
+          <!-- Vendor 3 -->
+          <div class="vendor-card reveal stagger">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:44px;height:44px;border-radius:10px;background:var(--coal-750);border:1px solid var(--border-100);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:700;color:var(--text-300);">MIC</div>
+                <div>
+                  <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);">Michelin Mining</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">OTR Tyres & Rubber</div>
+                </div>
+              </div>
+              <div class="score-ring" style="background:rgba(245,158,11,0.1);border:2px solid var(--amber-500);color:var(--amber-400);">74</div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag">OTR Tyres</span>
+              <span class="tag">Haul Truck</span>
+              <span class="tag">Loader Tyres</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);">
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--amber-400);">74/100</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Risk Score</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">8–12 wks</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Lead Time</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">60+</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Countries</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="risk-meter">
+                <div class="risk-dot" style="background:var(--amber-400);"></div>
+                <span style="font-size:0.75rem;color:var(--amber-400);font-weight:600;">Medium Risk</span>
+              </div>
+              <a href="../auth/signup.html" class="btn btn--ghost btn--xs">Full Profile <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+            </div>
+          </div>
+
+          <!-- Vendor 4 -->
+          <div class="vendor-card reveal stagger">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:44px;height:44px;border-radius:10px;background:var(--coal-750);border:1px solid var(--border-100);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:700;color:var(--text-300);">CYT</div>
+                <div>
+                  <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);">Cytec Solvay</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Flotation Reagents</div>
+                </div>
+              </div>
+              <div class="score-ring" style="background:rgba(16,185,129,0.1);border:2px solid var(--emerald-500);color:var(--emerald-400);">90</div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag">Collectors</span>
+              <span class="tag">Frothers</span>
+              <span class="tag">Depressants</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);">
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--emerald-400);">90/100</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Risk Score</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">3–5 wks</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Lead Time</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">45+</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Countries</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="risk-meter">
+                <div class="risk-dot" style="background:var(--emerald-400);"></div>
+                <span style="font-size:0.75rem;color:var(--emerald-400);font-weight:600;">Low Risk</span>
+              </div>
+              <a href="../auth/signup.html" class="btn btn--ghost btn--xs">Full Profile <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+            </div>
+          </div>
+
+          <!-- Vendor 5 -->
+          <div class="vendor-card reveal stagger">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:44px;height:44px;border-radius:10px;background:var(--coal-750);border:1px solid var(--border-100);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:700;color:var(--text-300);">PAR</div>
+                <div>
+                  <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);">Parker Hannifin</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Hydraulics & Fluid Power</div>
+                </div>
+              </div>
+              <div class="score-ring" style="background:rgba(245,158,11,0.1);border:2px solid var(--amber-500);color:var(--amber-400);">71</div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag">Hydraulic Hose</span>
+              <span class="tag">Cylinders</span>
+              <span class="tag">Fittings</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);">
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--amber-400);">71/100</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Risk Score</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--rose-400);">6–8 wks</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Lead Time ⚠</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">55+</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Countries</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="risk-meter">
+                <div class="risk-dot" style="background:var(--amber-400);"></div>
+                <span style="font-size:0.75rem;color:var(--amber-400);font-weight:600;">Medium Risk</span>
+              </div>
+              <a href="../auth/signup.html" class="btn btn--ghost btn--xs">Full Profile <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+            </div>
+          </div>
+
+          <!-- Vendor 6 -->
+          <div class="vendor-card reveal stagger">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <div style="width:44px;height:44px;border-radius:10px;background:var(--coal-750);border:1px solid var(--border-100);display:flex;align-items:center;justify-content:center;font-size:0.6875rem;font-weight:700;color:var(--text-300);">ABB</div>
+                <div>
+                  <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);">ABB Mining</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Electrical & Automation</div>
+                </div>
+              </div>
+              <div class="score-ring" style="background:rgba(16,185,129,0.1);border:2px solid var(--emerald-500);color:var(--emerald-400);">94</div>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag">Drive Systems</span>
+              <span class="tag">Transformers</span>
+              <span class="tag">Automation</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;padding:0.875rem;background:var(--coal-850);border-radius:var(--radius-md);">
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--emerald-400);">94/100</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Risk Score</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">4–8 wks</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Lead Time</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">70+</div>
+                <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-top:2px;">Countries</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="risk-meter">
+                <div class="risk-dot" style="background:var(--emerald-400);"></div>
+                <span style="font-size:0.75rem;color:var(--emerald-400);font-weight:600;">Low Risk</span>
+              </div>
+              <a href="../auth/signup.html" class="btn btn--ghost btn--xs">Full Profile <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="text-align:center;margin-top:2.5rem;" class="reveal">
+          <a href="../auth/signup.html" class="btn btn--ghost btn--lg">
+            <i class="fa-solid fa-plus"></i> Access Full Vendor Database (4,994+ more)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         CONTRACT BENCHMARKING
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+
+          <!-- Benchmark table -->
+          <div>
+            <div class="section-label reveal">Contract Benchmarking</div>
+            <h2 class="section-title reveal delay-1">Know If You're Paying Too Much</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+              Compare your contract rates against anonymised benchmarks from 2,400+ active mining contracts. Instantly see if your pricing is above or below market — and by how much.
+            </p>
+
+            <div style="background:var(--coal-850);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;" class="reveal delay-2">
+              <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--border-100);background:var(--coal-800);display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:0.5rem;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);">
+                <div>Category</div>
+                <div style="text-align:right;">Your Rate</div>
+                <div style="text-align:right;">Market P50</div>
+                <div style="text-align:right;">Variance</div>
+              </div>
+              <div style="padding:0 1.25rem;">
+                <div class="contract-row">
+                  <div style="color:var(--text-200);font-weight:500;">ANFO Explosives</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$842/t</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$810/t</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--rose-400);">+4.0% ▲</div>
+                </div>
+                <div class="contract-row">
+                  <div style="color:var(--text-200);font-weight:500;">Grinding Media (65mm)</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$1,240/t</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$1,380/t</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--emerald-400);">-10.1% ▼</div>
+                </div>
+                <div class="contract-row">
+                  <div style="color:var(--text-200);font-weight:500;">OTR Tyres (57")</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$48,200</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$44,800</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--rose-400);">+7.6% ▲</div>
+                </div>
+                <div class="contract-row">
+                  <div style="color:var(--text-200);font-weight:500;">Sodium Cyanide</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$2,840/t</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$2,920/t</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--emerald-400);">-2.7% ▼</div>
+                </div>
+                <div class="contract-row">
+                  <div style="color:var(--text-200);font-weight:500;">Hydraulic Hose Assy.</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$284/m</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--text-300);">$248/m</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;text-align:right;color:var(--rose-400);">+14.5% ▲</div>
+                </div>
+              </div>
+              <div style="padding:1rem 1.25rem;border-top:1px solid var(--border-100);background:rgba(239,68,68,0.04);">
+                <div style="font-size:0.8125rem;color:var(--text-400);">
+                  <i class="fa-solid fa-circle-info" style="color:var(--amber-400);margin-right:0.375rem;"></i>
+                  3 of 5 categories are above market benchmark. Estimated annual overspend: <strong style="color:var(--rose-400);">$2.1M</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Image + stats -->
+          <div>
+            <div class="reveal">
+              <div class="img-frame" style="height:260px;margin-bottom:1.25rem;">
+                <img
+                  src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80"
+                  alt="Procurement manager reviewing supply chain contracts and vendor data"
+                  style="width:100%;height:100%;object-fit:cover;"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;" class="reveal delay-1">
+              <div style="padding:1.25rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--amber-400);">$2.1M</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Avg. annual saving identified per client</div>
+              </div>
+              <div style="padding:1.25rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--cyan-400);">2,400+</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Active contracts in benchmark pool</div>
+              </div>
+              <div style="padding:1.25rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--emerald-400);">12%</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Average procurement cost reduction</div>
+              </div>
+              <div style="padding:1.25rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);">
+                <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--text-200);">84</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Countries with active vendor coverage</div>
+              </div>
+            </div>
+            <a href="../auth/signup.html" class="btn btn--amber btn--lg reveal delay-2" style="margin-top:1.25rem;width:100%;">
+              <i class="fa-solid fa-rocket"></i> Access Full Procurement Hub
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(245,158,11,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <h2 class="reveal" style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">De-Risk Your Supply Chain Today</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:440px;margin:0 auto 2rem;">5,000+ vendors, contract benchmarking, disruption alerts and strategic sourcing — all in one hub.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="../auth/signup.html" class="btn btn--amber btn--xl"><i class="fa-solid fa-rocket"></i> Start Free Trial</a>
+          <a href="../hub-preview.html" class="btn btn--ghost btn--xl"><i class="fa-solid fa-layer-group"></i> All Hubs</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="economics-hub.html">Economics</a><a href="engineering-hub.html">Engineering</a><a href="innovation-hub.html">Innovation</a><a href="procurement-hub.html">Procurement</a><a href="safety-hub.html">Safety</a><a href="sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="../products/ai-predictor.html">AI Predictor</a><a href="../products/equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="../pricing.html">Pricing</a><a href="../contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="../auth/login.html">Sign In</a><a href="../auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/config.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    const COMM = [
+      {name:'Gold',price:3142.50,chg:+0.8},{name:'Copper',price:9847,chg:+1.2},
+      {name:'Lithium',price:14200,chg:+2.1},{name:'Silver',price:31.84,chg:-0.3},
+      {name:'Nickel',price:18240,chg:+0.6},{name:'Iron Ore',price:108.40,chg:+0.5},
+      {name:'Cobalt',price:26800,chg:-1.1},{name:'Zinc',price:2840,chg:+0.4}
+    ];
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      t.innerHTML = [...COMM,...COMM].map(c => {
+        const up  = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => {
+      COMM.forEach(c => {
+        c.price = Math.max(1, c.price + (Math.random() - 0.49) * c.price * 0.002);
+        c.chg   = parseFloat((c.chg + (Math.random() - 0.5) * 0.08).toFixed(2));
+      });
+      renderTicker();
+    }, 8000);
+  </script>
+</body>
+</html>
