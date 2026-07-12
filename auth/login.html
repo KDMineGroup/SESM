@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — SESMine Intelligence</title>
+  <meta name="description" content="Sign in to your SESMine Intelligence account to access real-time commodity data, AI forecasting and mining intelligence tools." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://www.sesmine.com/auth/login.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    /* Auth-specific layout */
+    .auth-root {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left panel — visual */
+    .auth-panel {
+      position: relative;
+      overflow: hidden;
+      background: var(--coal-900);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2.5rem;
+    }
+
+    .auth-panel__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .auth-panel__bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.25;
+    }
+
+    .auth-panel__bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(8,11,15,0.85) 0%,
+        rgba(0,188,212,0.08) 50%,
+        rgba(8,11,15,0.9) 100%
+      );
+    }
+
+    .auth-panel__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      z-index: 1;
+    }
+
+    .auth-panel__content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    /* Right panel — form */
+    .auth-form-panel {
+      background: var(--coal-950);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      position: relative;
+    }
+
+    .auth-form-wrap {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* Stat cards on left panel */
+    .auth-stat {
+      background: rgba(13,17,23,0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-200);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+    }
+
+    /* Divider with text */
+    .divider-text {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      margin: 1.25rem 0;
+    }
+    .divider-text::before,
+    .divider-text::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-100);
+    }
+    .divider-text span {
+      font-size: 0.75rem;
+      color: var(--text-500);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    /* Password toggle */
+    .pw-wrap { position: relative; }
+    .pw-toggle {
+      position: absolute;
+      right: 0.875rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--text-500);
+      cursor: pointer;
+      font-size: 0.875rem;
+      padding: 0.25rem;
+      transition: color var(--ease-fast);
+    }
+    .pw-toggle:hover { color: var(--text-200); }
+
+    /* Error state */
+    .form-input--error { border-color: var(--rose-500) !important; }
+    .form-input--error:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.12) !important; }
+
+    @media (max-width: 900px) {
+      .auth-root { grid-template-columns: 1fr; }
+      .auth-panel { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <div class="auth-root">
+
+    <!-- ── Left Visual Panel ──────────────────────────────── -->
+    <div class="auth-panel">
+      <div class="auth-panel__bg">
+        <img
+          src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1200&q=80"
+          alt="Open pit copper mine operations"
+          loading="eager"
+        />
+      </div>
+      <div class="auth-panel__grid"></div>
+
+      <div class="auth-panel__content">
+
+        <!-- Logo -->
+        <div>
+          <a href="../index.html">
+            <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine Intelligence" width="130" height="34" loading="eager" />
+          </a>
+        </div>
+
+        <!-- Centre quote -->
+        <div style="padding: 2rem 0;">
+          <div style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(0,188,212,0.1);border:1px solid rgba(0,188,212,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan-400);margin-bottom:1.5rem;">
+            <span class="dot-live"></span> Live Platform
+          </div>
+          <h2 style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;line-height:1.2;letter-spacing:-0.025em;margin-bottom:1rem;max-width:380px;">
+            The Intelligence Layer for Global Mining
+          </h2>
+          <p style="font-size:0.875rem;color:var(--text-400);line-height:1.75;max-width:360px;">
+            Real-time commodity data across 48 markets, AI-powered forecasting and compliance tools trusted by 2,400+ professionals.
+          </p>
+        </div>
+
+        <!-- Live data stats -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.875rem;">
+          <div class="auth-stat">
+            <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Gold XAU/oz</div>
+            <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--text-50);">$3,142.50</div>
+            <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--emerald-400);margin-top:2px;">▲ +0.8% today</div>
+          </div>
+          <div class="auth-stat">
+            <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Copper LME/t</div>
+            <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--text-50);">$9,847</div>
+            <div style="font-family:var(--font-mono);font-size:0.6875rem;color:var(--emerald-400);margin-top:2px;">▲ +1.2% today</div>
+          </div>
+          <div class="auth-stat">
+            <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">AI Forecast Accuracy</div>
+            <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--cyan-400);">96%</div>
+            <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">30-day directional</div>
+          </div>
+          <div class="auth-stat">
+            <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Active Users</div>
+            <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--text-50);">2,400+</div>
+            <div style="font-size:0.6875rem;color:var(--text-500);margin-top:2px;">Mining professionals</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Right Form Panel ───────────────────────────────── -->
+    <div class="auth-form-panel">
+
+      <!-- Top nav link -->
+      <div style="position:absolute;top:1.5rem;right:1.5rem;display:flex;align-items:center;gap:0.5rem;">
+        <span style="font-size:0.8125rem;color:var(--text-500);">No account?</span>
+        <a href="signup.html" class="btn btn--ghost btn--sm">Start Free Trial</a>
+      </div>
+
+      <div class="auth-form-wrap animate-fadeInUp">
+
+        <!-- Header -->
+        <div style="margin-bottom:2rem;">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,188,212,0.1);border:1px solid rgba(0,188,212,0.2);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-size:1rem;">
+              <i class="fa-solid fa-lock-open"></i>
+            </div>
+            <div>
+              <h1 style="font-size:1.125rem;font-weight:700;margin:0;">Welcome back</h1>
+              <p style="font-size:0.75rem;color:var(--text-500);margin:0;">Sign in to your SESMine account</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Error alert (hidden by default) -->
+        <div class="alert alert--rose" id="loginError" style="display:none;margin-bottom:1.25rem;">
+          <i class="fa-solid fa-circle-exclamation alert__icon"></i>
+          <div>
+            <div class="alert__title">Sign in failed</div>
+            <div class="alert__body" id="loginErrorMsg">Invalid email or password. Please try again.</div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <form id="loginForm" novalidate>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="you@company.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+            <div class="form-error" id="emailError" style="display:none;">Please enter a valid email address.</div>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">
+              <label class="form-label" for="password" style="margin:0;">Password</label>
+              <a href="forgot-password.html" style="font-size:0.75rem;color:var(--cyan-400);">Forgot password?</a>
+            </div>
+            <div class="pw-wrap">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-input"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+                style="padding-right:2.75rem;"
+              />
+              <button type="button" class="pw-toggle" onclick="togglePw('password','pwIcon')" aria-label="Toggle password visibility">
+                <i class="fa-solid fa-eye" id="pwIcon"></i>
+              </button>
+            </div>
+            <div class="form-error" id="passwordError" style="display:none;">Please enter your password.</div>
+          </div>
+
+          <!-- Remember me -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+            <label style="display:flex;align-items:center;gap:0.625rem;cursor:pointer;">
+              <input type="checkbox" id="rememberMe" style="width:14px;height:14px;accent-color:var(--cyan-500);" />
+              <span style="font-size:0.8125rem;color:var(--text-400);">Remember me for 30 days</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--full btn--lg" id="loginBtn">
+            <span id="loginBtnText"><i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In</span>
+            <span id="loginBtnLoader" style="display:none;"><span class="spinner"></span> Signing in…</span>
+          </button>
+
+        </form>
+
+        <div class="divider-text"><span>or continue with</span></div>
+
+        <!-- Social login -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:1.5rem;">
+          <button class="btn btn--ghost" onclick="socialLogin('google')" style="gap:0.625rem;">
+            <img src="https://www.google.com/favicon.ico" alt="Google" width="14" height="14" />
+            Google
+          </button>
+          <button class="btn btn--ghost" onclick="socialLogin('microsoft')" style="gap:0.625rem;">
+            <img src="https://www.microsoft.com/favicon.ico" alt="Microsoft" width="14" height="14" />
+            Microsoft
+          </button>
+        </div>
+
+        <!-- Admin link -->
+        <div style="text-align:center;padding-top:1.25rem;border-top:1px solid var(--border-100);">
+          <a href="../admin/index.html" style="font-size:0.75rem;color:var(--text-500);display:inline-flex;align-items:center;gap:0.375rem;">
+            <i class="fa-solid fa-shield-halved fa-xs"></i> Admin Portal Sign In
+          </a>
+        </div>
+
+        <!-- Sign up link -->
+        <p style="text-align:center;font-size:0.8125rem;color:var(--text-500);margin-top:1.25rem;">
+          Don't have an account?
+          <a href="signup.html" style="color:var(--cyan-400);font-weight:600;">Start your free trial</a>
+        </p>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../js/auth.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 400); });
+
+    // Password visibility toggle
+    function togglePw(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon  = document.getElementById(iconId);
+      const show  = input.type === 'password';
+      input.type  = show ? 'text' : 'password';
+      icon.className = show ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+    }
+
+    // Social login placeholder
+    function socialLogin(provider) {
+      const btn = event.currentTarget;
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner"></span> Connecting…`;
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = provider === 'google'
+          ? '<img src="https://www.google.com/favicon.ico" width="14" height="14" /> Google'
+          : '<img src="https://www.microsoft.com/favicon.ico" width="14" height="14" /> Microsoft';
+        showError('SSO integration requires Enterprise plan. <a href="../pricing.html" style="color:var(--cyan-400);">Upgrade</a>');
+      }, 1200);
+    }
+
+    function showError(msg) {
+      const el  = document.getElementById('loginError');
+      const msg_el = document.getElementById('loginErrorMsg');
+      msg_el.innerHTML = msg;
+      el.style.display = 'flex';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideError() {
+      document.getElementById('loginError').style.display = 'none';
+    }
+
+    // Form validation & submission
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideError();
+
+      const email    = document.getElementById('email');
+      const password = document.getElementById('password');
+      let valid = true;
+
+      // Validate email
+      if (!email.value || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+        email.classList.add('form-input--error');
+        document.getElementById('emailError').style.display = 'block';
+        valid = false;
+      } else {
+        email.classList.remove('form-input--error');
+        document.getElementById('emailError').style.display = 'none';
+      }
+
+      // Validate password
+      if (!password.value) {
+        password.classList.add('form-input--error');
+        document.getElementById('passwordError').style.display = 'block';
+        valid = false;
+      } else {
+        password.classList.remove('form-input--error');
+        document.getElementById('passwordError').style.display = 'none';
+      }
+
+      if (!valid) return;
+
+      // Show loader
+      document.getElementById('loginBtnText').style.display   = 'none';
+      document.getElementById('loginBtnLoader').style.display = 'flex';
+      document.getElementById('loginBtn').disabled = true;
+
+      // Simulate async auth
+      await new Promise(r => setTimeout(r, 900));
+
+      const result = window.SESAuth
+        ? SESAuth.login(email.value, password.value)
+        : { success: email.value.includes('@') && password.value.length >= 6 };
+
+      if (result.success) {
+        document.getElementById('loginBtnText').innerHTML = '<i class="fa-solid fa-check"></i> Signed in!';
+        document.getElementById('loginBtnText').style.display = 'flex';
+        document.getElementById('loginBtnLoader').style.display = 'none';
+        document.getElementById('loginBtn').style.background = 'var(--emerald-500)';
+        setTimeout(() => window.location.href = '../dashboard/index.html', 600);
+      } else {
+        document.getElementById('loginBtnText').style.display   = 'flex';
+        document.getElementById('loginBtnLoader').style.display = 'none';
+        document.getElementById('loginBtn').disabled = false;
+        showError(result.message || 'Invalid email or password. Please try again.');
+      }
+    });
+
+    // Clear errors on input
+    ['email','password'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        document.getElementById(id).classList.remove('form-input--error');
+        document.getElementById(id + 'Error').style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>
