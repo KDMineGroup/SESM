@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — SESMine Intelligence</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    body { display:flex; min-height:100vh; background:var(--bg-950); overflow-x:hidden; }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: var(--bg-900);
+      border-right: var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 1.5rem;
+      border-bottom: var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .sidebar-logo img { height: 32px; }
+
+    .admin-badge {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: rgba(239,68,68,0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 4px;
+      padding: 2px 6px;
+    }
+
+    .sidebar-nav { padding: 1rem 0; flex: 1; }
+
+    .sidebar-section {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-600);
+      padding: 0.75rem 1.5rem 0.35rem;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-400);
+      transition: all var(--ease-fast);
+      border-left: 3px solid transparent;
+      text-decoration: none;
+    }
+
+    .sidebar-link:hover { color: var(--text-100); background: rgba(0,200,232,0.05); }
+    .sidebar-link.active { color: var(--brand-cyan); background: rgba(0,200,232,0.08); border-left-color: var(--brand-cyan); }
+    .sidebar-link .badge { margin-left: auto; }
+
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: var(--border-subtle);
+    }
+
+    /* Main Content */
+    .admin-main {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Top Bar */
+    .admin-topbar {
+      height: 64px;
+      background: var(--bg-900);
+      border-bottom: var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .admin-content { padding: 2rem; flex: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar" role="navigation" aria-label="Admin Navigation">
+    <div class="sidebar-logo">
+      <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" />
+      <span class="admin-badge">Admin</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Overview</div>
+      <a href="admin-dashboard.html" class="sidebar-link active"><i class="fa-solid fa-gauge-high" style="width:16px;"></i> Dashboard</a>
+
+      <div class="sidebar-section">Management</div>
+      <a href="user-management.html"    class="sidebar-link"><i class="fa-solid fa-users" style="width:16px;"></i> Users <span class="badge badge--cyan">2,418</span></a>
+      <a href="admin-users.html"        class="sidebar-link"><i class="fa-solid fa-user-shield" style="width:16px;"></i> Roles & Access</a>
+      <a href="content-management.html" class="sidebar-link"><i class="fa-solid fa-file-pen" style="width:16px;"></i> Content</a>
+      <a href="admin-hub-requests.html" class="sidebar-link"><i class="fa-solid fa-inbox" style="width:16px;"></i> Hub Requests <span class="badge badge--warning">7</span></a>
+
+      <div class="sidebar-section">Analytics</div>
+      <a href="../dashboard/analytics.html"     class="sidebar-link"><i class="fa-solid fa-chart-bar"    style="width:16px;"></i> Analytics</a>
+      <a href="../dashboard/esg-dashboard.html" class="sidebar-link"><i class="fa-solid fa-leaf"         style="width:16px;"></i> ESG Monitor</a>
+
+      <div class="sidebar-section">Platform</div>
+      <a href="../hubs/economics-hub.html"    class="sidebar-link"><i class="fa-solid fa-chart-line"    style="width:16px;"></i> Economics Hub</a>
+      <a href="../hubs/safety-hub.html"       class="sidebar-link"><i class="fa-solid fa-shield-halved" style="width:16px;"></i> Safety Hub</a>
+      <a href="../products/ai-predictor.html" class="sidebar-link"><i class="fa-solid fa-brain"         style="width:16px;"></i> AI Predictor</a>
+
+      <div class="sidebar-section">System</div>
+      <a href="../index.html"  class="sidebar-link" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square" style="width:16px;"></i> View Site</a>
+      <a href="admin-login.html" class="sidebar-link" id="logoutBtn"><i class="fa-solid fa-right-from-bracket" style="width:16px;color:var(--danger);"></i> <span style="color:var(--danger);">Sign Out</span></a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0;">SA</div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;color:var(--text-100);">Super Admin</div>
+          <div style="font-size:0.7rem;color:var(--text-500);">admin@sesmine.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="admin-main">
+
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+      <div>
+        <h4 style="font-size:1rem;margin:0;">Admin Dashboard</h4>
+        <div style="font-size:0.75rem;color:var(--text-500);">Wednesday, July 1, 2026 · 11:03 AM</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <button class="btn btn--outline btn--sm" onclick="refreshData()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        <div style="position:relative;">
+          <button class="btn btn--ghost btn--sm" style="position:relative;">
+            <i class="fa-solid fa-bell"></i>
+            <span style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:var(--danger);border-radius:50%;font-size:0.6rem;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;">7</span>
+          </button>
+        </div>
+        <span class="badge badge--success"><i class="fa-solid fa-circle" style="font-size:0.5rem;"></i> System Online</span>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="admin-content" id="main">
+
+      <!-- KPI Bar -->
+      <div class="grid-4" style="margin-bottom:2rem;">
+        <div class="stat-card animate-fadeInUp">
+          <div class="stat-card__icon"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-card__value">2,418</div>
+          <div class="stat-card__label">Total Users</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ +124 this month</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-1">
+          <div class="stat-card__icon" style="background:rgba(34,197,94,0.1);color:var(--success);"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-card__value">1,847</div>
+          <div class="stat-card__label">Active Subscriptions</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ +89 this month</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-2">
+          <div class="stat-card__icon" style="background:rgba(245,166,35,0.1);color:var(--brand-gold);"><i class="fa-solid fa-inbox"></i></div>
+          <div class="stat-card__value">7</div>
+          <div class="stat-card__label">Pending Requests</div>
+          <div class="stat-card__trend stat-card__trend--down">▼ Needs review</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-3">
+          <div class="stat-card__icon" style="background:rgba(59,130,246,0.1);color:#3B82F6;"><i class="fa-solid fa-server"></i></div>
+          <div class="stat-card__value">99.9%</div>
+          <div class="stat-card__label">Platform Uptime</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ SLA Met</div>
+        </div>
+      </div>
+
+      <!-- Two Column Layout -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:2rem;">
+
+        <!-- Recent Users Table -->
+        <div class="card animate-fadeInUp">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+            <h4>Recent Registrations</h4>
+            <a href="user-management.html" class="btn btn--ghost btn--sm">View All <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Plan</th>
+                  <th>Hubs</th>
+                  <th>Joined</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                      <div style="width:32px;height:32px;border-radius:50%;background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0;">JS</div>
+                      <div><div style="font-size:0.875rem;font-weight:600;">James Smith</div><div style="font-size:0.75rem;color:var(--text-500);">j.smith@bhp.com</div></div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge--cyan">Pro</span></td>
+                  <td><span style="font-size:0.8rem;font-family:var(--font-mono);">4/6</span></td>
+                  <td><span style="font-size:0.8rem;color:var(--text-400);">Jul 1, 2026</span></td>
+                  <td><span class="badge badge--success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#A855F7,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0;">AL</div>
+                      <div><div style="font-size:0.875rem;font-weight:600;">Anna Lee</div><div style="font-size:0.75rem;color:var(--text-500);">a.lee@riotinto.com</div></div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge--gold">Enterprise</span></td>
+                  <td><span style="font-size:0.8rem;font-family:var(--font-mono);">6/6</span></td>
+                  <td><span style="font-size:0.8rem;color:var(--text-400);">Jun 30, 2026</span></td>
+                  <td><span class="badge badge--success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#F5A623,#FF6B35);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0;">MK</div>
+                      <div><div style="font-size:0.875rem;font-weight:600;">Marco Kowalski</div><div style="font-size:0.75rem;color:var(--text-500);">m.kowalski@kghm.pl</div></div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge--info">Explorer</span></td>
+                  <td><span style="font-size:0.8rem;font-family:var(--font-mono);">2/6</span></td>
+                  <td><span style="font-size:0.8rem;color:var(--text-400);">Jun 29, 2026</span></td>
+                  <td><span class="badge badge--warning">Trial</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#22C55E,#16A34A);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0;">SR</div>
+                      <div><div style="font-size:0.875rem;font-weight:600;">Sara Reyes</div><div style="font-size:0.75rem;color:var(--text-500);">s.reyes@codelco.cl</div></div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge--cyan">Pro</span></td>
+                  <td><span style="font-size:0.8rem;font-family:var(--font-mono);">5/6</span></td>
+                  <td><span style="font-size:0.8rem;color:var(--text-400);">Jun 28, 2026</span></td>
+                  <td><span class="badge badge--success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#EF4444,#DC2626);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;flex-shrink:0;">TN</div>
+                      <div><div style="font-size:0.875rem;font-weight:600;">Tom Nguyen</div><div style="font-size:0.75rem;color:var(--text-500);">t.nguyen@fortescue.com</div></div>
+                    </div>
+                  </td>
+                  <td><span class="badge badge--gold">Enterprise</span></td>
+                  <td><span style="font-size:0.8rem;font-family:var(--font-mono);">6/6</span></td>
+                  <td><span style="font-size:0.8rem;color:var(--text-400);">Jun 27, 2026</span></td>
+                  <td><span class="badge badge--danger">Suspended</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+
+          <!-- Hub Requests -->
+          <div class="card animate-fadeInUp delay-1">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+              <h4>Hub Requests</h4>
+              <span class="badge badge--warning">7 Pending</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.75rem;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem;background:var(--bg-700);border-radius:var(--radius-md);">
+                <div>
+                  <div style="font-size:0.825rem;font-weight:600;">Innovation Hub Access</div>
+                  <div style="font-size:0.72rem;color:var(--text-500);">j.smith@bhp.com</div>
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                  <button class="btn btn--success btn--sm" onclick="approveRequest(this)"><i class="fa-solid fa-check"></i></button>
+                  <button class="btn btn--danger  btn--sm" onclick="denyRequest(this)"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem;background:var(--bg-700);border-radius:var(--radius-md);">
+                <div>
+                  <div style="font-size:0.825rem;font-weight:600;">Enterprise Upgrade</div>
+                  <div style="font-size:0.72rem;color:var(--text-500);">m.kowalski@kghm.pl</div>
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                  <button class="btn btn--success btn--sm" onclick="approveRequest(this)"><i class="fa-solid fa-check"></i></button>
+                  <button class="btn btn--danger  btn--sm" onclick="denyRequest(this)"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem;background:var(--bg-700);border-radius:var(--radius-md);">
+                <div>
+                  <div style="font-size:0.825rem;font-weight:600;">API Access Request</div>
+                  <div style="font-size:0.72rem;color:var(--text-500);">s.reyes@codelco.cl</div>
+                </div>
+                <div style="display:flex;gap:0.5rem;">
+                  <button class="btn btn--success btn--sm" onclick="approveRequest(this)"><i class="fa-solid fa-check"></i></button>
+                  <button class="btn btn--danger  btn--sm" onclick="denyRequest(this)"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+              </div>
+            </div>
+            <a href="admin-hub-requests.html" class="btn btn--ghost btn--full btn--sm" style="margin-top:1rem;">View All Requests</a>
+          </div>
+
+          <!-- System Health -->
+          <div class="card animate-fadeInUp delay-2">
+            <h4 style="margin-bottom:1.25rem;">System Health</h4>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <span style="font-size:0.8rem;color:var(--text-400);">API Response</span>
+                  <span style="font-size:0.8rem;font-family:var(--font-mono);color:var(--success);">142ms</span>
+                </div>
+                <div class="progress progress--success"><div class="progress__bar" style="width:92%;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <span style="font-size:0.8rem;color:var(--text-400);">Database Load</span>
+                  <span style="font-size:0.8rem;font-family:var(--font-mono);color:var(--brand-cyan);">34%</span>
+                </div>
+                <div class="progress"><div class="progress__bar" style="width:34%;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <span style="font-size:0.8rem;color:var(--text-400);">CDN Cache Hit</span>
+                  <span style="font-size:0.8rem;font-family:var(--font-mono);color:var(--success);">97.4%</span>
+                </div>
+                <div class="progress progress--success"><div class="progress__bar" style="width:97%;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <span style="font-size:0.8rem;color:var(--text-400);">Storage Used</span>
+                  <span style="font-size:0.8rem;font-family:var(--font-mono);color:var(--warning);">68%</span>
+                </div>
+                <div class="progress progress--gold"><div class="progress__bar" style="width:68%;background:var(--brand-gold);"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <span style="font-size:0.8rem;color:var(--text-400);">Active Sessions</span>
+                  <span style="font-size:0.8rem;font-family:var(--font-mono);color:var(--brand-cyan);">1,284</span>
+                </div>
+                <div class="progress"><div class="progress__bar" style="width:54%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Audit Log -->
+      <div class="card animate-fadeInUp">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+          <h4><i class="fa-solid fa-clock-rotate-left" style="color:var(--brand-cyan);margin-right:0.5rem;"></i> Recent Audit Log</h4>
+          <button class="btn btn--ghost btn--sm"><i class="fa-solid fa-download"></i> Export CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Timestamp</th><th>User</th><th>Action</th><th>IP Address</th><th>Result</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-500);">2026-07-01 11:02:14</td><td style="font-size:0.8rem;">admin@sesmine.com</td><td style="font-size:0.8rem;"><span class="badge badge--info">LOGIN</span> Admin portal access</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-500);">192.168.1.1</td><td><span class="badge badge--success">Success</span></td></tr>
+              <tr><td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-500);">2026-07-01 10:58:33</td><td style="font-size:0.8rem;">j.smith@bhp.com</td><td style="font-size:0.8rem;"><span class="badge badge--cyan">HUB_REQUEST</span> Innovation Hub</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-500);">203.45.12.88</td><td><span class="badge badge--warning">Pending</span></td></tr>
+              <tr><td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-500);">2026-07-01 10:44:07</td><td style="font-size:0.8rem;">t.nguyen@fortescue.com</td><td style="font-size:0.8rem;"><span class="badge badge--danger">SUSPEND</span> Account suspended</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-500);">110.23.45.67</td><td><span class="badge badge--danger">Actioned</span></td></tr>
+              <tr><td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-500);">2026-07-01 10:30:19</td><td style="font-size:0.8rem;">a.lee@riotinto.com</td><td style="font-size:0.8rem;"><span class="badge badge--gold">UPGRADE</span> Explorer → Enterprise</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-500);">58.96.234.11</td><td><span class="badge badge--success">Success</span></td></tr>
+              <tr><td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-500);">2026-07-01 09:15:44</td><td style="font-size:0.8rem;">system@sesmine.com</td><td style="font-size:0.8rem;"><span class="badge badge--info">DEPLOY</span> v5.0.3 production deploy</td><td style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-500);">10.0.0.1</td><td><span class="badge badge--success">Success</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/auth.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script>
+    function refreshData() {
+      const btn = event.target.closest('button');
+      btn.innerHTML = '<span class="spinner"></span>';
+      btn.disabled = true;
+      setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-rotate"></i> Refresh'; btn.disabled = false; }, 1200);
+    }
+
+    function approveRequest(btn) {
+      const row = btn.closest('[style*="background"]');
+      row.style.borderLeft = '3px solid var(--success)';
+      row.style.opacity = '0.6';
+      btn.closest('div').innerHTML = '<span class="badge badge--success">Approved</span>';
+    }
+
+    function denyRequest(btn) {
+      const row = btn.closest('[style*="background"]');
+      row.style.opacity = '0.4';
+      btn.closest('div').innerHTML = '<span class="badge badge--danger">Denied</span>';
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (window.SESAuth) SESAuth.adminLogout();
+      window.location.href = 'admin-login.html';
+    });
+  </script>
+</body>
+</html>

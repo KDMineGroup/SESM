@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News Manager — SESMine Admin</title>
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .article-row {
+      display:grid;
+      grid-template-columns:40px 1fr 120px 100px 100px 80px 120px;
+      gap:0.75rem;
+      padding:0.875rem 1.25rem;
+      border-bottom:1px solid var(--border-100);
+      align-items:center;
+      font-size:0.8125rem;
+      transition:background var(--ease-fast);
+      cursor:pointer;
+    }
+    .article-row:hover { background:rgba(255,255,255,0.02); }
+    .article-row:last-child { border-bottom:none; }
+
+    .editor-panel {
+      background:var(--coal-900);
+      border:1px solid var(--border-100);
+      border-radius:var(--radius-xl);
+      overflow:hidden;
+    }
+    .editor-toolbar {
+      padding:0.625rem 1rem;
+      background:var(--coal-850);
+      border-bottom:1px solid var(--border-100);
+      display:flex;
+      align-items:center;
+      gap:0.25rem;
+      flex-wrap:wrap;
+    }
+    .editor-btn {
+      width:28px;height:28px;
+      border-radius:var(--radius-sm);
+      background:none;
+      border:none;
+      color:var(--text-400);
+      cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:0.75rem;
+      transition:all var(--ease-fast);
+    }
+    .editor-btn:hover { background:var(--coal-700); color:var(--text-100); }
+    .editor-divider { width:1px;height:20px;background:var(--border-100);margin:0 0.25rem; }
+    .editor-area {
+      width:100%;
+      min-height:200px;
+      padding:1rem;
+      background:transparent;
+      border:none;
+      color:var(--text-200);
+      font-size:0.875rem;
+      line-height:1.75;
+      resize:vertical;
+      font-family:var(--font-sans);
+      outline:none;
+    }
+  </style>
+</head>
+<body class="admin-body">
+
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-sidebar__logo">
+      <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="32" />
+      <span class="admin-sidebar__badge">Admin</span>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Overview</div>
+        <a href="index.html"     class="admin-nav__item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="analytics.html" class="admin-nav__item"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Users</div>
+        <a href="users.html"     class="admin-nav__item"><i class="fa-solid fa-users"></i> All Users</a>
+        <a href="subscriptions.html" class="admin-nav__item"><i class="fa-solid fa-credit-card"></i> Subscriptions</a>
+        <a href="trials.html"    class="admin-nav__item"><i class="fa-solid fa-clock"></i> Active Trials</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Content</div>
+        <a href="news-manager.html"  class="admin-nav__item active"><i class="fa-solid fa-newspaper"></i> News Manager</a>
+        <a href="resources-manager.html" class="admin-nav__item"><i class="fa-solid fa-book-open"></i> Resources</a>
+        <a href="commodities.html"   class="admin-nav__item"><i class="fa-solid fa-chart-bar"></i> Commodity Data</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Platform</div>
+        <a href="ai-models.html"  class="admin-nav__item"><i class="fa-solid fa-brain"></i> AI Models</a>
+        <a href="settings.html"   class="admin-nav__item"><i class="fa-solid fa-gear"></i> Settings</a>
+      </div>
+    </nav>
+    <div class="admin-sidebar__footer">
+      <div style="display:flex;align-items:center;gap:0.625rem;padding:0.875rem;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);border:1px solid var(--border-100);">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--coal-700);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--cyan-400);">SA</div>
+        <div style="flex:1;"><div style="font-size:0.8125rem;font-weight:600;color:var(--text-100);">Super Admin</div><div style="font-size:0.6875rem;color:var(--text-500);">admin@sesmine.com</div></div>
+        <a href="../auth/login.html" style="color:var(--text-600);font-size:0.75rem;"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <button class="admin-sidebar-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h1 style="font-size:1.125rem;font-weight:700;color:var(--text-50);margin:0;">News Manager</h1>
+          <div style="font-size:0.75rem;color:var(--text-500);">Create, edit and publish news articles</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.75rem;">
+        <button class="btn btn--ghost btn--sm" onclick="showView('list')" id="listViewBtn"><i class="fa-solid fa-list fa-xs"></i> All Articles</button>
+        <button class="btn btn--primary btn--sm" onclick="showView('editor')" id="newArticleBtn"><i class="fa-solid fa-plus fa-xs"></i> New Article</button>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <!-- ── LIST VIEW ── -->
+      <div id="listView">
+        <!-- Stats -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;">
+          <div class="admin-kpi-card reveal">
+            <div class="admin-kpi-card__icon" style="background:rgba(16,185,129,0.1);color:var(--emerald-400);"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Published</div><div class="admin-kpi-card__value">284</div></div>
+          </div>
+          <div class="admin-kpi-card reveal delay-1">
+            <div class="admin-kpi-card__icon" style="background:rgba(245,158,11,0.1);color:var(--amber-400);"><i class="fa-solid fa-clock"></i></div>
+            <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Pending Review</div><div class="admin-kpi-card__value">3</div></div>
+          </div>
+          <div class="admin-kpi-card reveal delay-2">
+            <div class="admin-kpi-card__icon" style="background:rgba(100,116,139,0.1);color:var(--text-400);"><i class="fa-solid fa-file-pen"></i></div>
+            <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Drafts</div><div class="admin-kpi-card__value">7</div></div>
+          </div>
+          <div class="admin-kpi-card reveal delay-3">
+            <div class="admin-kpi-card__icon" style="background:rgba(0,188,212,0.1);color:var(--cyan-400);"><i class="fa-solid fa-eye"></i></div>
+            <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Views This Month</div><div class="admin-kpi-card__value">84.2K</div></div>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div style="display:flex;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;">
+          <div class="input-wrap" style="width:260px;">
+            <i class="fa-solid fa-search input-icon" style="font-size:0.75rem;"></i>
+            <input type="text" class="form-input" placeholder="Search articles…" style="font-size:0.8125rem;padding:0.5rem 0.5rem 0.5rem 2.25rem;" id="articleSearch" oninput="filterArticles()" />
+          </div>
+          <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.5rem 2rem 0.5rem 0.75rem;" id="catFilter2" onchange="filterArticles()">
+            <option value="">All Categories</option>
+            <option value="markets">Markets</option>
+            <option value="regulation">Regulation</option>
+            <option value="technology">Technology</option>
+            <option value="ma">M&A</option>
+            <option value="sustainability">Sustainability</option>
+            <option value="safety">Safety</option>
+          </select>
+          <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.5rem 2rem 0.5rem 0.75rem;" id="statusFilter2" onchange="filterArticles()">
+            <option value="">All Status</option>
+            <option value="published">Published</option>
+            <option value="pending">Pending</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+
+        <!-- Article table -->
+        <div class="admin-card reveal">
+          <div style="display:grid;grid-template-columns:40px 1fr 120px 100px 100px 80px 120px;gap:0.75rem;padding:0.625rem 1.25rem;background:var(--coal-850);border-bottom:1px solid var(--border-100);font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);">
+            <div></div><div>Title</div><div>Category</div><div>Author</div><div>Published</div><div>Views</div><div>Status</div>
+          </div>
+          <div id="articleList"><!-- JS --></div>
+        </div>
+      </div>
+
+      <!-- ── EDITOR VIEW ── -->
+      <div id="editorView" style="display:none;">
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:1.5rem;align-items:start;">
+
+          <!-- Main editor -->
+          <div style="display:flex;flex-direction:column;gap:1.25rem;">
+            <div class="editor-panel">
+              <div style="padding:1.25rem;border-bottom:1px solid var(--border-100);">
+                <input type="text" class="form-input" placeholder="Article title…" id="articleTitle" style="font-size:1.25rem;font-weight:600;background:transparent;border:none;padding:0;color:var(--text-50);" />
+              </div>
+              <div style="padding:0.75rem 1.25rem;border-bottom:1px solid var(--border-100);">
+                <textarea class="form-input" placeholder="Write a brief summary (shown in news cards)…" id="articleSummary" rows="2" style="resize:none;background:transparent;border:none;padding:0;font-size:0.875rem;color:var(--text-300);"></textarea>
+              </div>
+              <div class="editor-toolbar">
+                <button class="editor-btn" title="Bold"><i class="fa-solid fa-bold"></i></button>
+                <button class="editor-btn" title="Italic"><i class="fa-solid fa-italic"></i></button>
+                <button class="editor-btn" title="Underline"><i class="fa-solid fa-underline"></i></button>
+                <div class="editor-divider"></div>
+                <button class="editor-btn" title="H2"><span style="font-size:0.625rem;font-weight:700;">H2</span></button>
+                <button class="editor-btn" title="H3"><span style="font-size:0.625rem;font-weight:700;">H3</span></button>
+                <div class="editor-divider"></div>
+                <button class="editor-btn" title="Bullet list"><i class="fa-solid fa-list-ul"></i></button>
+                <button class="editor-btn" title="Numbered list"><i class="fa-solid fa-list-ol"></i></button>
+                <button class="editor-btn" title="Quote"><i class="fa-solid fa-quote-left"></i></button>
+                <div class="editor-divider"></div>
+                <button class="editor-btn" title="Link"><i class="fa-solid fa-link"></i></button>
+                <button class="editor-btn" title="Image"><i class="fa-solid fa-image"></i></button>
+                <button class="editor-btn" title="Code"><i class="fa-solid fa-code"></i></button>
+              </div>
+              <textarea class="editor-area" id="articleBody" placeholder="Write your article content here…"></textarea>
+            </div>
+          </div>
+
+          <!-- Sidebar settings -->
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+            <!-- Publish -->
+            <div class="admin-card">
+              <div class="admin-card__header"><div class="admin-card__title">Publish</div></div>
+              <div class="admin-card__body" style="display:flex;flex-direction:column;gap:0.875rem;">
+                <div>
+                  <label style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Status</label>
+                  <select class="form-select" id="articleStatus">
+                    <option value="draft">Draft</option>
+                    <option value="pending">Pending Review</option>
+                    <option value="published">Published</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Publish Date</label>
+                  <input type="datetime-local" class="form-input" id="articleDate" />
+                </div>
+                <div style="display:flex;gap:0.625rem;">
+                  <button class="btn btn--ghost btn--sm" style="flex:1;" onclick="saveArticle('draft')"><i class="fa-solid fa-floppy-disk fa-xs"></i> Save Draft</button>
+                  <button class="btn btn--primary btn--sm" style="flex:1;" onclick="saveArticle('published')"><i class="fa-solid fa-paper-plane fa-xs"></i> Publish</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div class="admin-card">
+              <div class="admin-card__header"><div class="admin-card__title">Category & Tags</div></div>
+              <div class="admin-card__body" style="display:flex;flex-direction:column;gap:0.875rem;">
+                <div>
+                  <label style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Category</label>
+                  <select class="form-select" id="articleCat">
+                    <option value="markets">Markets</option>
+                    <option value="regulation">Regulation</option>
+                    <option value="technology">Technology</option>
+                    <option value="ma">M&A</option>
+                    <option value="sustainability">Sustainability</option>
+                    <option value="safety">Safety</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Tags (comma separated)</label>
+                  <input type="text" class="form-input" placeholder="gold, price, fed, rally" id="articleTags" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Featured image -->
+            <div class="admin-card">
+              <div class="admin-card__header"><div class="admin-card__title">Featured Image</div></div>
+              <div class="admin-card__body">
+                <div style="border:2px dashed var(--border-200);border-radius:var(--radius-lg);padding:2rem;text-align:center;cursor:pointer;transition:border-color var(--ease-fast);" onmouseover="this.style.borderColor='var(--cyan-500)'" onmouseout="this.style.borderColor=''">
+                  <i class="fa-solid fa-cloud-arrow-up" style="font-size:1.5rem;color:var(--text-500);margin-bottom:0.5rem;display:block;"></i>
+                  <div style="font-size:0.8125rem;color:var(--text-500);">Drop image or <span style="color:var(--cyan-400);">browse</span></div>
+                  <div style="font-size:0.6875rem;color:var(--text-600);margin-top:0.25rem;">PNG, JPG up to 4MB</div>
+                </div>
+                <div style="margin-top:0.75rem;">
+                  <label style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Or paste image URL</label>
+                  <input type="url" class="form-input" placeholder="https://…" id="articleImg" style="font-size:0.8125rem;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- SEO -->
+            <div class="admin-card">
+              <div class="admin-card__header"><div class="admin-card__title">SEO</div></div>
+              <div class="admin-card__body" style="display:flex;flex-direction:column;gap:0.75rem;">
+                <div>
+                  <label style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Meta Title</label>
+                  <input type="text" class="form-input" placeholder="SEO title…" id="articleMetaTitle" style="font-size:0.8125rem;" />
+                </div>
+                <div>
+                  <label style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);display:block;margin-bottom:0.375rem;">Meta Description</label>
+                  <textarea class="form-input" rows="2" placeholder="SEO description…" id="articleMetaDesc" style="font-size:0.8125rem;resize:none;"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    const ARTICLES = [
+      {id:1,title:'Gold Breaks $3,150 as Fed Signals Rate Pause',cat:'markets',author:'Markets Desk',date:'Jul 1, 2026',views:'4,820',status:'published'},
+      {id:2,title:'Komatsu Unveils 930E-6 AHS With LiDAR Fusion',cat:'technology',author:'Engineering',date:'Jul 1, 2026',views:'3,240',status:'published'},
+      {id:3,title:'MSHA Final Rule Cuts Silica PEL to 50 µg/m³',cat:'regulation',author:'Safety Desk',date:'Jun 28, 2026',views:'6,180',status:'published'},
+      {id:4,title:'Rio Tinto Arcadium Integration Complete',cat:'ma',author:'M&A Desk',date:'Jun 27, 2026',views:'2,940',status:'published'},
+      {id:5,title:'BHP Pilbara Hybrid Microgrid Achieves 72% Diesel Displacement',cat:'sustainability',author:'Sustainability',date:'Jun 25, 2026',views:'3,820',status:'published'},
+      {id:6,title:'Queensland Fatigue Management Standard — Draft Analysis',cat:'regulation',author:'Safety Desk',date:'—',views:'—',status:'pending'},
+      {id:7,title:'Copper Deficit Widens to 380Kt in H1 2026',cat:'markets',author:'Markets Desk',date:'—',views:'—',status:'pending'},
+      {id:8,title:'Lithium Price Recovery: June Analysis',cat:'markets',author:'Markets Desk',date:'—',views:'—',status:'draft'},
+    ];
+
+    const catColor  = {markets:'var(--emerald-400)',regulation:'var(--rose-400)',technology:'var(--violet-400)',ma:'var(--amber-400)',sustainability:'var(--cyan-400)',safety:'var(--rose-400)'};
+    const catBg     = {markets:'rgba(16,185,129,0.1)',regulation:'rgba(239,68,68,0.1)',technology:'rgba(139,92,246,0.1)',ma:'rgba(245,158,11,0.1)',sustainability:'rgba(0,188,212,0.1)',safety:'rgba(239,68,68,0.1)'};
+    const stColor   = {published:'var(--emerald-400)',pending:'var(--amber-400)',draft:'var(--text-500)'};
+    const stBg      = {published:'rgba(16,185,129,0.1)',pending:'rgba(245,158,11,0.1)',draft:'rgba(255,255,255,0.05)'};
+
+    let filteredArt = [...ARTICLES];
+
+    function filterArticles() {
+      const q   = document.getElementById('articleSearch').value.toLowerCase();
+      const cat = document.getElementById('catFilter2').value;
+      const st  = document.getElementById('statusFilter2').value;
+      filteredArt = ARTICLES.filter(a => {
+        const mQ  = !q   || a.title.toLowerCase().includes(q);
+        const mC  = !cat || a.cat === cat;
+        const mS  = !st  || a.status === st;
+        return mQ && mC && mS;
+      });
+      renderArticles();
+    }
+
+    function renderArticles() {
+      document.getElementById('articleList').innerHTML = filteredArt.map(a => `
+        <div class="article-row" onclick="editArticle(${a.id})">
+          <div><input type="checkbox" onclick="event.stopPropagation()" style="accent-color:var(--cyan-500);" /></div>
+          <div>
+            <div style="font-weight:500;color:var(--text-100);margin-bottom:2px;">${a.title}</div>
+            <div style="font-size:0.6875rem;color:var(--text-500);">ID #${a.id}</div>
+          </div>
+          <div><span style="padding:0.2rem 0.5rem;background:${catBg[a.cat]};color:${catColor[a.cat]};border-radius:99px;font-size:0.6875rem;font-weight:600;text-transform:capitalize;">${a.cat}</span></div>
+          <div style="color:var(--text-400);font-size:0.75rem;">${a.author}</div>
+          <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-500);">${a.date}</div>
+          <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-300);">${a.views}</div>
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="padding:0.2rem 0.5rem;background:${stBg[a.status]};color:${stColor[a.status]};border-radius:99px;font-size:0.6875rem;font-weight:600;">${a.status}</span>
+            <button class="btn btn--ghost btn--xs" onclick="event.stopPropagation();adminConfirm('Delete this article?',()=>adminToast('Article deleted','warning'))" style="color:var(--rose-400);"><i class="fa-solid fa-trash fa-xs"></i></button>
+          </div>
+        </div>`).join('');
+    }
+
+    function editArticle(id) {
+      const a = ARTICLES.find(x=>x.id===id);
+      if (!a) return;
+      document.getElementById('articleTitle').value   = a.title;
+      document.getElementById('articleStatus').value  = a.status;
+      document.getElementById('articleCat').value     = a.cat;
+      showView('editor');
+    }
+
+    function showView(v) {
+      document.getElementById('listView').style.display   = v==='list'   ? 'block' : 'none';
+      document.getElementById('editorView').style.display = v==='editor' ? 'block' : 'none';
+    }
+
+    function saveArticle(status) {
+      const title = document.getElementById('articleTitle').value.trim();
+      if (!title) { adminToast('Please add a title before saving.','warning'); return; }
+      adminToast(status==='published' ? 'Article published successfully!' : 'Draft saved.', status==='published'?'success':'info');
+      setTimeout(()=>showView('list'), 800);
+    }
+
+    // Set default date
+    const now = new Date();
+    now.setMinutes(now.getMinutes()-now.getTimezoneOffset());
+    document.getElementById('articleDate').value = now.toISOString().slice(0,16);
+
+    filterArticles();
+  </script>
+</body>
+</html>

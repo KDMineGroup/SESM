@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users — SESMine Admin</title>
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-body">
+
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-sidebar__logo">
+      <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="32" />
+      <span class="admin-sidebar__badge">Admin</span>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Overview</div>
+        <a href="index.html"    class="admin-nav__item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="analytics.html" class="admin-nav__item"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Users</div>
+        <a href="users.html"    class="admin-nav__item active"><i class="fa-solid fa-users"></i> All Users <span class="admin-nav__count">14,284</span></a>
+        <a href="subscriptions.html" class="admin-nav__item"><i class="fa-solid fa-credit-card"></i> Subscriptions</a>
+        <a href="trials.html"   class="admin-nav__item"><i class="fa-solid fa-clock"></i> Active Trials <span class="admin-nav__count admin-nav__count--cyan">842</span></a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Content</div>
+        <a href="news-manager.html"  class="admin-nav__item"><i class="fa-solid fa-newspaper"></i> News Manager</a>
+        <a href="commodities.html"   class="admin-nav__item"><i class="fa-solid fa-chart-bar"></i> Commodity Data</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Platform</div>
+        <a href="ai-models.html"  class="admin-nav__item"><i class="fa-solid fa-brain"></i> AI Models</a>
+        <a href="settings.html"   class="admin-nav__item"><i class="fa-solid fa-gear"></i> Settings</a>
+      </div>
+    </nav>
+    <div class="admin-sidebar__footer">
+      <div style="display:flex;align-items:center;gap:0.625rem;padding:0.875rem;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);border:1px solid var(--border-100);">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--coal-700);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--cyan-400);">SA</div>
+        <div style="flex:1;"><div style="font-size:0.8125rem;font-weight:600;color:var(--text-100);">Super Admin</div><div style="font-size:0.6875rem;color:var(--text-500);">admin@sesmine.com</div></div>
+        <a href="../auth/login.html" style="color:var(--text-600);font-size:0.75rem;"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <button class="admin-sidebar-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h1 style="font-size:1.125rem;font-weight:700;color:var(--text-50);margin:0;">Users</h1>
+          <div style="font-size:0.75rem;color:var(--text-500);">Manage all platform users</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.875rem;">
+        <button class="btn btn--primary btn--sm" onclick="adminToast('Invite sent!','success')"><i class="fa-solid fa-user-plus fa-xs"></i> Invite User</button>
+        <button class="btn btn--ghost btn--sm" onclick="exportTableCSV('usersTable','sesmine-users.csv')"><i class="fa-solid fa-download fa-xs"></i> Export CSV</button>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <!-- Filters -->
+      <div style="display:flex;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center;">
+        <div class="input-wrap" style="width:280px;">
+          <i class="fa-solid fa-search input-icon" style="font-size:0.75rem;"></i>
+          <input type="text" class="form-input" placeholder="Search name, email, company…" style="font-size:0.8125rem;padding:0.5rem 0.5rem 0.5rem 2.25rem;" id="userSearch" oninput="filterUsers()" />
+        </div>
+        <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.5rem 2rem 0.5rem 0.75rem;" id="planFilter" onchange="filterUsers()">
+          <option value="">All Plans</option>
+          <option value="Enterprise">Enterprise</option>
+          <option value="Professional">Professional</option>
+          <option value="Explorer">Explorer</option>
+        </select>
+        <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.5rem 2rem 0.5rem 0.75rem;" id="statusFilter" onchange="filterUsers()">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="trial">Trial</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <div style="margin-left:auto;font-size:0.8125rem;color:var(--text-500);">Showing <span id="userCount" style="color:var(--text-200);font-weight:600;">—</span> users</div>
+      </div>
+
+      <!-- Table -->
+      <div class="admin-card reveal">
+        <div class="admin-card__body" style="padding:0;overflow-x:auto;">
+          <table class="admin-table" id="usersTable">
+            <thead>
+              
+              <tr>
+                <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll(this)" style="accent-color:var(--cyan-500);" /></th>
+                <th>User</th>
+                <th>Plan</th>
+                <th>Company</th>
+                <th>Country</th>
+                <th>MRR</th>
+                <th>Joined</th>
+                <th>Last Active</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"><!-- JS --></tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        <div style="padding:1rem 1.25rem;border-top:1px solid var(--border-100);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
+          <div style="font-size:0.8125rem;color:var(--text-500);">Page <span id="pageNum">1</span> of <span id="pageTotal">—</span></div>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn--ghost btn--xs" id="prevBtn" onclick="changePage(-1)" disabled><i class="fa-solid fa-chevron-left fa-xs"></i></button>
+            <div id="pageButtons" style="display:flex;gap:0.25rem;"></div>
+            <button class="btn btn--ghost btn--xs" id="nextBtn" onclick="changePage(1)"><i class="fa-solid fa-chevron-right fa-xs"></i></button>
+          </div>
+          <select class="form-select" style="width:auto;font-size:0.75rem;padding:0.375rem 1.75rem 0.375rem 0.625rem;" onchange="setPageSize(parseInt(this.value))">
+            <option value="20">20 / page</option>
+            <option value="50">50 / page</option>
+            <option value="100">100 / page</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User detail drawer -->
+  <div id="userDrawer" style="position:fixed;top:0;right:-420px;width:420px;height:100vh;background:var(--coal-900);border-left:1px solid var(--border-200);z-index:400;overflow-y:auto;transition:right 0.3s cubic-bezier(0.4,0,0.2,1);box-shadow:-16px 0 48px rgba(0,0,0,0.4);">
+    <div style="padding:1.25rem;border-bottom:1px solid var(--border-100);display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:0.9375rem;font-weight:600;color:var(--text-100);">User Details</span>
+      <button onclick="closeDrawer()" style="background:none;border:none;color:var(--text-500);cursor:pointer;font-size:1rem;"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="userDrawerContent" style="padding:1.25rem;"></div>
+  </div>
+  <div id="drawerOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:399;" onclick="closeDrawer()"></div>
+
+  <script src="../js/config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    // ── Generate mock users ──────────────────────────────
+    const NAMES = ['Sarah Chen','Marcus Webb','Priya Sharma','James O\'Brien','Aiko Tanaka','Carlos Mendez','Emma Fitzgerald','Liam Nguyen','Sofia Rossi','Ahmed Al-Rashid','Hannah Schmidt','Raj Patel','Mei Lin','Tom Kowalski','Fatima Hassan','Oliver Brown','Yuki Yamamoto','Ana Silva','David Osei','Claire Martin'];
+    const COMPANIES = ['BHP','Rio Tinto','Fortescue','Newmont','Codelco','AngloGold','Glencore','Vale','Barrick','Freeport-McMoRan','Sumitomo','Anglo American','Teck Resources','Kinross','Agnico Eagle','First Quantum','Lundin Mining','Oz Minerals','Evolution Mining','Northern Star'];
+    const COUNTRIES = ['Australia','USA','Canada','Chile','South Africa','Brazil','UK','Japan','Germany','Peru'];
+    const PLANS     = ['Enterprise','Professional','Professional','Professional','Explorer','Explorer'];
+    const STATUSES  = ['active','active','active','active','trial','cancelled'];
+
+    const ALL_USERS = Array.from({length:120}, (_, i) => ({
+      id      : i+1,
+      name    : NAMES[i % NAMES.length] + (i >= NAMES.length ? ' '+(Math.floor(i/NAMES.length)+1) : ''),
+      email   : NAMES[i%NAMES.length].toLowerCase().replace(/[' ]/g,'.').replace('..','.')+`@${COMPANIES[i%COMPANIES.length].toLowerCase().replace(/[- ]/g,'')}.com`,
+      plan    : PLANS[i % PLANS.length],
+      company : COMPANIES[i % COMPANIES.length],
+      country : COUNTRIES[i % COUNTRIES.length],
+      mrr     : PLANS[i%PLANS.length]==='Enterprise'?1200:PLANS[i%PLANS.length]==='Professional'?299:149,
+      joined  : new Date(2025,Math.floor(Math.random()*12),Math.floor(Math.random()*28)+1).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}),
+      lastActive: ['2h ago','4h ago','1d ago','3d ago','1w ago'][i%5],
+      status  : STATUSES[i % STATUSES.length],
+    }));
+
+    const planColor  = {Enterprise:'var(--amber-400)',Professional:'var(--cyan-400)',Explorer:'var(--violet-400)'};
+    const planBg     = {Enterprise:'rgba(245,158,11,0.1)',Professional:'rgba(0,188,212,0.1)',Explorer:'rgba(139,92,246,0.1)'};
+    const statusColor= {active:'var(--emerald-400)',trial:'var(--cyan-400)',cancelled:'var(--rose-400)'};
+    const statusBg   = {active:'rgba(16,185,129,0.1)',trial:'rgba(0,188,212,0.1)',cancelled:'rgba(239,68,68,0.1)'};
+
+    let filtered  = [...ALL_USERS];
+    let pageSize  = 20;
+    let page      = 1;
+
+    function filterUsers() {
+      const q      = document.getElementById('userSearch').value.toLowerCase();
+      const plan   = document.getElementById('planFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      filtered = ALL_USERS.filter(u => {
+        const mQ = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.company.toLowerCase().includes(q);
+        const mP = !plan   || u.plan   === plan;
+        const mS = !status || u.status === status;
+        return mQ && mP && mS;
+      });
+      page = 1;
+      renderTable();
+    }
+
+    function renderTable() {
+      const total = Math.ceil(filtered.length / pageSize);
+      const start = (page-1)*pageSize;
+      const slice = filtered.slice(start, start+pageSize);
+
+      document.getElementById('userCount').textContent  = filtered.length.toLocaleString();
+      document.getElementById('pageNum').textContent    = page;
+      document.getElementById('pageTotal').textContent  = total;
+      document.getElementById('prevBtn').disabled       = page <= 1;
+      document.getElementById('nextBtn').disabled       = page >= total;
+
+      // Page buttons
+      const pb = document.getElementById('pageButtons');
+      pb.innerHTML = Array.from({length:Math.min(total,5)},(_,i)=>{
+        const p = i+1;
+        return `<button class="btn btn--xs ${p===page?'btn--primary':'btn--ghost'}" onclick="goPage(${p})">${p}</button>`;
+      }).join('');
+
+      document.getElementById('usersTableBody').innerHTML = slice.map(u => `
+        <tr>
+          <td><input type="checkbox" class="row-check" data-id="${u.id}" style="accent-color:var(--cyan-500);" /></td>
+          <td>
+            <div style="display:flex;align-items:center;gap:0.625rem;">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--coal-700);display:flex;align-items:center;justify-content:center;font-size:0.5625rem;font-weight:700;color:var(--cyan-400);flex-shrink:0;">${u.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+              <div>
+                <div style="font-weight:500;color:var(--text-100);">${u.name}</div>
+                <div style="font-size:0.6875rem;color:var(--text-500);">${u.email}</div>
+              </div>
+            </div>
+          </td>
+          <td><span style="padding:0.2rem 0.5rem;background:${planBg[u.plan]};color:${planColor[u.plan]};border-radius:99px;font-size:0.6875rem;font-weight:600;">${u.plan}</span></td>
+          <td style="color:var(--text-300);">${u.company}</td>
+          <td style="color:var(--text-400);font-size:0.75rem;">${u.country}</td>
+          <td style="font-family:var(--font-mono);font-size:0.8125rem;color:var(--emerald-400);">$${u.mrr}</td>
+          <td style="font-size:0.75rem;color:var(--text-500);">${u.joined}</td>
+          <td style="font-size:0.75rem;color:var(--text-500);">${u.lastActive}</td>
+          <td><span style="padding:0.2rem 0.5rem;background:${statusBg[u.status]};color:${statusColor[u.status]};border-radius:99px;font-size:0.6875rem;font-weight:600;">${u.status}</span></td>
+          <td>
+            <div style="display:flex;gap:0.375rem;">
+              <button class="btn btn--ghost btn--xs" onclick="openDrawer(${u.id})" title="View"><i class="fa-solid fa-eye fa-xs"></i></button>
+              <button class="btn btn--ghost btn--xs" onclick="adminToast('Email sent to ${u.name}','success')" title="Email"><i class="fa-solid fa-envelope fa-xs"></i></button>
+              <button class="btn btn--ghost btn--xs" style="color:var(--rose-400);" onclick="adminConfirm('Suspend ${u.name}?',()=>adminToast('User suspended','warning'))" title="Suspend"><i class="fa-solid fa-ban fa-xs"></i></button>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+
+    function changePage(dir) { goPage(page+dir); }
+    function goPage(p) {
+      const total = Math.ceil(filtered.length/pageSize);
+      page = Math.max(1,Math.min(p,total));
+      renderTable();
+    }
+    function setPageSize(s) { pageSize=s; page=1; renderTable(); }
+    function toggleSelectAll(cb) { document.querySelectorAll('.row-check').forEach(c=>c.checked=cb.checked); }
+
+    function openDrawer(id) {
+      const u = ALL_USERS.find(x=>x.id===id);
+      if (!u) return;
+      document.getElementById('userDrawerContent').innerHTML = `
+        <div style="text-align:center;margin-bottom:1.5rem;">
+          <div style="width:56px;height:56px;border-radius:50%;background:var(--coal-700);border:2px solid var(--border-200);display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:var(--cyan-400);margin:0 auto 0.75rem;">${u.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+          <div style="font-size:1rem;font-weight:700;color:var(--text-50);">${u.name}</div>
+          <div style="font-size:0.8125rem;color:var(--text-500);">${u.email}</div>
+          <div style="margin-top:0.625rem;display:flex;justify-content:center;gap:0.5rem;">
+            <span style="padding:0.25rem 0.625rem;background:${planBg[u.plan]};color:${planColor[u.plan]};border-radius:99px;font-size:0.6875rem;font-weight:600;">${u.plan}</span>
+            <span style="padding:0.25rem 0.625rem;background:${statusBg[u.status]};color:${statusColor[u.status]};border-radius:99px;font-size:0.6875rem;font-weight:600;">${u.status}</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;">
+          ${[['Company',u.company],['Country',u.country],['MRR','$'+u.mrr+'/mo'],['Joined',u.joined],['Last Active',u.lastActive],['User ID','#'+u.id]].map(([l,v])=>`
+            <div style="display:flex;justify-content:space-between;padding:0.625rem 0;border-bottom:1px solid var(--border-100);">
+              <span style="font-size:0.8125rem;color:var(--text-500);">${l}</span>
+              <span style="font-size:0.8125rem;font-weight:500;color:var(--text-200);font-family:var(--font-mono);">${v}</span>
+            </div>`).join('')}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.625rem;">
+          <button class="btn btn--primary btn--full btn--sm" onclick="adminToast('Email sent to ${u.name}','success')"><i class="fa-solid fa-envelope fa-xs"></i> Send Email</button>
+          <button class="btn btn--ghost btn--full btn--sm" onclick="adminToast('Plan change modal — coming soon','info')"><i class="fa-solid fa-arrows-rotate fa-xs"></i> Change Plan</button>
+          <button class="btn btn--ghost btn--full btn--sm" onclick="adminToast('Password reset sent','success')"><i class="fa-solid fa-key fa-xs"></i> Reset Password</button>
+          <button class="btn btn--ghost btn--full btn--sm" style="color:var(--rose-400);border-color:rgba(239,68,68,0.2);" onclick="adminConfirm('Suspend ${u.name}?',()=>{adminToast('User suspended','warning');closeDrawer();})"><i class="fa-solid fa-ban fa-xs"></i> Suspend Account</button>
+        </div>`;
+      document.getElementById('userDrawer').style.right = '0';
+      document.getElementById('drawerOverlay').style.display = 'block';
+    }
+
+    function closeDrawer() {
+      document.getElementById('userDrawer').style.right = '-420px';
+      document.getElementById('drawerOverlay').style.display = 'none';
+    }
+
+    filterUsers();
+  </script>
+</body>
+</html>

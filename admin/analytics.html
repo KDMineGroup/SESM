@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — SESMine Admin</title>
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-body">
+
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-sidebar__logo">
+      <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="32" />
+      <span class="admin-sidebar__badge">Admin</span>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Overview</div>
+        <a href="index.html"      class="admin-nav__item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="analytics.html"  class="admin-nav__item active"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Users</div>
+        <a href="users.html"      class="admin-nav__item"><i class="fa-solid fa-users"></i> All Users</a>
+        <a href="subscriptions.html" class="admin-nav__item"><i class="fa-solid fa-credit-card"></i> Subscriptions</a>
+        <a href="trials.html"     class="admin-nav__item"><i class="fa-solid fa-clock"></i> Active Trials</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Content</div>
+        <a href="news-manager.html"  class="admin-nav__item"><i class="fa-solid fa-newspaper"></i> News Manager</a>
+        <a href="commodities.html"   class="admin-nav__item"><i class="fa-solid fa-chart-bar"></i> Commodity Data</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Platform</div>
+        <a href="ai-models.html"  class="admin-nav__item"><i class="fa-solid fa-brain"></i> AI Models</a>
+        <a href="settings.html"   class="admin-nav__item"><i class="fa-solid fa-gear"></i> Settings</a>
+      </div>
+    </nav>
+    <div class="admin-sidebar__footer">
+      <div style="display:flex;align-items:center;gap:0.625rem;padding:0.875rem;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);border:1px solid var(--border-100);">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--coal-700);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--cyan-400);">SA</div>
+        <div style="flex:1;"><div style="font-size:0.8125rem;font-weight:600;color:var(--text-100);">Super Admin</div><div style="font-size:0.6875rem;color:var(--text-500);">admin@sesmine.com</div></div>
+        <a href="../auth/login.html" style="color:var(--text-600);font-size:0.75rem;"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <button class="admin-sidebar-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h1 style="font-size:1.125rem;font-weight:700;color:var(--text-50);margin:0;">Analytics</h1>
+          <div style="font-size:0.75rem;color:var(--text-500);">Platform usage and engagement metrics</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:0.75rem;align-items:center;">
+        <div style="display:flex;background:var(--coal-850);border:1px solid var(--border-100);border-radius:var(--radius-md);overflow:hidden;">
+          <button class="btn btn--xs" style="border-radius:0;border:none;background:var(--coal-700);color:var(--text-100);" onclick="setRange('7d',this)">7D</button>
+          <button class="btn btn--xs" style="border-radius:0;border:none;background:transparent;color:var(--text-500);" onclick="setRange('30d',this)">30D</button>
+          <button class="btn btn--xs" style="border-radius:0;border:none;background:transparent;color:var(--text-500);" onclick="setRange('90d',this)">90D</button>
+          <button class="btn btn--xs" style="border-radius:0;border:none;background:transparent;color:var(--text-500);" onclick="setRange('1y',this)">1Y</button>
+        </div>
+        <button class="btn btn--ghost btn--sm" onclick="adminToast('Analytics report exported','success')"><i class="fa-solid fa-download fa-xs"></i> Export</button>
+      </div>
+    </header>
+
+    <div class="admin-content">
+
+      <!-- KPIs -->
+      <div class="admin-kpi-grid" style="margin-bottom:1.5rem;">
+        <div class="admin-kpi-card reveal">
+          <div class="admin-kpi-card__icon" style="background:rgba(0,188,212,0.1);color:var(--cyan-400);"><i class="fa-solid fa-eye"></i></div>
+          <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Page Views</div><div class="admin-kpi-card__value">284K</div><div class="admin-kpi-card__delta up"><i class="fa-solid fa-arrow-trend-up fa-xs"></i> +14% vs last week</div></div>
+        </div>
+        <div class="admin-kpi-card reveal delay-1">
+          <div class="admin-kpi-card__icon" style="background:rgba(16,185,129,0.1);color:var(--emerald-400);"><i class="fa-solid fa-users"></i></div>
+          <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Unique Visitors</div><div class="admin-kpi-card__value">48.2K</div><div class="admin-kpi-card__delta up"><i class="fa-solid fa-arrow-trend-up fa-xs"></i> +8.4% vs last week</div></div>
+        </div>
+        <div class="admin-kpi-card reveal delay-2">
+          <div class="admin-kpi-card__icon" style="background:rgba(245,158,11,0.1);color:var(--amber-400);"><i class="fa-solid fa-clock"></i></div>
+          <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Avg. Session</div><div class="admin-kpi-card__value">8m 42s</div><div class="admin-kpi-card__delta up"><i class="fa-solid fa-arrow-trend-up fa-xs"></i> +1m 12s</div></div>
+        </div>
+        <div class="admin-kpi-card reveal delay-3">
+          <div class="admin-kpi-card__icon" style="background:rgba(139,92,246,0.1);color:var(--violet-400);"><i class="fa-solid fa-arrow-right-to-bracket"></i></div>
+          <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Bounce Rate</div><div class="admin-kpi-card__value">28.4%</div><div class="admin-kpi-card__delta down"><i class="fa-solid fa-arrow-trend-down fa-xs"></i> -3.2% (good)</div></div>
+        </div>
+        <div class="admin-kpi-card reveal delay-4">
+          <div class="admin-kpi-card__icon" style="background:rgba(0,188,212,0.1);color:var(--cyan-400);"><i class="fa-solid fa-bolt"></i></div>
+          <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">API Calls</div><div class="admin-kpi-card__value">8.64M</div><div class="admin-kpi-card__delta up"><i class="fa-solid fa-arrow-trend-up fa-xs"></i> +22% vs last week</div></div>
+        </div>
+        <div class="admin-kpi-card reveal delay-5">
+          <div class="admin-kpi-card__icon" style="background:rgba(16,185,129,0.1);color:var(--emerald-400);"><i class="fa-solid fa-percent"></i></div>
+          <div class="admin-kpi-card__body"><div class="admin-kpi-card__label">Trial → Paid</div><div class="admin-kpi-card__value">38.4%</div><div class="admin-kpi-card__delta up"><i class="fa-solid fa-arrow-trend-up fa-xs"></i> +2.1% MoM</div></div>
+        </div>
+      </div>
+
+      <!-- Traffic chart + top pages -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+
+        <div class="admin-card reveal">
+          <div class="admin-card__header">
+            <div><div class="admin-card__title">Traffic Overview</div><div class="admin-card__subtitle" id="trafficSubtitle">Last 7 days</div></div>
+            <div style="display:flex;gap:1rem;">
+              <div style="display:flex;align-items:center;gap:0.375rem;font-size:0.75rem;color:var(--text-500);"><div style="width:10px;height:2px;background:var(--cyan-500);border-radius:1px;"></div>Page Views</div>
+              <div style="display:flex;align-items:center;gap:0.375rem;font-size:0.75rem;color:var(--text-500);"><div style="width:10px;height:2px;background:var(--emerald-500);border-radius:1px;"></div>Unique Visitors</div>
+            </div>
+          </div>
+          <div class="admin-card__body">
+            <svg viewBox="0 0 560 160" style="width:100%;height:160px;" preserveAspectRatio="none" id="trafficChart">
+              <defs>
+                <linearGradient id="trafficGrad1" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stop-color="rgba(0,188,212,0.2)"/>
+                  <stop offset="100%" stop-color="rgba(0,188,212,0)"/>
+                </linearGradient>
+                <linearGradient id="trafficGrad2" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stop-color="rgba(16,185,129,0.15)"/>
+                  <stop offset="100%" stop-color="rgba(16,185,129,0)"/>
+                </linearGradient>
+              </defs>
+              <!-- Grid -->
+              <line x1="0" y1="32"  x2="560" y2="32"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="64"  x2="560" y2="64"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="96"  x2="560" y2="96"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="128" x2="560" y2="128" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <!-- Page views area -->
+              <path d="M0,110 L80,90 L160,100 L240,70 L320,60 L400,45 L480,35 L560,25 L560,150 L0,150 Z" fill="url(#trafficGrad1)"/>
+              <path d="M0,110 L80,90 L160,100 L240,70 L320,60 L400,45 L480,35 L560,25" fill="none" stroke="var(--cyan-500)" stroke-width="2"/>
+              <!-- Unique visitors area -->
+              <path d="M0,125 L80,115 L160,120 L240,100 L320,90 L400,78 L480,68 L560,58 L560,150 L0,150 Z" fill="url(#trafficGrad2)"/>
+              <path d="M0,125 L80,115 L160,120 L240,100 L320,90 L400,78 L480,68 L560,58" fill="none" stroke="var(--emerald-500)" stroke-width="2"/>
+              <!-- Day labels -->
+              <text x="0"   y="148" font-size="8" fill="rgba(100,116,139,0.7)" font-family="monospace">Mon</text>
+              <text x="75"  y="148" font-size="8" fill="rgba(100,116,139,0.7)" font-family="monospace">Tue</text>
+              <text x="155" y="148" font-size="8" fill="rgba(100,116,139,0.7)" font-family="monospace">Wed</text>
+              <text x="235" y="148" font-size="8" fill="rgba(100,116,139,0.7)" font-family="monospace">Thu</text>
+              <text x="315" y="148" font-size="8" fill="rgba(100,116,139,0.7)" font-family="monospace">Fri</text>
+              <text x="395" y="148" font-size="8" fill="rgba(100,116,139,0.7)" font-family="monospace">Sat</text>
+              <text x="475" y="148" font-size="8" fill="rgba(0,188,212,0.8)"   font-family="monospace">Sun</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Top pages -->
+        <div class="admin-card reveal delay-1">
+          <div class="admin-card__header"><div class="admin-card__title">Top Pages</div><div class="admin-card__subtitle">By sessions this week</div></div>
+          <div class="admin-card__body" style="padding:0;">
+            <div id="topPagesList"><!-- JS --></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Geo + device + referrers -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+
+        <!-- Top countries -->
+        <div class="admin-card reveal">
+          <div class="admin-card__header"><div class="admin-card__title">Top Countries</div></div>
+          <div class="admin-card__body" style="display:flex;flex-direction:column;gap:0.75rem;" id="countryList"><!-- JS --></div>
+        </div>
+
+        <!-- Device breakdown -->
+        <div class="admin-card reveal delay-1">
+          <div class="admin-card__header"><div class="admin-card__title">Device Breakdown</div></div>
+          <div class="admin-card__body">
+            <svg viewBox="0 0 200 100" width="100%" height="100" style="display:block;margin:0 auto 1rem;">
+              <!-- Desktop 68% -->
+              <rect x="0"   y="30" width="136" height="40" rx="4" fill="var(--cyan-500)"    opacity="0.85"/>
+              <!-- Mobile 22% -->
+              <rect x="140" y="30" width="44"  height="40" rx="4" fill="var(--violet-500)"  opacity="0.85"/>
+              <!-- Tablet 10% -->
+              <rect x="188" y="30" width="12"  height="40" rx="4" fill="var(--amber-500)"   opacity="0.85"/>
+              <text x="68"  y="54" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="monospace">68%</text>
+              <text x="162" y="54" text-anchor="middle" font-size="9"  font-weight="700" fill="#fff" font-family="monospace">22%</text>
+            </svg>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+              <div style="display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:0.5rem;"><div style="width:10px;height:10px;border-radius:2px;background:var(--cyan-500);"></div><span style="font-size:0.8125rem;color:var(--text-300);">Desktop</span></div><span style="font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-100);">68%</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:0.5rem;"><div style="width:10px;height:10px;border-radius:2px;background:var(--violet-500);"></div><span style="font-size:0.8125rem;color:var(--text-300);">Mobile</span></div><span style="font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-100);">22%</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;align-items:center;gap:0.5rem;"><div style="width:10px;height:10px;border-radius:2px;background:var(--amber-500);"></div><span style="font-size:0.8125rem;color:var(--text-300);">Tablet</span></div><span style="font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-100);">10%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top referrers -->
+        <div class="admin-card reveal delay-2">
+          <div class="admin-card__header"><div class="admin-card__title">Top Referrers</div></div>
+          <div class="admin-card__body" style="padding:0;" id="referrerList"><!-- JS --></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    const TOP_PAGES = [
+      {page:'/ (Home)',              sessions:'12,840', pct:100},
+      {page:'/hubs/economics-hub',   sessions:'8,420',  pct:66},
+      {page:'/products/ai-predictor',sessions:'7,180',  pct:56},
+      {page:'/news',                 sessions:'6,240',  pct:49},
+      {page:'/pricing',              sessions:'5,820',  pct:45},
+      {page:'/hubs/engineering-hub', sessions:'4,940',  pct:38},
+      {page:'/resources',            sessions:'3,820',  pct:30},
+      {page:'/auth/signup',          sessions:'3,240',  pct:25},
+    ];
+    document.getElementById('topPagesList').innerHTML = TOP_PAGES.map(p => `
+      <div style="padding:0.625rem 1.25rem;border-bottom:1px solid var(--border-100);display:flex;align-items:center;gap:0.75rem;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:0.8125rem;color:var(--text-200);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-mono);">${p.page}</div>
+          <div style="height:3px;background:var(--coal-700);border-radius:2px;margin-top:4px;overflow:hidden;">
+            <div style="width:${p.pct}%;height:100%;background:var(--cyan-500);border-radius:2px;"></div>
+          </div>
+        </div>
+        <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-400);flex-shrink:0;">${p.sessions}</div>
+      </div>`).join('');
+
+    const COUNTRIES = [
+      {flag:'🇦🇺',name:'Australia',  pct:32, sessions:'15,424'},
+      {flag:'🇺🇸',name:'USA',        pct:18, sessions:'8,676'},
+      {flag:'🇨🇦',name:'Canada',     pct:12, sessions:'5,784'},
+      {flag:'🇬🇧',name:'UK',         pct:9,  sessions:'4,338'},
+      {flag:'🇨🇱',name:'Chile',      pct:7,  sessions:'3,374'},
+      {flag:'🇿🇦',name:'S. Africa',  pct:6,  sessions:'2,892'},
+      {flag:'🇧🇷',name:'Brazil',     pct:5,  sessions:'2,410'},
+    ];
+    document.getElementById('countryList').innerHTML = COUNTRIES.map(c => `
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <span style="font-size:1rem;">${c.flag}</span>
+        <div style="flex:1;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+            <span style="font-size:0.8125rem;color:var(--text-300);">${c.name}</span>
+            <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-400);">${c.sessions}</span>
+          </div>
+          <div style="height:4px;background:var(--coal-700);border-radius:2px;overflow:hidden;">
+            <div style="width:${c.pct*3}%;height:100%;background:var(--cyan-500);border-radius:2px;opacity:0.7;"></div>
+          </div>
+        </div>
+      </div>`).join('');
+
+    const REFERRERS = [
+      {source:'linkedin.com',   sessions:'8,420', icon:'fa-brands fa-linkedin-in', color:'#0077b5'},
+      {source:'google.com',     sessions:'6,840', icon:'fa-brands fa-google',      color:'#4285f4'},
+      {source:'twitter.com',    sessions:'2,180', icon:'fa-brands fa-x-twitter',   color:'var(--text-300)'},
+      {source:'mining.com',     sessions:'1,840', icon:'fa-solid fa-newspaper',    color:'var(--amber-400)'},
+      {source:'direct',         sessions:'1,620', icon:'fa-solid fa-arrow-right',  color:'var(--cyan-400)'},
+      {source:'miningweekly.com',sessions:'980',  icon:'fa-solid fa-newspaper',    color:'var(--violet-400)'},
+    ];
+    document.getElementById('referrerList').innerHTML = REFERRERS.map(r => `
+      <div style="display:flex;align-items:center;gap:0.75rem;padding:0.625rem 1.25rem;border-bottom:1px solid var(--border-100);" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background=''">
+        <div style="width:28px;height:28px;border-radius:6px;background:var(--coal-800);display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:${r.color};flex-shrink:0;"><i class="${r.icon}"></i></div>
+        <div style="flex:1;font-size:0.8125rem;color:var(--text-300);font-family:var(--font-mono);">${r.source}</div>
+        <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-400);">${r.sessions}</div>
+      </div>`).join('');
+
+    function setRange(range, btn) {
+      document.querySelectorAll('.admin-topbar .btn--xs').forEach(b => { b.style.background='transparent'; b.style.color='var(--text-500)'; });
+      btn.style.background = 'var(--coal-700)';
+      btn.style.color = 'var(--text-100)';
+      const labels = {'7d':'Last 7 days','30d':'Last 30 days','90d':'Last 90 days','1y':'Last 12 months'};
+      document.getElementById('trafficSubtitle').textContent = labels[range];
+      adminToast('Analytics range: '+labels[range],'info');
+    }
+  </script>
+</body>
+</html>

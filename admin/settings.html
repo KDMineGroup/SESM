@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — SESMine Admin</title>
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .settings-nav { display:flex;flex-direction:column;gap:0.25rem; }
+    .settings-nav__item {
+      display:flex;align-items:center;gap:0.625rem;
+      padding:0.625rem 0.875rem;
+      border-radius:var(--radius-md);
+      font-size:0.875rem;font-weight:500;
+      color:var(--text-400);cursor:pointer;
+      transition:all var(--ease-fast);border:none;background:none;text-align:left;width:100%;
+    }
+    .settings-nav__item:hover { background:rgba(255,255,255,0.04);color:var(--text-100); }
+    .settings-nav__item.active { background:rgba(0,188,212,0.08);color:var(--cyan-400);border:1px solid rgba(0,188,212,0.15); }
+    .toggle-switch {
+      position:relative;width:44px;height:24px;flex-shrink:0;
+    }
+    .toggle-switch input { opacity:0;width:0;height:0; }
+    .toggle-slider {
+      position:absolute;cursor:pointer;inset:0;
+      background:var(--coal-700);border-radius:99px;
+      transition:background 0.2s;border:1px solid var(--border-200);
+    }
+    .toggle-slider::before {
+      content:'';position:absolute;
+      width:16px;height:16px;left:3px;bottom:3px;
+      background:var(--text-500);border-radius:50%;
+      transition:transform 0.2s,background 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background:rgba(0,188,212,0.2);border-color:var(--cyan-500); }
+    .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px);background:var(--cyan-400); }
+    .setting-row {
+      display:flex;align-items:center;justify-content:space-between;
+      padding:1rem 0;border-bottom:1px solid var(--border-100);gap:1rem;
+    }
+    .setting-row:last-child { border-bottom:none; }
+  </style>
+</head>
+<body class="admin-body">
+
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-sidebar__logo">
+      <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="32" />
+      <span class="admin-sidebar__badge">Admin</span>
+    </div>
+    <nav class="admin-nav">
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Overview</div>
+        <a href="index.html"     class="admin-nav__item"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="analytics.html" class="admin-nav__item"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Users</div>
+        <a href="users.html"     class="admin-nav__item"><i class="fa-solid fa-users"></i> All Users</a>
+        <a href="subscriptions.html" class="admin-nav__item"><i class="fa-solid fa-credit-card"></i> Subscriptions</a>
+        <a href="trials.html"    class="admin-nav__item"><i class="fa-solid fa-clock"></i> Active Trials</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Content</div>
+        <a href="news-manager.html"  class="admin-nav__item"><i class="fa-solid fa-newspaper"></i> News Manager</a>
+        <a href="commodities.html"   class="admin-nav__item"><i class="fa-solid fa-chart-bar"></i> Commodity Data</a>
+      </div>
+      <div class="admin-nav__group">
+        <div class="admin-nav__label">Platform</div>
+        <a href="ai-models.html"  class="admin-nav__item"><i class="fa-solid fa-brain"></i> AI Models</a>
+        <a href="settings.html"   class="admin-nav__item active"><i class="fa-solid fa-gear"></i> Settings</a>
+      </div>
+    </nav>
+    <div class="admin-sidebar__footer">
+      <div style="display:flex;align-items:center;gap:0.625rem;padding:0.875rem;background:rgba(255,255,255,0.03);border-radius:var(--radius-lg);border:1px solid var(--border-100);">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--coal-700);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:var(--cyan-400);">SA</div>
+        <div style="flex:1;"><div style="font-size:0.8125rem;font-weight:600;color:var(--text-100);">Super Admin</div><div style="font-size:0.6875rem;color:var(--text-500);">admin@sesmine.com</div></div>
+        <a href="../auth/login.html" style="color:var(--text-600);font-size:0.75rem;"><i class="fa-solid fa-right-from-bracket"></i></a>
+      </div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <button class="admin-sidebar-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+        <div>
+          <h1 style="font-size:1.125rem;font-weight:700;color:var(--text-50);margin:0;">Settings</h1>
+          <div style="font-size:0.75rem;color:var(--text-500);">Platform configuration and preferences</div>
+        </div>
+      </div>
+      <button class="btn btn--primary btn--sm" onclick="saveAllSettings()"><i class="fa-solid fa-floppy-disk fa-xs"></i> Save Changes</button>
+    </header>
+
+    <div class="admin-content">
+      <div style="display:grid;grid-template-columns:220px 1fr;gap:1.5rem;align-items:start;">
+
+        <!-- Settings nav -->
+        <div class="admin-card" style="position:sticky;top:1.5rem;">
+          <div class="admin-card__body" style="padding:0.75rem;">
+            <div class="settings-nav">
+              <button class="settings-nav__item active" onclick="showSection('general',this)"><i class="fa-solid fa-sliders fa-sm"></i> General</button>
+              <button class="settings-nav__item" onclick="showSection('security',this)"><i class="fa-solid fa-shield-halved fa-sm"></i> Security</button>
+              <button class="settings-nav__item" onclick="showSection('email',this)"><i class="fa-solid fa-envelope fa-sm"></i> Email</button>
+              <button class="settings-nav__item" onclick="showSection('api',this)"><i class="fa-solid fa-plug fa-sm"></i> API & Integrations</button>
+              <button class="settings-nav__item" onclick="showSection('billing',this)"><i class="fa-solid fa-credit-card fa-sm"></i> Billing</button>
+              <button class="settings-nav__item" onclick="showSection('features',this)"><i class="fa-solid fa-toggle-on fa-sm"></i> Feature Flags</button>
+              <button class="settings-nav__item" onclick="showSection('danger',this)" style="color:var(--rose-400);"><i class="fa-solid fa-triangle-exclamation fa-sm"></i> Danger Zone</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings panels -->
+        <div>
+
+          <!-- General -->
+          <div id="section-general" class="admin-card reveal" style="margin-bottom:1.25rem;">
+            <div class="admin-card__header"><div class="admin-card__title">General Settings</div></div>
+            <div class="admin-card__body" style="display:flex;flex-direction:column;">
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Platform Name</div><div style="font-size:0.8125rem;color:var(--text-500);">Displayed in browser tabs and emails</div></div>
+                <input type="text" class="form-input" value="SESMine Intelligence" style="width:240px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Platform URL</div><div style="font-size:0.8125rem;color:var(--text-500);">Canonical base URL</div></div>
+                <input type="url" class="form-input" value="https://www.sesmine.com" style="width:240px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Support Email</div><div style="font-size:0.8125rem;color:var(--text-500);">Shown on contact and error pages</div></div>
+                <input type="email" class="form-input" value="support@sesmine.com" style="width:240px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Default Timezone</div><div style="font-size:0.8125rem;color:var(--text-500);">Used for scheduled tasks and reports</div></div>
+                <select class="form-select" style="width:240px;font-size:0.875rem;">
+                  <option selected>Australia/Sydney (AEST)</option>
+                  <option>UTC</option>
+                  <option>America/New_York</option>
+                  <option>Europe/London</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Maintenance Mode</div><div style="font-size:0.8125rem;color:var(--text-500);">Show maintenance page to all visitors</div></div>
+                <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security -->
+          <div id="section-security" class="admin-card reveal" style="margin-bottom:1.25rem;display:none;">
+            <div class="admin-card__header"><div class="admin-card__title">Security Settings</div></div>
+            <div class="admin-card__body" style="display:flex;flex-direction:column;">
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Two-Factor Authentication</div><div style="font-size:0.8125rem;color:var(--text-500);">Require 2FA for all admin accounts</div></div>
+                <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Session Timeout</div><div style="font-size:0.8125rem;color:var(--text-500);">Auto-logout inactive sessions</div></div>
+                <select class="form-select" style="width:180px;font-size:0.875rem;">
+                  <option>30 minutes</option>
+                  <option selected>1 hour</option>
+                  <option>4 hours</option>
+                  <option>8 hours</option>
+                  <option>Never</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">IP Allowlist (Admin)</div><div style="font-size:0.8125rem;color:var(--text-500);">Restrict admin panel to specific IPs</div></div>
+                <label class="toggle-switch"><input type="checkbox" /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Failed Login Lockout</div><div style="font-size:0.8125rem;color:var(--text-500);">Lock account after N failed attempts</div></div>
+                <select class="form-select" style="width:180px;font-size:0.875rem;">
+                  <option>3 attempts</option>
+                  <option selected>5 attempts</option>
+                  <option>10 attempts</option>
+                </select>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Audit Log Retention</div><div style="font-size:0.8125rem;color:var(--text-500);">How long to keep admin activity logs</div></div>
+                <select class="form-select" style="width:180px;font-size:0.875rem;">
+                  <option>30 days</option>
+                  <option>90 days</option>
+                  <option selected>1 year</option>
+                  <option>Forever</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div id="section-email" class="admin-card reveal" style="margin-bottom:1.25rem;display:none;">
+            <div class="admin-card__header"><div class="admin-card__title">Email Settings</div></div>
+            <div class="admin-card__body" style="display:flex;flex-direction:column;">
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">SMTP Host</div><div style="font-size:0.8125rem;color:var(--text-500);">Outbound mail server</div></div>
+                <input type="text" class="form-input" value="smtp.sendgrid.net" style="width:240px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">SMTP Port</div><div style="font-size:0.8125rem;color:var(--text-500);">TLS recommended</div></div>
+                <input type="number" class="form-input" value="587" style="width:120px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">From Name</div><div style="font-size:0.8125rem;color:var(--text-500);">Sender display name</div></div>
+                <input type="text" class="form-input" value="SESMine Intelligence" style="width:240px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">From Address</div><div style="font-size:0.8125rem;color:var(--text-500);">Sender email address</div></div>
+                <input type="email" class="form-input" value="noreply@sesmine.com" style="width:240px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Welcome Email</div><div style="font-size:0.8125rem;color:var(--text-500);">Send welcome email on signup</div></div>
+                <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Trial Expiry Reminder</div><div style="font-size:0.8125rem;color:var(--text-500);">Send reminder 3 days before trial ends</div></div>
+                <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Morning Brief Digest</div><div style="font-size:0.8125rem;color:var(--text-500);">Daily 6AM AEST newsletter dispatch</div></div>
+                <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+              </div>
+              <div class="setting-row" style="border-bottom:none;">
+                <div style="flex:1;"></div>
+                <button class="btn btn--ghost btn--sm" onclick="adminToast('Test email sent to admin@sesmine.com','success')">
+                  <i class="fa-solid fa-paper-plane fa-xs"></i> Send Test Email
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- API & Integrations -->
+          <div id="section-api" class="admin-card reveal" style="margin-bottom:1.25rem;display:none;">
+            <div class="admin-card__header"><div class="admin-card__title">API & Integrations</div></div>
+            <div class="admin-card__body" style="display:flex;flex-direction:column;">
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">API Rate Limit (per key/min)</div><div style="font-size:0.8125rem;color:var(--text-500);">Default rate limit for all API keys</div></div>
+                <input type="number" class="form-input" value="120" style="width:120px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">WebSocket Max Connections</div><div style="font-size:0.8125rem;color:var(--text-500);">Per enterprise account</div></div>
+                <input type="number" class="form-input" value="50" style="width:120px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Google Analytics 4</div><div style="font-size:0.8125rem;color:var(--text-500);">GA4 Measurement ID</div></div>
+                <input type="text" class="form-input" placeholder="G-XXXXXXXXXX" style="width:200px;font-size:0.875rem;" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Stripe Publishable Key</div><div style="font-size:0.8125rem;color:var(--text-500);">Used for checkout and billing</div></div>
+                <input type="text" class="form-input" value="pk_live_••••••••••••••••" style="width:240px;font-size:0.875rem;font-family:var(--font-mono);" />
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Slack Webhook (Alerts)</div><div style="font-size:0.8125rem;color:var(--text-500);">Post critical alerts to Slack channel</div></div>
+                <div style="display:flex;gap:0.5rem;align-items:center;">
+                  <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+                  <input type="url" class="form-input" placeholder="https://hooks.slack.com/…" style="width:200px;font-size:0.75rem;" />
+                </div>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Intercom Workspace ID</div><div style="font-size:0.8125rem;color:var(--text-500);">In-app support chat</div></div>
+                <input type="text" class="form-input" placeholder="abc12xyz" style="width:160px;font-size:0.875rem;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Billing -->
+          <div id="section-billing" class="admin-card reveal" style="margin-bottom:1.25rem;display:none;">
+            <div class="admin-card__header"><div class="admin-card__title">Billing Settings</div></div>
+            <div class="admin-card__body" style="display:flex;flex-direction:column;">
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Trial Duration</div><div style="font-size:0.8125rem;color:var(--text-500);">Days before trial expires</div></div>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <input type="number" class="form-input" value="14" style="width:80px;font-size:0.875rem;" />
+                  <span style="font-size:0.875rem;color:var(--text-500);">days</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Explorer Plan Price</div><div style="font-size:0.8125rem;color:var(--text-500);">Monthly USD</div></div>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span style="color:var(--text-400);">$</span>
+                  <input type="number" class="form-input" value="149" style="width:100px;font-size:0.875rem;" />
+                </div>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Professional Plan Price</div><div style="font-size:0.8125rem;color:var(--text-500);">Monthly USD</div></div>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span style="color:var(--text-400);">$</span>
+                  <input type="number" class="form-input" value="299" style="width:100px;font-size:0.875rem;" />
+                </div>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Annual Discount</div><div style="font-size:0.8125rem;color:var(--text-500);">% off for annual billing</div></div>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <input type="number" class="form-input" value="20" style="width:80px;font-size:0.875rem;" />
+                  <span style="font-size:0.875rem;color:var(--text-500);">%</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Grace Period After Expiry</div><div style="font-size:0.8125rem;color:var(--text-500);">Days before access is revoked</div></div>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <input type="number" class="form-input" value="3" style="width:80px;font-size:0.875rem;" />
+                  <span style="font-size:0.875rem;color:var(--text-500);">days</span>
+                </div>
+              </div>
+              <div class="setting-row">
+                <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Auto-Retry Failed Payments</div><div style="font-size:0.8125rem;color:var(--text-500);">Retry declined cards automatically</div></div>
+                <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feature Flags -->
+          <div id="section-features" class="admin-card reveal" style="margin-bottom:1.25rem;display:none;">
+            <div class="admin-card__header">
+              <div>
+                <div class="admin-card__title">Feature Flags</div>
+                <div class="admin-card__subtitle">Toggle platform features without a deployment</div>
+              </div>
+            </div>
+            <div class="admin-card__body" style="display:flex;flex-direction:column;" id="featureFlagsList">
+              <!-- JS rendered -->
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div id="section-danger" class="admin-card reveal" style="margin-bottom:1.25rem;border-color:rgba(239,68,68,0.2);display:none;">
+            <div class="admin-card__header" style="background:rgba(239,68,68,0.04);border-bottom-color:rgba(239,68,68,0.15);">
+              <div class="admin-card__title" style="color:var(--rose-400);">
+                <i class="fa-solid fa-triangle-exclamation fa-sm" style="margin-right:0.375rem;"></i> Danger Zone
+              </div>
+            </div>
+            <div class="admin-card__body" style="display:flex;flex-direction:column;gap:1rem;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.12);border-radius:var(--radius-lg);">
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Clear All Cache</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);">Purge Redis cache and CDN edge nodes</div>
+                </div>
+                <button class="btn btn--ghost btn--sm" style="border-color:rgba(239,68,68,0.3);color:var(--rose-400);" onclick="adminConfirm('Clear all platform cache? This may temporarily slow the site.',()=>adminToast('Cache cleared successfully','success'))">
+                  <i class="fa-solid fa-trash-can fa-xs"></i> Clear Cache
+                </button>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.12);border-radius:var(--radius-lg);">
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Enable Maintenance Mode</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);">Take the platform offline for all users</div>
+                </div>
+                <button class="btn btn--ghost btn--sm" style="border-color:rgba(239,68,68,0.3);color:var(--rose-400);" onclick="adminConfirm('Enable maintenance mode? All users will see a maintenance page.',()=>adminToast('Maintenance mode enabled','warning'))">
+                  <i class="fa-solid fa-power-off fa-xs"></i> Enable
+                </button>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.12);border-radius:var(--radius-lg);">
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Reset AI Model Cache</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);">Force all AI models to reload from disk</div>
+                </div>
+                <button class="btn btn--ghost btn--sm" style="border-color:rgba(239,68,68,0.3);color:var(--rose-400);" onclick="adminConfirm('Reset AI model cache? Models will reload on next request.',()=>adminToast('AI model cache reset','warning'))">
+                  <i class="fa-solid fa-rotate fa-xs"></i> Reset
+                </button>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-lg);">
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--rose-400);">Delete All Trial Accounts</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);">Permanently remove all expired trial users</div>
+                </div>
+                <button class="btn btn--ghost btn--sm" style="border-color:rgba(239,68,68,0.4);color:var(--rose-400);" onclick="adminConfirm('PERMANENTLY delete all expired trial accounts? This cannot be undone.',()=>adminToast('Expired trials deleted','error'))">
+                  <i class="fa-solid fa-skull fa-xs"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/config.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    const FEATURE_FLAGS = [
+      {key:'live_ticker',          label:'Live Commodity Ticker',         desc:'Show real-time price ticker on all pages',            enabled:true},
+      {key:'ai_predictor',         label:'AI Price Predictor',            desc:'Enable AI forecasting tool for subscribers',          enabled:true},
+      {key:'websocket_streaming',  label:'WebSocket Streaming API',       desc:'Real-time data push via WebSocket connections',       enabled:true},
+      {key:'morning_brief',        label:'Morning Brief Newsletter',      desc:'Daily 6AM AEST automated email digest',               enabled:true},
+      {key:'equipment_cad',        label:'CAD File Downloads',            desc:'Allow CAD file downloads from Equipment Database',    enabled:true},
+      {key:'esg_reporting',        label:'ESG Auto-Reporting (ISSB)',     desc:'Automated ISSB S1/S2 disclosure generation',          enabled:true},
+      {key:'api_public',           label:'Public API Access',             desc:'Allow external API key generation for subscribers',   enabled:true},
+      {key:'social_auth',          label:'Social Login (Google/LinkedIn)','desc':'Allow OAuth login via Google and LinkedIn',         enabled:true},
+      {key:'beta_features',        label:'Beta Feature Access',           desc:'Show beta features to opted-in users',                enabled:false},
+      {key:'maintenance_banner',   label:'Maintenance Banner',            desc:'Show yellow maintenance warning banner site-wide',    enabled:false},
+      {key:'new_pricing_page',     label:'New Pricing Page (A/B Test)',   desc:'Serve new pricing layout to 50% of visitors',         enabled:false},
+      {key:'ai_chat_assistant',    label:'AI Chat Assistant (Beta)',      desc:'In-platform AI chat for mining queries',              enabled:false},
+    ];
+
+    document.getElementById('featureFlagsList').innerHTML = FEATURE_FLAGS.map((f,i) => `
+      <div class="setting-row" style="${i===FEATURE_FLAGS.length-1?'border-bottom:none;':''}">
+        <div style="flex:1;">
+          <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);display:flex;align-items:center;gap:0.5rem;">
+            ${f.label}
+            <span style="font-family:var(--font-mono);font-size:0.625rem;color:var(--text-600);background:var(--coal-800);padding:0.125rem 0.375rem;border-radius:4px;">${f.key}</span>
+          </div>
+          <div style="font-size:0.8125rem;color:var(--text-500);">${f.desc}</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" ${f.enabled?'checked':''} onchange="adminToast('Feature flag \\'${f.label}\\' '+(this.checked?'enabled':'disabled'),'info')" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>`).join('');
+
+    function showSection(id, btn) {
+      document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display='none');
+      document.getElementById('section-'+id).style.display = 'block';
+      document.querySelectorAll('.settings-nav__item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function saveAllSettings() {
+      adminToast('Settings saved successfully.','success');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — SESMine Intelligence Platform</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    body { display:flex; min-height:100vh; background:var(--bg-950); }
+
+    .dash-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+      background: var(--bg-900);
+      border-right: var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top:0; left:0; bottom:0;
+      z-index: 50;
+      overflow-y: auto;
+    }
+
+    .dash-logo { padding:1.25rem 1.5rem; border-bottom:var(--border-subtle); }
+    .dash-logo img { height:32px; }
+
+    .dash-nav { padding:1rem 0; flex:1; }
+
+    .dash-section {
+      font-size:0.65rem; font-weight:800;
+      letter-spacing:0.15em; text-transform:uppercase;
+      color:var(--text-600); padding:0.75rem 1.5rem 0.35rem;
+    }
+
+    .dash-link {
+      display:flex; align-items:center; gap:0.75rem;
+      padding:0.6rem 1.5rem; font-size:0.875rem;
+      font-weight:500; color:var(--text-400);
+      transition:all var(--ease-fast);
+      border-left:3px solid transparent;
+      text-decoration:none;
+    }
+    .dash-link:hover  { color:var(--text-100); background:rgba(0,200,232,0.05); }
+    .dash-link.active { color:var(--brand-cyan); background:rgba(0,200,232,0.08); border-left-color:var(--brand-cyan); }
+
+    .dash-main { margin-left:240px; flex:1; display:flex; flex-direction:column; }
+
+    .dash-topbar {
+      height:64px; background:var(--bg-900);
+      border-bottom:var(--border-subtle);
+      display:flex; align-items:center;
+      justify-content:space-between;
+      padding:0 2rem; position:sticky; top:0; z-index:40;
+    }
+
+    .dash-content { padding:2rem; flex:1; }
+
+    /* Mini chart bars */
+    .mini-chart { display:flex; align-items:flex-end; gap:3px; height:40px; }
+    .mini-bar { flex:1; border-radius:3px 3px 0 0; background:rgba(0,200,232,0.3); transition:background 0.2s; }
+    .mini-bar:hover { background:var(--brand-cyan); }
+    .mini-bar.up   { background:rgba(34,197,94,0.4); }
+    .mini-bar.down { background:rgba(239,68,68,0.4); }
+
+    /* Commodity row */
+    .commodity-row {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0.875rem 1rem; border-radius:var(--radius-md);
+      background:var(--bg-700); transition:background var(--ease-fast);
+    }
+    .commodity-row:hover { background:var(--bg-600); }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="dash-sidebar">
+    <div class="dash-logo">
+      <a href="../index.html">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" loading="eager" />
+      </a>
+    </div>
+    <nav class="dash-nav">
+      <div class="dash-section">Dashboard</div>
+      <a href="main-dashboard.html"  class="dash-link active"><i class="fa-solid fa-house"       style="width:16px;"></i> Overview</a>
+      <a href="analytics.html"       class="dash-link"><i class="fa-solid fa-chart-bar"   style="width:16px;"></i> Analytics</a>
+      <a href="esg-dashboard.html"   class="dash-link"><i class="fa-solid fa-leaf"         style="width:16px;"></i> ESG Monitor</a>
+
+      <div class="dash-section">Intelligence Hubs</div>
+      <a href="../hubs/economics-hub.html"     class="dash-link"><i class="fa-solid fa-chart-line"    style="width:16px;color:#22C55E;"></i> Economics</a>
+      <a href="../hubs/engineering-hub.html"   class="dash-link"><i class="fa-solid fa-gear"          style="width:16px;color:#3B82F6;"></i> Engineering</a>
+      <a href="../hubs/innovation-hub.html"    class="dash-link"><i class="fa-solid fa-microchip"     style="width:16px;color:#A855F7;"></i> Innovation</a>
+      <a href="../hubs/procurement-hub.html"   class="dash-link"><i class="fa-solid fa-boxes-stacked" style="width:16px;color:var(--brand-gold);"></i> Procurement</a>
+      <a href="../hubs/safety-hub.html"        class="dash-link"><i class="fa-solid fa-shield-halved" style="width:16px;color:#EF4444;"></i> Safety</a>
+      <a href="../hubs/sustainability-hub.html" class="dash-link"><i class="fa-solid fa-leaf"         style="width:16px;color:var(--brand-cyan);"></i> Sustainability</a>
+
+      <div class="dash-section">Tools</div>
+      <a href="../products/ai-predictor.html"    class="dash-link"><i class="fa-solid fa-brain"      style="width:16px;"></i> AI Predictor</a>
+      <a href="../products/cost-calculator.html" class="dash-link"><i class="fa-solid fa-calculator" style="width:16px;"></i> Cost Calculator</a>
+      <a href="../products/equipment-database.html" class="dash-link"><i class="fa-solid fa-database" style="width:16px;"></i> Equipment DB</a>
+
+      <div class="dash-section">Account</div>
+      <a href="../pricing.html"       class="dash-link"><i class="fa-solid fa-tag"                style="width:16px;"></i> Upgrade Plan</a>
+      <a href="../auth/login.html"    class="dash-link" id="dashLogout"><i class="fa-solid fa-right-from-bracket" style="width:16px;color:var(--danger);"></i> <span style="color:var(--danger);">Sign Out</span></a>
+    </nav>
+    <div style="padding:1rem 1.5rem;border-top:var(--border-subtle);">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;flex-shrink:0;" id="userAvatar">U</div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;color:var(--text-100);" id="userName">User</div>
+          <div style="font-size:0.7rem;" id="userPlan"><span class="badge badge--cyan" style="font-size:0.65rem;">Pro</span></div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="dash-main">
+
+    <!-- Top Bar -->
+    <header class="dash-topbar">
+      <div>
+        <h4 style="font-size:1rem;margin:0;" id="greetingText">Good morning 👋</h4>
+        <div style="font-size:0.75rem;color:var(--text-500);">Wednesday, July 1, 2026</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;">
+        <div style="position:relative;">
+          <input type="search" placeholder="Search platform..." class="form-input" style="width:220px;padding:0.5rem 1rem 0.5rem 2.5rem;font-size:0.825rem;" aria-label="Search" />
+          <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:0.875rem;top:50%;transform:translateY(-50%);color:var(--text-500);font-size:0.75rem;"></i>
+        </div>
+        <button class="btn btn--ghost btn--sm"><i class="fa-solid fa-bell"></i></button>
+        <a href="../pricing.html" class="btn btn--gold btn--sm" data-track="dash-upgrade"><i class="fa-solid fa-rocket"></i> Upgrade</a>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="dash-content" id="main">
+
+      <!-- KPI Row -->
+      <div class="grid-4" style="margin-bottom:2rem;">
+        <div class="stat-card animate-fadeInUp">
+          <div class="stat-card__icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="stat-card__value text-gradient">$9,847</div>
+          <div class="stat-card__label">Copper LME / t</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ +1.2% today</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-1">
+          <div class="stat-card__icon" style="background:rgba(245,166,35,0.1);color:var(--brand-gold);"><i class="fa-solid fa-coins"></i></div>
+          <div class="stat-card__value text-gradient">$3,142</div>
+          <div class="stat-card__label">Gold XAU / oz</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ +0.8% today</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-2">
+          <div class="stat-card__icon" style="background:rgba(34,197,94,0.1);color:var(--success);"><i class="fa-solid fa-leaf"></i></div>
+          <div class="stat-card__value text-gradient">AA+</div>
+          <div class="stat-card__label">ESG Score</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ Top Quartile</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-3">
+          <div class="stat-card__icon" style="background:rgba(239,68,68,0.1);color:var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+          <div class="stat-card__value" style="color:var(--warning);">2</div>
+          <div class="stat-card__label">AI Alerts Active</div>
+          <div class="stat-card__trend stat-card__trend--down">▼ Review needed</div>
+        </div>
+      </div>
+
+      <!-- Middle Row -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:2rem;">
+
+        <!-- Commodity Watchlist -->
+        <div class="card animate-fadeInUp">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+            <h4>Commodity Watchlist</h4>
+            <div style="display:flex;gap:0.5rem;">
+              <button class="btn btn--ghost btn--sm">7D</button>
+              <button class="btn btn--primary btn--sm">30D</button>
+              <button class="btn btn--ghost btn--sm">90D</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div class="commodity-row">
+              <div style="display:flex;align-items:center;gap:0.875rem;">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(245,166,35,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem;">🟡</div>
+                <div><div style="font-size:0.875rem;font-weight:600;">Gold</div><div style="font-size:0.72rem;color:var(--text-500);">XAU/oz · LME</div></div>
+              </div>
+              <div class="mini-chart">
+                <div class="mini-bar up" style="height:60%;"></div><div class="mini-bar up" style="height:70%;"></div>
+                <div class="mini-bar up" style="height:55%;"></div><div class="mini-bar up" style="height:80%;"></div>
+                <div class="mini-bar up" style="height:75%;"></div><div class="mini-bar up" style="height:90%;"></div>
+                <div class="mini-bar up" style="height:100%;"></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:var(--font-mono);font-weight:700;font-size:0.95rem;">$3,142.50</div>
+                <div style="font-size:0.75rem;color:var(--success);">▲ +0.8%</div>
+              </div>
+            </div>
+            <div class="commodity-row">
+              <div style="display:flex;align-items:center;gap:0.875rem;">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem;">🔵</div>
+                <div><div style="font-size:0.875rem;font-weight:600;">Copper</div><div style="font-size:0.72rem;color:var(--text-500);">LME/t · Grade A</div></div>
+              </div>
+              <div class="mini-chart">
+                <div class="mini-bar up" style="height:50%;"></div><div class="mini-bar up" style="height:65%;"></div>
+                <div class="mini-bar down" style="height:45%;"></div><div class="mini-bar up" style="height:75%;"></div>
+                <div class="mini-bar up" style="height:80%;"></div><div class="mini-bar up" style="height:95%;"></div>
+                <div class="mini-bar up" style="height:100%;"></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:var(--font-mono);font-weight:700;font-size:0.95rem;">$9,847.00</div>
+                <div style="font-size:0.75rem;color:var(--success);">▲ +1.2%</div>
+              </div>
+            </div>
+            <div class="commodity-row">
+              <div style="display:flex;align-items:center;gap:0.875rem;">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem;">⚪</div>
+                <div><div style="font-size:0.875rem;font-weight:600;">Silver</div><div style="font-size:0.72rem;color:var(--text-500);">XAG/oz · COMEX</div></div>
+              </div>
+              <div class="mini-chart">
+                <div class="mini-bar" style="height:70%;"></div><div class="mini-bar down" style="height:55%;"></div>
+                <div class="mini-bar" style="height:65%;"></div><div class="mini-bar down" style="height:50%;"></div>
+                <div class="mini-bar" style="height:60%;"></div><div class="mini-bar down" style="height:48%;"></div>
+                <div class="mini-bar down" style="height:45%;"></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:var(--font-mono);font-weight:700;font-size:0.95rem;">$31.84</div>
+                <div style="font-size:0.75rem;color:var(--danger);">▼ -0.3%</div>
+              </div>
+            </div>
+            <div class="commodity-row">
+              <div style="display:flex;align-items:center;gap:0.875rem;">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;font-size:1rem;">🟠</div>
+                <div><div style="font-size:0.875rem;font-weight:600;">Lithium</div><div style="font-size:0.72rem;color:var(--text-500);">Carbonate/t · Spot</div></div>
+              </div>
+              <div class="mini-chart">
+                <div class="mini-bar up" style="height:40%;"></div><div class="mini-bar up" style="height:55%;"></div>
+                <div class="mini-bar up" style="height:70%;"></div><div class="mini-bar up" style="height:80%;"></div>
+                <div class="mini-bar up" style="height:85%;"></div><div class="mini-bar up" style="height:95%;"></div>
+                <div class="mini-bar up" style="height:100%;"></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:var(--font-mono);font-weight:700;font-size:0.95rem;">$14,200</div>
+                <div style="font-size:0.75rem;color:var(--success);">▲ +2.1%</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:right;margin-top:1rem;">
+            <a href="../hubs/economics-hub.html" style="font-size:0.8rem;color:var(--brand-cyan);">Full Economics Hub <i class="fa-solid fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <!-- AI Alerts -->
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          <div class="card animate-fadeInUp delay-1">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+              <h4><i class="fa-solid fa-brain" style="color:var(--brand-cyan);margin-right:0.5rem;"></i> AI Alerts</h4>
+              <span class="badge badge--warning">2 Active</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.875rem;">
+              <div style="padding:1rem;background:var(--danger-bg);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-md);">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+                  <i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);font-size:0.875rem;"></i>
+                  <span style="font-size:0.8rem;font-weight:700;color:var(--danger);">HIGH RISK</span>
+                </div>
+                <div style="font-size:0.825rem;font-weight:600;margin-bottom:0.25rem;">Crusher #4 — Bearing Failure</div>
+                <div style="font-size:0.75rem;color:var(--text-400);">62% failure probability within 72 hours. Maintenance recommended immediately.</div>
+                <div class="progress progress--danger" style="margin-top:0.75rem;"><div class="progress__bar" style="width:62%;"></div></div>
+              </div>
+              <div style="padding:1rem;background:var(--warning-bg);border:1px solid rgba(245,166,35,0.2);border-radius:var(--radius-md);">
+                <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+                  <i class="fa-solid fa-circle-exclamation" style="color:var(--warning);font-size:0.875rem;"></i>
+                  <span style="font-size:0.8rem;font-weight:700;color:var(--warning);">MEDIUM</span>
+                </div>
+                <div style="font-size:0.825rem;font-weight:600;margin-bottom:0.25rem;">Supply Chain — APAC Disruption</div>
+                <div style="font-size:0.75rem;color:var(--text-400);">3 active disruption nodes detected. Lead times +14 days on copper cathode.</div>
+                <div class="progress progress--gold" style="margin-top:0.75rem;"><div class="progress__bar" style="width:45%;background:var(--brand-gold);"></div></div>
+              </div>
+            </div>
+            <a href="../products/ai-predictor.html" class="btn btn--ghost btn--full btn--sm" style="margin-top:1rem;">Open AI Predictor</a>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="card animate-fadeInUp delay-2">
+            <h4 style="margin-bottom:1.25rem;">Quick Access</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+              <a href="../products/cost-calculator.html" class="card" style="padding:1rem;text-align:center;text-decoration:none;border-radius:var(--radius-md);">
+                <i class="fa-solid fa-calculator" style="color:var(--brand-gold);font-size:1.25rem;margin-bottom:0.5rem;display:block;"></i>
+                <div style="font-size:0.75rem;font-weight:600;color:var(--text-200);">Cost Calc</div>
+              </a>
+              <a href="../products/equipment-database.html" class="card" style="padding:1rem;text-align:center;text-decoration:none;border-radius:var(--radius-md);">
+                <i class="fa-solid fa-database" style="color:var(--brand-cyan);font-size:1.25rem;margin-bottom:0.5rem;display:block;"></i>
+                <div style="font-size:0.75rem;font-weight:600;color:var(--text-200);">Equipment</div>
+              </a>
+              <a href="esg-dashboard.html" class="card" style="padding:1rem;text-align:center;text-decoration:none;border-radius:var(--radius-md);">
+                <i class="fa-solid fa-leaf" style="color:var(--success);font-size:1.25rem;margin-bottom:0.5rem;display:block;"></i>
+                <div style="font-size:0.75rem;font-weight:600;color:var(--text-200);">ESG</div>
+              </a>
+              <a href="../news.html" class="card" style="padding:1rem;text-align:center;text-decoration:none;border-radius:var(--radius-md);">
+                <i class="fa-solid fa-newspaper" style="color:#A855F7;font-size:1.25rem;margin-bottom:0.5rem;display:block;"></i>
+                <div style="font-size:0.75rem;font-weight:600;color:var(--text-200);">News</div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hub Access Grid -->
+      <div class="card animate-fadeInUp">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+          <h4>Your Intelligence Hubs</h4>
+          <a href="../hub-preview.html" class="btn btn--ghost btn--sm">All Hubs <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="grid-3">
+          <a href="../hubs/economics-hub.html" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bg-700);border-radius:var(--radius-md);text-decoration:none;transition:background var(--ease-fast);" onmouseover="this.style.background='var(--bg-600)'" onmouseout="this.style.background='var(--bg-700)'">
+            <div style="width:40px;height:40px;border-radius:8px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;color:#22C55E;flex-shrink:0;"><i class="fa-solid fa-chart-line"></i></div>
+            <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Economics</div><div style="font-size:0.75rem;color:var(--text-500);">48 commodities live</div></div>
+            <i class="fa-solid fa-arrow-right" style="color:var(--text-600);margin-left:auto;font-size:0.75rem;"></i>
+          </a>
+          <a href="../hubs/engineering-hub.html" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bg-700);border-radius:var(--radius-md);text-decoration:none;transition:background var(--ease-fast);" onmouseover="this.style.background='var(--bg-600)'" onmouseout="this.style.background='var(--bg-700)'">
+            <div style="width:40px;height:40px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;color:#3B82F6;flex-shrink:0;"><i class="fa-solid fa-gear"></i></div>
+            <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Engineering</div><div style="font-size:0.75rem;color:var(--text-500);">10,000+ specs</div></div>
+            <i class="fa-solid fa-arrow-right" style="color:var(--text-600);margin-left:auto;font-size:0.75rem;"></i>
+          </a>
+          <a href="../hubs/sustainability-hub.html" style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bg-700);border-radius:var(--radius-md);text-decoration:none;transition:background var(--ease-fast);" onmouseover="this.style.background='var(--bg-600)'" onmouseout="this.style.background='var(--bg-700)'">
+            <div style="width:40px;height:40px;border-radius:8px;background:rgba(0,200,232,0.1);display:flex;align-items:center;justify-content:center;color:var(--brand-cyan);flex-shrink:0;"><i class="fa-solid fa-leaf"></i></div>
+            <div><div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Sustainability</div><div style="font-size:0.75rem;color:var(--text-500);">ESG live tracking</div></div>
+            <i class="fa-solid fa-arrow-right" style="color:var(--text-600);margin-left:auto;font-size:0.75rem;"></i>
+          </a>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/auth.js" defer></script>
+  <script src="../js/config.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script>
+    // Greeting
+    const h = new Date().getHours();
+    document.getElementById('greetingText').textContent =
+      (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ' 👋';
+
+    // Load user info
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.SESAuth) {
+        const u = SESAuth.getCurrentUser();
+        if (u) {
+          document.getElementById('userName').textContent   = u.firstName || u.email;
+          document.getElementById('userAvatar').textContent = (u.firstName || u.email)[0].toUpperCase();
+        }
+      }
+    });
+
+    document.getElementById('dashLogout').addEventListener('click', e => {
+      e.preventDefault();
+      if (window.SESAuth) SESAuth.logout();
+      window.location.href = '../auth/login.html';
+    });
+  </script>
+</body>
+</html>

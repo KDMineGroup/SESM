@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal — SESMine Intelligence</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-950);
+      padding: 2rem;
+    }
+
+    .admin-login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-900);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .admin-login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--danger), #FF6B6B, var(--danger));
+    }
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.2);
+      border-radius: var(--radius-full);
+      padding: 0.35rem 0.875rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--danger);
+      margin-bottom: 1.5rem;
+    }
+
+    .input-wrap { position: relative; }
+    .input-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-500); font-size: 0.875rem; pointer-events: none; }
+    .input-wrap .form-input { padding-left: 2.75rem; }
+  </style>
+</head>
+<body>
+
+  <div class="glow-orb" style="width:400px;height:400px;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(239,68,68,0.08) 0%,transparent 70%);position:fixed;pointer-events:none;"></div>
+
+  <div class="admin-login-card animate-scaleIn">
+
+    <div style="text-align:center;margin-bottom:2rem;">
+      <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png"
+        alt="SESMine" width="120" height="36" style="margin:0 auto 1.5rem;" loading="eager" />
+      <div class="security-badge"><i class="fa-solid fa-shield-halved"></i> Restricted Admin Access</div>
+      <h3 style="margin-bottom:0.5rem;">Admin Portal</h3>
+      <p style="font-size:0.825rem;color:var(--text-500);">Authorised personnel only. All access is logged and monitored.</p>
+    </div>
+
+    <div id="adminError" style="display:none;background:var(--danger-bg);border:1px solid rgba(239,68,68,0.3);border-radius:var(--radius-md);padding:0.875rem 1rem;margin-bottom:1.5rem;font-size:0.875rem;color:var(--danger);display:none;">
+      <i class="fa-solid fa-triangle-exclamation"></i> <span id="adminErrorMsg">Invalid credentials.</span>
+    </div>
+
+    <form id="adminLoginForm" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="adminEmail">Admin Email</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-user-shield input-icon"></i>
+          <input class="form-input" type="email" id="adminEmail" placeholder="admin@sesmine.com" required autocomplete="email" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="adminPassword">Password</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input class="form-input" type="password" id="adminPassword" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="adminMFA">2FA Code</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-key input-icon"></i>
+          <input class="form-input" type="text" id="adminMFA" placeholder="6-digit code"
+            maxlength="6" pattern="[0-9]{6}" autocomplete="one-time-code"
+            style="font-family:var(--font-mono);letter-spacing:0.25em;font-size:1.1rem;" />
+        </div>
+      </div>
+      <button type="submit" class="btn btn--full btn--lg" id="adminLoginBtn"
+        style="background:linear-gradient(135deg,#991B1B,var(--danger));color:#fff;box-shadow:0 4px 20px rgba(239,68,68,0.25);margin-top:0.5rem;">
+        <i class="fa-solid fa-shield-halved"></i> Access Admin Portal
+      </button>
+    </form>
+
+    <div style="text-align:center;margin-top:1.5rem;padding-top:1.5rem;border-top:var(--border-subtle);">
+      <a href="../auth/login.html" style="font-size:0.8rem;color:var(--text-500);">
+        <i class="fa-solid fa-arrow-left"></i> Back to User Login
+      </a>
+    </div>
+
+    <div style="margin-top:1.5rem;padding:0.875rem;background:rgba(239,68,68,0.05);border-radius:var(--radius-md);border:1px solid rgba(239,68,68,0.1);">
+      <p style="font-size:0.72rem;color:var(--text-500);text-align:center;line-height:1.5;">
+        <i class="fa-solid fa-circle-info" style="color:var(--danger);"></i>
+        Unauthorized access attempts are logged, reported, and may result in legal action.
+      </p>
+    </div>
+
+  </div>
+
+  <script src="../js/auth.js" defer></script>
+  <script>
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('adminLoginBtn');
+      btn.innerHTML = '<span class="spinner"></span> Verifying...';
+      btn.disabled = true;
+
+      const email    = document.getElementById('adminEmail').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      const mfa      = document.getElementById('adminMFA').value.trim();
+
+      setTimeout(() => {
+        if (window.SESAuth) {
+          const result = SESAuth.adminLogin(email, password);
+          if (result.success) {
+            window.location.href = 'admin-dashboard.html';
+          } else {
+            const err = document.getElementById('adminError');
+            document.getElementById('adminErrorMsg').textContent = result.message || 'Invalid credentials.';
+            err.style.display = 'block';
+            btn.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Access Admin Portal';
+            btn.disabled = false;
+          }
+        } else {
+          window.location.href = 'admin-dashboard.html';
+        }
+      }, 1200);
+    });
+
+    // Auto-format MFA input
+    document.getElementById('adminMFA').addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '').slice(0, 6);
+    });
+  </script>
+</body>
+</html>

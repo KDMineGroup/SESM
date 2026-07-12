@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roles & Access — Admin | SESMine</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    body { display:flex; min-height:100vh; background:var(--bg-950); }
+    .admin-sidebar { width:260px; flex-shrink:0; background:var(--bg-900); border-right:var(--border-subtle); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:50; overflow-y:auto; }
+    .sidebar-logo { padding:1.5rem; border-bottom:var(--border-subtle); display:flex; align-items:center; gap:0.75rem; }
+    .sidebar-logo img { height:32px; }
+    .admin-badge { font-size:0.6rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; background:rgba(239,68,68,0.15); color:var(--danger); border:1px solid rgba(239,68,68,0.2); border-radius:4px; padding:2px 6px; }
+    .sidebar-nav { padding:1rem 0; flex:1; }
+    .sidebar-section { font-size:0.65rem; font-weight:800; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-600); padding:0.75rem 1.5rem 0.35rem; }
+    .sidebar-link { display:flex; align-items:center; gap:0.75rem; padding:0.625rem 1.5rem; font-size:0.875rem; font-weight:500; color:var(--text-400); transition:all var(--ease-fast); border-left:3px solid transparent; text-decoration:none; }
+    .sidebar-link:hover { color:var(--text-100); background:rgba(0,200,232,0.05); }
+    .sidebar-link.active { color:var(--brand-cyan); background:rgba(0,200,232,0.08); border-left-color:var(--brand-cyan); }
+    .admin-main { margin-left:260px; flex:1; display:flex; flex-direction:column; }
+    .admin-topbar { height:64px; background:var(--bg-900); border-bottom:var(--border-subtle); display:flex; align-items:center; justify-content:space-between; padding:0 2rem; position:sticky; top:0; z-index:40; }
+    .admin-content { padding:2rem; flex:1; }
+
+    .role-card {
+      background: var(--bg-900);
+      border: var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      transition: border-color var(--ease-fast);
+    }
+    .role-card:hover { border-color: rgba(0,200,232,0.2); }
+
+    .perm-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.625rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.825rem;
+    }
+    .perm-toggle:last-child { border-bottom: none; }
+
+    .toggle-switch {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-600);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      width: 14px; height: 14px;
+      left: 3px; top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: var(--brand-cyan); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(16px); }
+  </style>
+</head>
+<body>
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" />
+      <span class="admin-badge">Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Overview</div>
+      <a href="admin-dashboard.html"    class="sidebar-link"><i class="fa-solid fa-gauge-high"  style="width:16px;"></i> Dashboard</a>
+      <div class="sidebar-section">Management</div>
+      <a href="user-management.html"    class="sidebar-link"><i class="fa-solid fa-users"        style="width:16px;"></i> Users</a>
+      <a href="admin-users.html"        class="sidebar-link active"><i class="fa-solid fa-user-shield" style="width:16px;"></i> Roles & Access</a>
+      <a href="content-management.html" class="sidebar-link"><i class="fa-solid fa-file-pen"     style="width:16px;"></i> Content</a>
+      <a href="admin-hub-requests.html" class="sidebar-link"><i class="fa-solid fa-inbox"        style="width:16px;"></i> Hub Requests <span class="badge badge--warning" style="margin-left:auto;">7</span></a>
+      <div class="sidebar-section">Analytics</div>
+      <a href="../dashboard/analytics.html"     class="sidebar-link"><i class="fa-solid fa-chart-bar" style="width:16px;"></i> Analytics</a>
+      <a href="../dashboard/esg-dashboard.html" class="sidebar-link"><i class="fa-solid fa-leaf"      style="width:16px;"></i> ESG Monitor</a>
+      <div class="sidebar-section">System</div>
+      <a href="../index.html" class="sidebar-link" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square" style="width:16px;"></i> View Site</a>
+      <a href="admin-login.html" class="sidebar-link" id="logoutBtn"><i class="fa-solid fa-right-from-bracket" style="width:16px;color:var(--danger);"></i><span style="color:var(--danger);">Sign Out</span></a>
+    </nav>
+    <div style="padding:1rem 1.5rem;border-top:var(--border-subtle);">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;">SA</div>
+        <div><div style="font-size:0.8rem;font-weight:600;color:var(--text-100);">Super Admin</div><div style="font-size:0.7rem;color:var(--text-500);">admin@sesmine.com</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h4 style="font-size:1rem;margin:0;"><i class="fa-solid fa-user-shield" style="color:var(--brand-cyan);margin-right:0.5rem;"></i> Roles & Access Control</h4>
+        <div style="font-size:0.75rem;color:var(--text-500);">Manage platform roles and permission sets</div>
+      </div>
+      <button class="btn btn--primary btn--sm" onclick="saveRoles()"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Role Cards Grid -->
+      <div class="grid-3" style="margin-bottom:2rem;">
+
+        <!-- Super Admin -->
+        <div class="role-card animate-fadeInUp" style="border-color:rgba(239,68,68,0.25);">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;color:var(--danger);font-size:1rem;"><i class="fa-solid fa-crown"></i></div>
+            <div><div style="font-weight:700;font-size:0.95rem;">Super Admin</div><div style="font-size:0.72rem;color:var(--text-500);">1 user assigned</div></div>
+            <span class="badge badge--danger" style="margin-left:auto;">System</span>
+          </div>
+          <div>
+            <div class="perm-toggle"><span>Full Platform Access</span><label class="toggle-switch"><input type="checkbox" checked disabled /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>User Management</span><label class="toggle-switch"><input type="checkbox" checked disabled /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Content Management</span><label class="toggle-switch"><input type="checkbox" checked disabled /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Billing & Plans</span><label class="toggle-switch"><input type="checkbox" checked disabled /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>System Configuration</span><label class="toggle-switch"><input type="checkbox" checked disabled /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Audit Log Access</span><label class="toggle-switch"><input type="checkbox" checked disabled /><span class="toggle-slider"></span></label></div>
+          </div>
+          <div style="margin-top:1.25rem;padding-top:1rem;border-top:var(--border-subtle);">
+            <p style="font-size:0.75rem;color:var(--text-500);">⚠️ System role — permissions cannot be modified.</p>
+          </div>
+        </div>
+
+        <!-- Platform Admin -->
+        <div class="role-card animate-fadeInUp delay-1">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,200,232,0.1);display:flex;align-items:center;justify-content:center;color:var(--brand-cyan);font-size:1rem;"><i class="fa-solid fa-user-gear"></i></div>
+            <div><div style="font-weight:700;font-size:0.95rem;">Platform Admin</div><div style="font-size:0.72rem;color:var(--text-500);">4 users assigned</div></div>
+            <span class="badge badge--cyan" style="margin-left:auto;">Custom</span>
+          </div>
+          <div>
+            <div class="perm-toggle"><span>User Management</span><label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Content Management</span><label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Hub Request Approval</span><label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Analytics Access</span><label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Billing & Plans</span><label class="toggle-switch"><input type="checkbox" onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>System Configuration</span><label class="toggle-switch"><input type="checkbox" onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+          </div>
+          <div style="margin-top:1.25rem;padding-top:1rem;border-top:var(--border-subtle);">
+            <button class="btn btn--ghost btn--full btn--sm" onclick="editRole('Platform Admin')"><i class="fa-solid fa-pen"></i> Edit Role</button>
+          </div>
+        </div>
+
+        <!-- Content Editor -->
+        <div class="role-card animate-fadeInUp delay-2">
+          <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.25rem;">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(168,85,247,0.1);display:flex;align-items:center;justify-content:center;color:#A855F7;font-size:1rem;"><i class="fa-solid fa-pen-nib"></i></div>
+            <div><div style="font-weight:700;font-size:0.95rem;">Content Editor</div><div style="font-size:0.72rem;color:var(--text-500);">8 users assigned</div></div>
+            <span style="background:rgba(168,85,247,0.15);color:#A855F7;" class="badge" style="margin-left:auto;">Custom</span>
+          </div>
+          <div>
+            <div class="perm-toggle"><span>News Publishing</span><label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Resource Management</span><label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Hub Content Editing</span><label class="toggle-switch"><input type="checkbox" checked onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>User Management</span><label class="toggle-switch"><input type="checkbox" onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Analytics Access</span><label class="toggle-switch"><input type="checkbox" onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+            <div class="perm-toggle"><span>Billing & Plans</span><label class="toggle-switch"><input type="checkbox" onchange="markDirty()" /><span class="toggle-slider"></span></label></div>
+          </div>
+          <div style="margin-top:1.25rem;padding-top:1rem;border-top:var(--border-subtle);">
+            <button class="btn btn--ghost btn--full btn--sm" onclick="editRole('Content Editor')"><i class="fa-solid fa-pen"></i> Edit Role</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Role Assignment Table -->
+      <div class="card animate-fadeInUp">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+          <h4>Admin User Assignments</h4>
+          <button class="btn btn--primary btn--sm" onclick="addAdminUser()"><i class="fa-solid fa-plus"></i> Add Admin User</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>User</th><th>Role</th><th>Last Active</th><th>MFA</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:0.75rem;"><div style="width:32px;height:32px;border-radius:50%;background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;">SA</div><div><div style="font-size:0.875rem;font-weight:600;">Super Admin</div><div style="font-size:0.75rem;color:var(--text-500);">admin@sesmine.com</div></div></div></td>
+                <td><span class="badge badge--danger">Super Admin</span></td>
+                <td style="font-size:0.8rem;color:var(--text-400);">Jul 1, 2026 · 11:02</td>
+                <td><span class="badge badge--success"><i class="fa-solid fa-shield-check"></i> Enabled</span></td>
+                <td><span class="badge badge--success">Active</span></td>
+                <td><button class="btn btn--ghost btn--sm" disabled><i class="fa-solid fa-lock"></i></button></td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:0.75rem;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#1D4ED8);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;">CM</div><div><div style="font-size:0.875rem;font-weight:600;">Chris Morgan</div><div style="font-size:0.75rem;color:var(--text-500);">c.morgan@sesmine.com</div></div></div></td>
+                <td><span class="badge badge--cyan">Platform Admin</span></td>
+                <td style="font-size:0.8rem;color:var(--text-400);">Jun 30, 2026 · 4:18</td>
+                <td><span class="badge badge--success"><i class="fa-solid fa-shield-check"></i> Enabled</span></td>
+                <td><span class="badge badge--success">Active</span></td>
+                <td><div style="display:flex;gap:0.5rem;"><button class="btn btn--ghost btn--sm" onclick="editAdminUser('Chris Morgan')"><i class="fa-solid fa-pen"></i></button><button class="btn btn--danger btn--sm" onclick="removeAdminUser(this)"><i class="fa-solid fa-trash"></i></button></div></td>
+              </tr>
+              <tr>
+                <td><div style="display:flex;align-items:center;gap:0.75rem;"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#A855F7,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;color:#fff;">NP</div><div><div style="font-size:0.875rem;font-weight:600;">Nina Patel</div><div style="font-size:0.75rem;color:var(--text-500);">n.patel@sesmine.com</div></div></div></td>
+                <td><span style="background:rgba(168,85,247,0.15);color:#A855F7;" class="badge">Content Editor</span></td>
+                <td style="font-size:0.8rem;color:var(--text-400);">Jun 29, 2026 · 2:44</td>
+                <td><span class="badge badge--warning">Disabled</span></td>
+                <td><span class="badge badge--success">Active</span></td>
+                <td><div style="display:flex;gap:0.5rem;"><button class="btn btn--ghost btn--sm" onclick="editAdminUser('Nina Patel')"><i class="fa-solid fa-pen"></i></button><button class="btn btn--danger btn--sm" onclick="removeAdminUser(this)"><i class="fa-solid fa-trash"></i></button></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/auth.js" defer></script>
+  <script>
+    let isDirty = false;
+    function markDirty() { isDirty = true; document.querySelector('[onclick="saveRoles()"]').classList.add('btn--gold'); }
+    function saveRoles() {
+      const btn = event.target.closest('button');
+      btn.innerHTML = '<span class="spinner"></span> Saving...';
+      btn.disabled = true;
+      setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-check"></i> Saved'; isDirty = false; setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes'; btn.disabled = false; btn.classList.remove('btn--gold'); }, 2000); }, 1200);
+    }
+    function editRole(name)      { alert(`Role editor for "${name}" — full role builder coming in v5.1`); }
+    function editAdminUser(name) { alert(`Edit admin user "${name}" — opens user edit modal`); }
+    function removeAdminUser(btn){ if (confirm('Remove this admin user?')) btn.closest('tr').style.opacity = '0.3'; }
+    function addAdminUser()      { alert('Add admin user modal — invite by email with role assignment'); }
+    document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); if (window.SESAuth) SESAuth.adminLogout(); window.location.href = 'admin-login.html'; });
+  </script>
+</body>
+</html>

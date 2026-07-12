@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Management — Admin | SESMine</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    body { display:flex; min-height:100vh; background:var(--bg-950); }
+    .admin-sidebar { width:260px; flex-shrink:0; background:var(--bg-900); border-right:var(--border-subtle); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:50; overflow-y:auto; }
+    .sidebar-logo { padding:1.5rem; border-bottom:var(--border-subtle); display:flex; align-items:center; gap:0.75rem; }
+    .sidebar-logo img { height:32px; }
+    .admin-badge { font-size:0.6rem; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; background:rgba(239,68,68,0.15); color:var(--danger); border:1px solid rgba(239,68,68,0.2); border-radius:4px; padding:2px 6px; }
+    .sidebar-nav { padding:1rem 0; flex:1; }
+    .sidebar-section { font-size:0.65rem; font-weight:800; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-600); padding:0.75rem 1.5rem 0.35rem; }
+    .sidebar-link { display:flex; align-items:center; gap:0.75rem; padding:0.625rem 1.5rem; font-size:0.875rem; font-weight:500; color:var(--text-400); transition:all var(--ease-fast); border-left:3px solid transparent; text-decoration:none; }
+    .sidebar-link:hover { color:var(--text-100); background:rgba(0,200,232,0.05); }
+    .sidebar-link.active { color:var(--brand-cyan); background:rgba(0,200,232,0.08); border-left-color:var(--brand-cyan); }
+    .admin-main { margin-left:260px; flex:1; display:flex; flex-direction:column; }
+    .admin-topbar { height:64px; background:var(--bg-900); border-bottom:var(--border-subtle); display:flex; align-items:center; justify-content:space-between; padding:0 2rem; position:sticky; top:0; z-index:40; }
+    .admin-content { padding:2rem; flex:1; }
+
+    .content-tab { padding:0.5rem 1.25rem; font-size:0.875rem; font-weight:600; border-radius:var(--radius-md); cursor:pointer; border:var(--border-subtle); background:transparent; color:var(--text-400); transition:all var(--ease-fast); }
+    .content-tab.active { background:var(--grad-primary); color:#fff; border-color:transparent; }
+    .content-tab:hover:not(.active) { color:var(--text-100); background:var(--bg-700); }
+
+    .editor-toolbar { display:flex; gap:0.25rem; padding:0.75rem; background:var(--bg-700); border-radius:var(--radius-md) var(--radius-md) 0 0; border-bottom:var(--border-subtle); flex-wrap:wrap; }
+    .editor-btn { width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:6px; border:none; background:transparent; color:var(--text-400); cursor:pointer; font-size:0.8rem; transition:all var(--ease-fast); }
+    .editor-btn:hover { background:var(--bg-600); color:var(--text-100); }
+    .editor-area { width:100%; min-height:200px; background:var(--bg-800); border:none; border-radius:0 0 var(--radius-md) var(--radius-md); padding:1rem; color:var(--text-100); font-family:var(--font-body); font-size:0.875rem; line-height:1.7; resize:vertical; outline:none; }
+  </style>
+</head>
+<body>
+
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">
+      <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" />
+      <span class="admin-badge">Admin</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">Overview</div>
+      <a href="admin-dashboard.html"    class="sidebar-link"><i class="fa-solid fa-gauge-high"  style="width:16px;"></i> Dashboard</a>
+      <div class="sidebar-section">Management</div>
+      <a href="user-management.html"    class="sidebar-link"><i class="fa-solid fa-users"        style="width:16px;"></i> Users</a>
+      <a href="admin-users.html"        class="sidebar-link"><i class="fa-solid fa-user-shield"  style="width:16px;"></i> Roles & Access</a>
+      <a href="content-management.html" class="sidebar-link active"><i class="fa-solid fa-file-pen" style="width:16px;"></i> Content</a>
+      <a href="admin-hub-requests.html" class="sidebar-link"><i class="fa-solid fa-inbox"        style="width:16px;"></i> Hub Requests <span class="badge badge--warning" style="margin-left:auto;">7</span></a>
+      <div class="sidebar-section">Analytics</div>
+      <a href="../dashboard/analytics.html"     class="sidebar-link"><i class="fa-solid fa-chart-bar" style="width:16px;"></i> Analytics</a>
+      <a href="../dashboard/esg-dashboard.html" class="sidebar-link"><i class="fa-solid fa-leaf"      style="width:16px;"></i> ESG Monitor</a>
+      <div class="sidebar-section">System</div>
+      <a href="../index.html" class="sidebar-link" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square" style="width:16px;"></i> View Site</a>
+      <a href="admin-login.html" class="sidebar-link" id="logoutBtn"><i class="fa-solid fa-right-from-bracket" style="width:16px;color:var(--danger);"></i><span style="color:var(--danger);">Sign Out</span></a>
+    </nav>
+    <div style="padding:1rem 1.5rem;border-top:var(--border-subtle);">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;">SA</div>
+        <div><div style="font-size:0.8rem;font-weight:600;color:var(--text-100);">Super Admin</div><div style="font-size:0.7rem;color:var(--text-500);">admin@sesmine.com</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <h4 style="font-size:1rem;margin:0;"><i class="fa-solid fa-file-pen" style="color:var(--brand-cyan);margin-right:0.5rem;"></i> Content Management</h4>
+        <div style="font-size:0.75rem;color:var(--text-500);">Manage news, resources, hub content and announcements</div>
+      </div>
+      <button class="btn btn--primary btn--sm" onclick="newContent()"><i class="fa-solid fa-plus"></i> New Content</button>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap;" class="animate-fadeInUp">
+        <button class="content-tab active" onclick="switchTab('news',this)">News Articles</button>
+        <button class="content-tab" onclick="switchTab('resources',this)">Resources</button>
+        <button class="content-tab" onclick="switchTab('announcements',this)">Announcements</button>
+        <button class="content-tab" onclick="switchTab('hub-content',this)">Hub Content</button>
+      </div>
+
+      <!-- News Tab -->
+      <div id="tab-news" class="animate-fadeInUp">
+
+        <!-- Stats Row -->
+        <div class="grid-4" style="margin-bottom:2rem;">
+          <div class="stat-card"><div class="stat-card__icon"><i class="fa-solid fa-newspaper"></i></div><div class="stat-card__value">48</div><div class="stat-card__label">Published Articles</div></div>
+          <div class="stat-card"><div class="stat-card__icon" style="background:rgba(245,166,35,0.1);color:var(--brand-gold);"><i class="fa-solid fa-clock"></i></div><div class="stat-card__value">3</div><div class="stat-card__label">Drafts</div></div>
+          <div class="stat-card"><div class="stat-card__icon" style="background:rgba(34,197,94,0.1);color:var(--success);"><i class="fa-solid fa-eye"></i></div><div class="stat-card__value">8,240</div><div class="stat-card__label">Views This Month</div></div>
+          <div class="stat-card"><div class="stat-card__icon" style="background:rgba(168,85,247,0.1);color:#A855F7;"><i class="fa-solid fa-share-nodes"></i></div><div class="stat-card__value">1,420</div><div class="stat-card__label">Social Shares</div></div>
+        </div>
+
+        <!-- Article List -->
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+            <h4>All Articles</h4>
+            <div style="display:flex;gap:0.75rem;">
+              <input type="search" class="form-input" placeholder="Search articles..." style="width:200px;padding:0.45rem 1rem;font-size:0.825rem;" />
+              <select class="form-select" style="width:140px;padding:0.45rem 0.75rem;font-size:0.825rem;">
+                <option>All Categories</option>
+                <option>Markets</option>
+                <option>Commodities</option>
+                <option>Technology</option>
+                <option>ESG</option>
+                <option>Regulation</option>
+              </select>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Title</th><th>Category</th><th>Author</th><th>Published</th><th>Views</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="max-width:280px;"><div style="font-size:0.875rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Lithium Prices Surge 18% as EV Demand Accelerates</div></td>
+                  <td><span class="badge badge--gold">Commodities</span></td>
+                  <td style="font-size:0.8rem;">Nina Patel</td>
+                  <td style="font-size:0.8rem;color:var(--text-400);">Jul 1, 2026</td>
+                  <td style="font-family:var(--font-mono);font-size:0.8rem;">1,240</td>
+                  <td><span class="badge badge--success">Published</span></td>
+                  <td><div style="display:flex;gap:0.4rem;"><button class="btn btn--ghost btn--sm" onclick="editArticle(this)"><i class="fa-solid fa-pen"></i></button><button class="btn btn--ghost btn--sm"><i class="fa-solid fa-eye"></i></button><button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-trash"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td style="max-width:280px;"><div style="font-size:0.875rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">New Mining Tax Reforms Proposed in Western Australia</div></td>
+                  <td><span class="badge badge--info">Regulation</span></td>
+                  <td style="font-size:0.8rem;">Chris Morgan</td>
+                  <td style="font-size:0.8rem;color:var(--text-400);">Jun 22, 2026</td>
+                  <td style="font-family:var(--font-mono);font-size:0.8rem;">984</td>
+                  <td><span class="badge badge--success">Published</span></td>
+                  <td><div style="display:flex;gap:0.4rem;"><button class="btn btn--ghost btn--sm" onclick="editArticle(this)"><i class="fa-solid fa-pen"></i></button><button class="btn btn--ghost btn--sm"><i class="fa-solid fa-eye"></i></button><button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-trash"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td style="max-width:280px;"><div style="font-size:0.875rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Geopolitical Tensions Impacting Cobalt Supply Chains in DRC</div></td>
+                  <td><span class="badge badge--cyan">Markets</span></td>
+                  <td style="font-size:0.8rem;">Nina Patel</td>
+                  <td style="font-size:0.8rem;color:var(--text-400);">Jun 20, 2026</td>
+                  <td style="font-family:var(--font-mono);font-size:0.8rem;">762</td>
+                  <td><span class="badge badge--success">Published</span></td>
+                  <td><div style="display:flex;gap:0.4rem;"><button class="btn btn--ghost btn--sm" onclick="editArticle(this)"><i class="fa-solid fa-pen"></i></button><button class="btn btn--ghost btn--sm"><i class="fa-solid fa-eye"></i></button><button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-trash"></i></button></div></td>
+                </tr>
+                <tr>
+                  <td style="max-width:280px;"><div style="font-size:0.875rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Q3 2026 Copper Market Outlook — DRAFT</div></td>
+                  <td><span class="badge badge--gold">Commodities</span></td>
+                  <td style="font-size:0.8rem;">Chris Morgan</td>
+                  <td style="font-size:0.8rem;color:var(--text-500);">—</td>
+                  <td style="font-family:var(--font-mono);font-size:0.8rem;color:var(--text-500);">—</td>
+                  <td><span class="badge badge--warning">Draft</span></td>
+                  <td><div style="display:flex;gap:0.4rem;"><button class="btn btn--ghost btn--sm" onclick="editArticle(this)"><i class="fa-solid fa-pen"></i></button><button class="btn btn--success btn--sm" onclick="publishContent(this)"><i class="fa-solid fa-upload"></i></button><button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-trash"></i></button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resources Tab (hidden) -->
+      <div id="tab-resources" style="display:none;" class="animate-fadeInUp">
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+            <h4>Resource Library</h4>
+            <button class="btn btn--primary btn--sm" onclick="newContent()"><i class="fa-solid fa-upload"></i> Upload Resource</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Title</th><th>Type</th><th>Downloads</th><th>Uploaded</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td style="font-size:0.875rem;font-weight:600;">Global Mining Outlook 2026–2030</td><td><span class="badge badge--cyan">Whitepaper</span></td><td style="font-family:var(--font-mono);font-size:0.8rem;">4,820</td><td style="font-size:0.8rem;color:var(--text-400);">Jan 15, 2026</td><td><span class="badge badge--success">Published</span></td><td><div style="display:flex;gap:0.4rem;"><button class="btn btn--ghost btn--sm"><i class="fa-solid fa-pen"></i></button><button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-trash"></i></button></div></td></tr>
+                <tr><td style="font-size:0.875rem;font-weight:600;">ESG Reporting Masterclass Webinar</td><td><span style="background:rgba(168,85,247,0.15);color:#A855F7;" class="badge">Webinar</span></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2,140</td><td style="font-size:0.8rem;color:var(--text-400);">Mar 8, 2026</td><td><span class="badge badge--success">Published</span></td><td><div style="display:flex;gap:0.4rem;"><button class="btn btn--ghost btn--sm"><i class="fa-solid fa-pen"></i></button><button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-trash"></i></button></div></td></tr>
+                <tr><td style="font-size:0.875rem;font-weight:600;">Autonomous Mining ROI Analysis</td><td><span class="badge badge--cyan">Whitepaper</span></td><td style="font-family:var(--font-mono);font-size:0.8rem;">1,680</td><td style="font-size:0.8rem;color:var(--text-400);">Feb 20, 2026</td><td><span class="badge badge--success">Published</span></td><td><div style="display:flex;gap:0.4rem;"><button class="btn btn--ghost btn--sm"><i class="fa-solid fa-pen"></i></button><button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-trash"></i></button></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Announcements Tab (hidden) -->
+      <div id="tab-announcements" style="display:none;" class="animate-fadeInUp">
+        <div class="card" style="margin-bottom:1.5rem;">
+          <h4 style="margin-bottom:1.25rem;"><i class="fa-solid fa-bullhorn" style="color:var(--brand-gold);margin-right:0.5rem;"></i> New Announcement</h4>
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input class="form-input" type="text" placeholder="Announcement title..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Message</label>
+            <div>
+              <div class="editor-toolbar">
+                <button class="editor-btn" title="Bold"><i class="fa-solid fa-bold"></i></button>
+                <button class="editor-btn" title="Italic"><i class="fa-solid fa-italic"></i></button>
+                <button class="editor-btn" title="Link"><i class="fa-solid fa-link"></i></button>
+                <button class="editor-btn" title="List"><i class="fa-solid fa-list"></i></button>
+              </div>
+              <textarea class="editor-area" placeholder="Write your announcement message here..."></textarea>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">Type</label>
+              <select class="form-select">
+                <option>Info</option>
+                <option>Warning</option>
+                <option>Success</option>
+                <option>Maintenance</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">Target Audience</label>
+              <select class="form-select">
+                <option>All Users</option>
+                <option>Pro Users</option>
+                <option>Enterprise Users</option>
+                <option>Trial Users</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">Expires</label>
+              <input class="form-input" type="date" />
+            </div>
+          </div>
+          <div style="display:flex;gap:1rem;">
+            <button class="btn btn--ghost" onclick="previewAnnouncement()"><i class="fa-solid fa-eye"></i> Preview</button>
+            <button class="btn btn--primary" onclick="publishAnnouncement()"><i class="fa-solid fa-bullhorn"></i> Publish Now</button>
+          </div>
+        </div>
+
+        <!-- Active Announcements -->
+        <div class="card">
+          <h4 style="margin-bottom:1.25rem;">Active Announcements</h4>
+          <div style="display:flex;flex-direction:column;gap:0.875rem;">
+            <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bg-700);border-radius:var(--radius-md);border-left:3px solid var(--brand-cyan);">
+              <i class="fa-solid fa-circle-info" style="color:var(--brand-cyan);flex-shrink:0;"></i>
+              <div style="flex:1;"><div style="font-size:0.875rem;font-weight:600;">Platform v5.0.3 Released</div><div style="font-size:0.75rem;color:var(--text-500);">All Users · Expires Jul 8, 2026</div></div>
+              <button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="display:flex;align-items:center;gap:1rem;padding:1rem;background:var(--bg-700);border-radius:var(--radius-md);border-left:3px solid var(--warning);">
+              <i class="fa-solid fa-triangle-exclamation" style="color:var(--warning);flex-shrink:0;"></i>
+              <div style="flex:1;"><div style="font-size:0.875rem;font-weight:600;">Scheduled Maintenance — Jul 6, 2026 02:00–04:00 UTC</div><div style="font-size:0.75rem;color:var(--text-500);">All Users · Expires Jul 6, 2026</div></div>
+              <button class="btn btn--danger btn--sm" onclick="deleteContent(this)"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hub Content Tab (hidden) -->
+      <div id="tab-hub-content" style="display:none;" class="animate-fadeInUp">
+        <div class="grid-3">
+          <div class="card" style="cursor:pointer;" onclick="editHubContent('economics')">
+            <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:1rem;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(34,197,94,0.1);display:flex;align-items:center;justify-content:center;color:#22C55E;"><i class="fa-solid fa-chart-line"></i></div>
+              <div><div style="font-weight:700;">Economics Hub</div><div style="font-size:0.72rem;color:var(--text-500);">Last updated: Jul 1, 2026</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-400);margin-bottom:0.75rem;"><span>Data feeds</span><span class="badge badge--success">48 Live</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-400);"><span>Articles</span><span style="font-family:var(--font-mono);">12</span></div>
+            <button class="btn btn--ghost btn--full btn--sm" style="margin-top:1rem;"><i class="fa-solid fa-pen"></i> Edit Content</button>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="editHubContent('safety')">
+            <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:1rem;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;align-items:center;justify-content:center;color:#EF4444;"><i class="fa-solid fa-shield-halved"></i></div>
+              <div><div style="font-weight:700;">Safety Hub</div><div style="font-size:0.72rem;color:var(--text-500);">Last updated: Jun 28, 2026</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-400);margin-bottom:0.75rem;"><span>Regulations</span><span class="badge badge--success">180+ Active</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-400);"><span>Alerts</span><span style="font-family:var(--font-mono);">7</span></div>
+            <button class="btn btn--ghost btn--full btn--sm" style="margin-top:1rem;"><i class="fa-solid fa-pen"></i> Edit Content</button>
+          </div>
+          <div class="card" style="cursor:pointer;" onclick="editHubContent('sustainability')">
+            <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:1rem;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,200,232,0.1);display:flex;align-items:center;justify-content:center;color:var(--brand-cyan);"><i class="fa-solid fa-leaf"></i></div>
+              <div><div style="font-weight:700;">Sustainability Hub</div><div style="font-size:0.72rem;color:var(--text-500);">Last updated: Jun 30, 2026</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-400);margin-bottom:0.75rem;"><span>ESG Frameworks</span><span class="badge badge--success">5 Active</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-400);"><span>Reports</span><span style="font-family:var(--font-mono);">24</span></div>
+            <button class="btn btn--ghost btn--full btn--sm" style="margin-top:1rem;"><i class="fa-solid fa-pen"></i> Edit Content</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/auth.js" defer></script>
+  <script>
+    function switchTab(name, btn) {
+      document.querySelectorAll('.content-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      ['news','resources','announcements','hub-content'].forEach(t => {
+        document.getElementById('tab-' + t).style.display = t === name ? '' : 'none';
+      });
+    }
+    function newContent()             { alert('New content editor modal — rich text editor with media upload'); }
+    function editArticle(btn)         { alert('Article editor — opens full rich text editor for this article'); }
+    function publishContent(btn)      { btn.closest('tr').querySelector('.badge').outerHTML = '<span class="badge badge--success">Published</span>'; btn.remove(); }
+    function deleteContent(btn)       { if (confirm('Delete this content permanently?')) btn.closest('tr, [style*="border-left"]').style.opacity = '0.3'; }
+    function previewAnnouncement()    { alert('Preview mode — shows announcement banner as users will see it'); }
+    function publishAnnouncement()    { alert('Announcement published to all targeted users'); }
+    function editHubContent(hub)      { alert(`Hub content editor for "${hub}" — opens structured content editor`); }
+    document.getElementById('logoutBtn').addEventListener('click', e => { e.preventDefault(); if (window.SESAuth) SESAuth.adminLogout(); window.location.href = 'admin-login.html'; });
+  </script>
+</body>
+</html>
