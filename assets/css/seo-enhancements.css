@@ -1,0 +1,110 @@
+/**
+ * SESMine SEO Enhancement Styles v5.0
+ * Core Web Vitals: CLS prevention, font loading, accessibility
+ */
+
+/* ── Font display optimization ── */
+@font-face {
+  font-display: swap;
+}
+
+/* ── CLS Prevention: reserve space for images ── */
+img {
+  aspect-ratio: attr(width) / attr(height);
+}
+
+img[width][height] {
+  height: auto;
+}
+
+/* ── Visually hidden but crawler-readable ── */
+.sr-only,
+.seo-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Skip to content (accessibility + SEO) ── */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  background: var(--brand-cyan);
+  color: var(--bg-950);
+  padding: 8px 16px;
+  border-radius: 0 0 8px 8px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  z-index: 10000;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ── Focus styles for accessibility ── */
+:focus-visible {
+  outline: 2px solid var(--brand-cyan);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Prevent FOUC ── */
+html:not(.fonts-loaded) body {
+  visibility: hidden;
+}
+
+html.fonts-loaded body {
+  visibility: visible;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ── Print styles ── */
+@media print {
+  .navbar,
+  .footer,
+  .btn,
+  .ticker,
+  .page-loader {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  a::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.75em;
+    color: #666;
+  }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── High contrast mode ── */
+@media (prefers-contrast: high) {
+  :root {
+    --border-subtle: 1px solid rgba(0,200,232,0.4);
+    --text-300: #FFFFFF;
+    --text-400: #E0E0E0;
+  }
+}
