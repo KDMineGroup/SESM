@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analytics — SESMine Intelligence Platform</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    body { display:flex; min-height:100vh; background:var(--bg-950); }
+    .dash-sidebar { width:240px; flex-shrink:0; background:var(--bg-900); border-right:var(--border-subtle); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:50; overflow-y:auto; }
+    .dash-logo { padding:1.25rem 1.5rem; border-bottom:var(--border-subtle); }
+    .dash-logo img { height:32px; }
+    .dash-nav { padding:1rem 0; flex:1; }
+    .dash-section { font-size:0.65rem; font-weight:800; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-600); padding:0.75rem 1.5rem 0.35rem; }
+    .dash-link { display:flex; align-items:center; gap:0.75rem; padding:0.6rem 1.5rem; font-size:0.875rem; font-weight:500; color:var(--text-400); transition:all var(--ease-fast); border-left:3px solid transparent; text-decoration:none; }
+    .dash-link:hover { color:var(--text-100); background:rgba(0,200,232,0.05); }
+    .dash-link.active { color:var(--brand-cyan); background:rgba(0,200,232,0.08); border-left-color:var(--brand-cyan); }
+    .dash-main { margin-left:240px; flex:1; display:flex; flex-direction:column; }
+    .dash-topbar { height:64px; background:var(--bg-900); border-bottom:var(--border-subtle); display:flex; align-items:center; justify-content:space-between; padding:0 2rem; position:sticky; top:0; z-index:40; }
+    .dash-content { padding:2rem; flex:1; }
+
+    /* Bar Chart CSS */
+    .bar-chart { display:flex; align-items:flex-end; gap:8px; height:160px; padding:0 0 0.5rem; border-bottom:1px solid rgba(0,200,232,0.1); }
+    .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .bar-fill { width:100%; border-radius:4px 4px 0 0; background:var(--grad-primary); transition:height 1s ease; min-height:4px; }
+    .bar-label { font-size:0.65rem; color:var(--text-500); text-align:center; }
+    .bar-val { font-size:0.7rem; font-family:var(--font-mono); color:var(--brand-cyan); }
+  </style>
+</head>
+<body>
+
+  <aside class="dash-sidebar">
+    <div class="dash-logo"><a href="../index.html"><img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" loading="eager" /></a></div>
+    <nav class="dash-nav">
+      <div class="dash-section">Dashboard</div>
+      <a href="main-dashboard.html" class="dash-link"><i class="fa-solid fa-house"     style="width:16px;"></i> Overview</a>
+      <a href="analytics.html"      class="dash-link active"><i class="fa-solid fa-chart-bar" style="width:16px;"></i> Analytics</a>
+      <a href="esg-dashboard.html"  class="dash-link"><i class="fa-solid fa-leaf"      style="width:16px;"></i> ESG Monitor</a>
+      <div class="dash-section">Hubs</div>
+      <a href="../hubs/economics-hub.html"    class="dash-link"><i class="fa-solid fa-chart-line"    style="width:16px;color:#22C55E;"></i> Economics</a>
+      <a href="../hubs/engineering-hub.html"  class="dash-link"><i class="fa-solid fa-gear"          style="width:16px;color:#3B82F6;"></i> Engineering</a>
+      <a href="../hubs/procurement-hub.html"  class="dash-link"><i class="fa-solid fa-boxes-stacked" style="width:16px;color:var(--brand-gold);"></i> Procurement</a>
+      <div class="dash-section">Tools</div>
+      <a href="../products/ai-predictor.html" class="dash-link"><i class="fa-solid fa-brain"      style="width:16px;"></i> AI Predictor</a>
+      <a href="../auth/login.html"            class="dash-link" id="analyticsLogout"><i class="fa-solid fa-right-from-bracket" style="width:16px;color:var(--danger);"></i><span style="color:var(--danger);">Sign Out</span></a>
+    </nav>
+  </aside>
+
+  <div class="dash-main">
+
+    <header class="dash-topbar">
+      <div>
+        <h4 style="font-size:1rem;margin:0;"><i class="fa-solid fa-chart-bar" style="color:var(--brand-cyan);margin-right:0.5rem;"></i> Analytics</h4>
+        <div style="font-size:0.75rem;color:var(--text-500);">Platform usage & market data insights</div>
+      </div>
+      <div style="display:flex;gap:1rem;align-items:center;">
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn btn--ghost btn--sm" onclick="setPeriod('7d',this)">7D</button>
+          <button class="btn btn--primary btn--sm" onclick="setPeriod('30d',this)">30D</button>
+          <button class="btn btn--ghost btn--sm" onclick="setPeriod('90d',this)">90D</button>
+          <button class="btn btn--ghost btn--sm" onclick="setPeriod('1y',this)">1Y</button>
+        </div>
+        <button class="btn btn--ghost btn--sm"><i class="fa-solid fa-download"></i> Export</button>
+      </div>
+    </header>
+
+    <main class="dash-content" id="main">
+
+      <!-- KPIs -->
+      <div class="grid-4" style="margin-bottom:2rem;">
+        <div class="stat-card animate-fadeInUp">
+          <div class="stat-card__icon"><i class="fa-solid fa-eye"></i></div>
+          <div class="stat-card__value text-gradient">48,240</div>
+          <div class="stat-card__label">Page Views (30D)</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ +22%</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-1">
+          <div class="stat-card__icon" style="background:rgba(34,197,94,0.1);color:var(--success);"><i class="fa-solid fa-users"></i></div>
+          <div class="stat-card__value text-gradient">2,418</div>
+          <div class="stat-card__label">Active Users</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ +124</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-2">
+          <div class="stat-card__icon" style="background:rgba(245,166,35,0.1);color:var(--brand-gold);"><i class="fa-solid fa-clock"></i></div>
+          <div class="stat-card__value text-gradient">8m 42s</div>
+          <div class="stat-card__label">Avg. Session Time</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ +1m 12s</div>
+        </div>
+        <div class="stat-card animate-fadeInUp delay-3">
+          <div class="stat-card__icon" style="background:rgba(168,85,247,0.1);color:#A855F7;"><i class="fa-solid fa-brain"></i></div>
+          <div class="stat-card__value text-gradient">14,820</div>
+          <div class="stat-card__label">AI Predictions Run</div>
+          <div class="stat-card__trend stat-card__trend--up">▲ +38%</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:2rem;">
+
+        <!-- Usage Bar Chart -->
+        <div class="card animate-fadeInUp">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+            <h4>Platform Usage — Daily Active Users</h4>
+            <span class="badge badge--cyan">Last 30 Days</span>
+          </div>
+          <div class="bar-chart" id="usageChart">
+            <!-- Bars rendered by JS -->
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:0.5rem;font-size:0.7rem;color:var(--text-500);">
+            <span>Jun 1</span><span>Jun 8</span><span>Jun 15</span><span>Jun 22</span><span>Jul 1</span>
+          </div>
+        </div>
+
+        <!-- Hub Popularity -->
+        <div class="card animate-fadeInUp delay-1">
+          <h4 style="margin-bottom:1.5rem;">Hub Popularity</h4>
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span style="font-size:0.8rem;display:flex;align-items:center;gap:0.5rem;"><i class="fa-solid fa-chart-line" style="color:#22C55E;font-size:0.75rem;"></i> Economics</span>
+                <span style="font-size:0.8rem;font-family:var(--font-mono);color:var(--success);">34%</span>
+              </div>
+              <div class="progress progress--success"><div class="progress__bar" style="width:34%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span style="font-size:0.8rem;display:flex;align-items:center;gap:0.5rem;"><i class="fa-solid fa-leaf" style="color:var(--brand-cyan);font-size:0.75rem;"></i> Sustainability</span>
+                <span style="font-size:0.8rem;font-family:var(--font-mono);color:var(--brand-cyan);">24%</span>
+              </div>
+              <div class="progress"><div class="progress__bar" style="width:24%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span style="font-size:0.8rem;display:flex;align-items:center;gap:0.5rem;"><i class="fa-solid fa-shield-halved" style="color:#EF4444;font-size:0.75rem;"></i> Safety</span>
+                <span style="font-size:0.8rem;font-family:var(--font-mono);color:#EF4444;">18%</span>
+              </div>
+              <div class="progress progress--danger"><div class="progress__bar" style="width:18%;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span style="font-size:0.8rem;display:flex;align-items:center;gap:0.5rem;"><i class="fa-solid fa-gear" style="color:#3B82F6;font-size:0.75rem;"></i> Engineering</span>
+                <span style="font-size:0.8rem;font-family:var(--font-mono);color:#3B82F6;">12%</span>
+              </div>
+              <div class="progress progress--info" style=""><div class="progress__bar" style="width:12%;background:#3B82F6;"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span style="font-size:0.8rem;display:flex;align-items:center;gap:0.5rem;"><i class="fa-solid fa-boxes-stacked" style="color:var(--brand-gold);font-size:0.75rem;"></i> Procurement</span>
+                <span style="font-size:0.8rem;font-family:var(--font-mono);color:var(--brand-gold);">8%</span>
+              </div>
+              <div class="progress progress--gold"><div class="progress__bar" style="width:8%;background:var(--brand-gold);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                <span style="font-size:0.8rem;display:flex;align-items:center;gap:0.5rem;"><i class="fa-solid fa-microchip" style="color:#A855F7;font-size:0.75rem;"></i> Innovation</span>
+                <span style="font-size:0.8rem;font-family:var(--font-mono);color:#A855F7;">4%</span>
+              </div>
+              <div class="progress"><div class="progress__bar" style="width:4%;background:#A855F7;"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Pages Table -->
+      <div class="card animate-fadeInUp">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+          <h4>Top Pages by Traffic</h4>
+          <button class="btn btn--ghost btn--sm"><i class="fa-solid fa-download"></i> CSV</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Page</th><th>Views</th><th>Unique Users</th><th>Avg. Time</th><th>Bounce Rate</th><th>Trend</th></tr>
+            </thead>
+            <tbody>
+              <tr><td style="font-size:0.875rem;font-weight:600;">/index.html</td><td style="font-family:var(--font-mono);font-size:0.875rem;">12,840</td><td style="font-family:var(--font-mono);font-size:0.875rem;">8,420</td><td style="font-family:var(--font-mono);font-size:0.875rem;">3m 12s</td><td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--success);">28%</td><td><span class="badge badge--success">▲ +18%</span></td></tr>
+              <tr><td style="font-size:0.875rem;font-weight:600;">/hubs/economics-hub.html</td><td style="font-family:var(--font-mono);font-size:0.875rem;">8,240</td><td style="font-family:var(--font-mono);font-size:0.875rem;">5,180</td><td style="font-family:var(--font-mono);font-size:0.875rem;">6m 44s</td><td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--success);">22%</td><td><span class="badge badge--success">▲ +31%</span></td></tr>
+              <tr><td style="font-size:0.875rem;font-weight:600;">/products/ai-predictor.html</td><td style="font-family:var(--font-mono);font-size:0.875rem;">6,120</td><td style="font-family:var(--font-mono);font-size:0.875rem;">4,240</td><td style="font-family:var(--font-mono);font-size:0.875rem;">9m 18s</td><td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--success);">18%</td><td><span class="badge badge--success">▲ +44%</span></td></tr>
+              <tr><td style="font-size:0.875rem;font-weight:600;">/pricing.html</td><td style="font-family:var(--font-mono);font-size:0.875rem;">4,880</td><td style="font-family:var(--font-mono);font-size:0.875rem;">3,920</td><td style="font-family:var(--font-mono);font-size:0.875rem;">4m 02s</td><td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--warning);">41%</td><td><span class="badge badge--success">▲ +12%</span></td></tr>
+              <tr><td style="font-size:0.875rem;font-weight:600;">/dashboard/esg-dashboard.html</td><td style="font-family:var(--font-mono);font-size:0.875rem;">3,640</td><td style="font-family:var(--font-mono);font-size:0.875rem;">2,180</td><td style="font-family:var(--font-mono);font-size:0.875rem;">11m 24s</td><td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--success);">14%</td><td><span class="badge badge--success">▲ +28%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/auth.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script>
+    // Render bar chart
+    const data = [42,58,61,55,70,68,74,80,77,85,82,90,88,94,86,92,98,95,100,96,88,92,97,94,99,96,100,98,95,100];
+    const chart = document.getElementById('usageChart');
+    data.forEach((v, i) => {
+      const col = document.createElement('div');
+      col.className = 'bar-col';
+      col.innerHTML = `
+        <div class="bar-val" style="opacity:0;transition:opacity 0.3s;">${Math.round(v * 24.18)}</div>
+        <div class="bar-fill" style="height:0%;transition:height 1s ease ${i * 0.03}s;"></div>
+      `;
+      chart.appendChild(col);
+      setTimeout(() => {
+        col.querySelector('.bar-fill').style.height = v + '%';
+        col.querySelector('.bar-val').style.opacity = '1';
+      }, 200);
+    });
+
+    function setPeriod(p, btn) {
+      document.querySelectorAll('.dash-topbar .btn').forEach(b => b.className = 'btn btn--ghost btn--sm');
+      btn.className = 'btn btn--primary btn--sm';
+    }
+
+    document.getElementById('analyticsLogout').addEventListener('click', e => {
+      e.preventDefault();
+      if (window.SESAuth) SESAuth.logout();
+      window.location.href = '../auth/login.html';
+    });
+  </script>
+</body>
+</html>

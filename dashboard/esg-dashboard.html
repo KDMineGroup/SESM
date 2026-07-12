@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ESG Dashboard — SESMine Intelligence</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    body { display:flex; min-height:100vh; background:var(--bg-950); }
+    /* Reuse sidebar styles from main-dashboard */
+    .dash-sidebar { width:240px; flex-shrink:0; background:var(--bg-900); border-right:var(--border-subtle); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:50; overflow-y:auto; }
+    .dash-logo { padding:1.25rem 1.5rem; border-bottom:var(--border-subtle); }
+    .dash-logo img { height:32px; }
+    .dash-nav { padding:1rem 0; flex:1; }
+    .dash-section { font-size:0.65rem; font-weight:800; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-600); padding:0.75rem 1.5rem 0.35rem; }
+    .dash-link { display:flex; align-items:center; gap:0.75rem; padding:0.6rem 1.5rem; font-size:0.875rem; font-weight:500; color:var(--text-400); transition:all var(--ease-fast); border-left:3px solid transparent; text-decoration:none; }
+    .dash-link:hover { color:var(--text-100); background:rgba(0,200,232,0.05); }
+    .dash-link.active { color:var(--brand-cyan); background:rgba(0,200,232,0.08); border-left-color:var(--brand-cyan); }
+    .dash-main { margin-left:240px; flex:1; display:flex; flex-direction:column; }
+    .dash-topbar { height:64px; background:var(--bg-900); border-bottom:var(--border-subtle); display:flex; align-items:center; justify-content:space-between; padding:0 2rem; position:sticky; top:0; z-index:40; }
+    .dash-content { padding:2rem; flex:1; }
+
+    /* ESG Ring */
+    .esg-ring-wrap { position:relative; width:140px; height:140px; margin:0 auto; }
+    .esg-ring-wrap svg { transform:rotate(-90deg); }
+    .esg-ring-label { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  </style>
+</head>
+<body>
+
+  <aside class="dash-sidebar">
+    <div class="dash-logo"><a href="../index.html"><img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" loading="eager" /></a></div>
+    <nav class="dash-nav">
+      <div class="dash-section">Dashboard</div>
+      <a href="main-dashboard.html"  class="dash-link"><i class="fa-solid fa-house"     style="width:16px;"></i> Overview</a>
+      <a href="analytics.html"       class="dash-link"><i class="fa-solid fa-chart-bar" style="width:16px;"></i> Analytics</a>
+      <a href="esg-dashboard.html"   class="dash-link active"><i class="fa-solid fa-leaf" style="width:16px;"></i> ESG Monitor</a>
+      <div class="dash-section">Hubs</div>
+      <a href="../hubs/economics-hub.html"      class="dash-link"><i class="fa-solid fa-chart-line"    style="width:16px;color:#22C55E;"></i> Economics</a>
+      <a href="../hubs/sustainability-hub.html" class="dash-link"><i class="fa-solid fa-leaf"          style="width:16px;color:var(--brand-cyan);"></i> Sustainability</a>
+      <a href="../hubs/safety-hub.html"         class="dash-link"><i class="fa-solid fa-shield-halved" style="width:16px;color:#EF4444;"></i> Safety</a>
+      <div class="dash-section">Tools</div>
+      <a href="../products/ai-predictor.html" class="dash-link"><i class="fa-solid fa-brain"      style="width:16px;"></i> AI Predictor</a>
+      <a href="../auth/login.html"            class="dash-link" id="esgLogout"><i class="fa-solid fa-right-from-bracket" style="width:16px;color:var(--danger);"></i><span style="color:var(--danger);">Sign Out</span></a>
+    </nav>
+    <div style="padding:1rem 1.5rem;border-top:var(--border-subtle);">
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--grad-primary);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:#fff;">U</div>
+        <div><div style="font-size:0.8rem;font-weight:600;color:var(--text-100);">User</div><span class="badge badge--cyan" style="font-size:0.65rem;">Pro</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="dash-main">
+
+    <header class="dash-topbar">
+      <div>
+        <h4 style="font-size:1rem;margin:0;"><i class="fa-solid fa-leaf" style="color:var(--success);margin-right:0.5rem;"></i> ESG Intelligence Dashboard</h4>
+        <div style="font-size:0.75rem;color:var(--text-500);">Reporting Period: Q2 2026 · ISSB Aligned</div>
+      </div>
+      <div style="display:flex;gap:1rem;align-items:center;">
+        <select class="form-select" style="width:160px;padding:0.4rem 0.75rem;font-size:0.8rem;">
+          <option>Q2 2026</option>
+          <option>Q1 2026</option>
+          <option>FY 2025</option>
+        </select>
+        <button class="btn btn--ghost btn--sm"><i class="fa-solid fa-download"></i> Export PDF</button>
+        <span class="badge badge--success"><i class="fa-solid fa-circle" style="font-size:0.5rem;"></i> ISSB Compliant</span>
+      </div>
+    </header>
+
+    <main class="dash-content" id="main">
+
+      <!-- ESG Score Rings -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;margin-bottom:2rem;">
+
+        <!-- Overall -->
+        <div class="card card--glow animate-fadeInUp" style="text-align:center;padding:2rem;">
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-400);margin-bottom:1.25rem;">Overall ESG Score</div>
+          <div class="esg-ring-wrap">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(0,200,232,0.1)" stroke-width="12"/>
+              <circle cx="70" cy="70" r="58" fill="none" stroke="url(#gradCyan)" stroke-width="12"
+                stroke-dasharray="364" stroke-dashoffset="36" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="gradCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#0033AA"/>
+                  <stop offset="100%" stop-color="#00C8E8"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="esg-ring-label">
+              <div style="font-family:var(--font-display);font-size:1.75rem;font-weight:800;color:var(--brand-cyan);">AA+</div>
+              <div style="font-size:0.7rem;color:var(--text-500);">90/100</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;"><span class="badge badge--success">▲ Top Quartile</span></div>
+        </div>
+
+        <!-- Environmental -->
+        <div class="card animate-fadeInUp delay-1" style="text-align:center;padding:2rem;">
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-400);margin-bottom:1.25rem;">Environmental</div>
+          <div class="esg-ring-wrap">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(34,197,94,0.1)" stroke-width="12"/>
+              <circle cx="70" cy="70" r="58" fill="none" stroke="#22C55E" stroke-width="12"
+                stroke-dasharray="364" stroke-dashoffset="51" stroke-linecap="round"/>
+            </svg>
+            <div class="esg-ring-label">
+              <div style="font-family:var(--font-display);font-size:1.75rem;font-weight:800;color:var(--success);">86</div>
+              <div style="font-size:0.7rem;color:var(--text-500);">/ 100</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;"><span class="badge badge--success">▲ +4 pts QoQ</span></div>
+        </div>
+
+        <!-- Social -->
+        <div class="card animate-fadeInUp delay-2" style="text-align:center;padding:2rem;">
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-400);margin-bottom:1.25rem;">Social</div>
+          <div class="esg-ring-wrap">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(59,130,246,0.1)" stroke-width="12"/>
+              <circle cx="70" cy="70" r="58" fill="none" stroke="#3B82F6" stroke-width="12"
+                stroke-dasharray="364" stroke-dashoffset="58" stroke-linecap="round"/>
+            </svg>
+            <div class="esg-ring-label">
+              <div style="font-family:var(--font-display);font-size:1.75rem;font-weight:800;color:#3B82F6;">84</div>
+              <div style="font-size:0.7rem;color:var(--text-500);">/ 100</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;"><span class="badge badge--info">▲ +2 pts QoQ</span></div>
+        </div>
+
+        <!-- Governance -->
+        <div class="card animate-fadeInUp delay-3" style="text-align:center;padding:2rem;">
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-400);margin-bottom:1.25rem;">Governance</div>
+          <div class="esg-ring-wrap">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(168,85,247,0.1)" stroke-width="12"/>
+              <circle cx="70" cy="70" r="58" fill="none" stroke="#A855F7" stroke-width="12"
+                stroke-dasharray="364" stroke-dashoffset="44" stroke-linecap="round"/>
+            </svg>
+            <div class="esg-ring-label">
+              <div style="font-family:var(--font-display);font-size:1.75rem;font-weight:800;color:#A855F7;">88</div>
+              <div style="font-size:0.7rem;color:var(--text-500);">/ 100</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem;"><span style="background:rgba(168,85,247,0.15);color:#A855F7;" class="badge">▲ +6 pts QoQ</span></div>
+        </div>
+
+      </div>
+
+      <!-- Emissions Tracking -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:2rem;">
+
+        <div class="card animate-fadeInUp">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+            <h4><i class="fa-solid fa-cloud" style="color:var(--success);margin-right:0.5rem;"></i> Emissions Tracking</h4>
+            <span class="badge badge--success">On Target</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:1.25rem;">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;">Scope 1 — Direct Emissions</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Fuel combustion, process emissions</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-family:var(--font-mono);font-size:0.9rem;font-weight:700;color:var(--success);">42,180 tCO₂e</div>
+                  <div style="font-size:0.72rem;color:var(--success);">▼ -18% vs target</div>
+                </div>
+              </div>
+              <div class="progress progress--success"><div class="progress__bar" style="width:72%;"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-500);margin-top:0.25rem;"><span>0</span><span>Target: 58,500 tCO₂e</span></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;">Scope 2 — Indirect Emissions</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Purchased electricity & heat</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-family:var(--font-mono);font-size:0.9rem;font-weight:700;color:var(--brand-cyan);">18,640 tCO₂e</div>
+                  <div style="font-size:0.72rem;color:var(--brand-cyan);">▼ -31% vs 2024</div>
+                </div>
+              </div>
+              <div class="progress"><div class="progress__bar" style="width:54%;"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-500);margin-top:0.25rem;"><span>0</span><span>Target: 34,500 tCO₂e</span></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;">Scope 3 — Value Chain Emissions</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Supply chain, transport, end-of-life</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-family:var(--font-mono);font-size:0.9rem;font-weight:700;color:var(--warning);">124,800 tCO₂e</div>
+                  <div style="font-size:0.72rem;color:var(--warning);">▼ -8% vs 2024</div>
+                </div>
+              </div>
+              <div class="progress progress--gold"><div class="progress__bar" style="width:83%;background:var(--brand-gold);"></div></div>
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text-500);margin-top:0.25rem;"><span>0</span><span>Target: 150,000 tCO₂e</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESG Metrics Panel -->
+        <div style="display:flex;flex-direction:column;gap:1.5rem;">
+          <div class="card animate-fadeInUp delay-1">
+            <h4 style="margin-bottom:1.25rem;"><i class="fa-solid fa-droplet" style="color:#3B82F6;margin-right:0.5rem;"></i> Water & Waste</h4>
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <span style="font-size:0.8rem;color:var(--text-400);">Water Recycled</span>
+                  <span style="font-size:0.8rem;font-weight:700;color:var(--success);">92%</span>
+                </div>
+                <div class="progress progress--success"><div class="progress__bar" style="width:92%;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <span style="font-size:0.8rem;color:var(--text-400);">Waste Diverted</span>
+                  <span style="font-size:0.8rem;font-weight:700;color:var(--brand-cyan);">78%</span>
+                </div>
+                <div class="progress"><div class="progress__bar" style="width:78%;"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:0.4rem;">
+                  <span style="font-size:0.8rem;color:var(--text-400);">Renewable Energy</span>
+                  <span style="font-size:0.8rem;font-weight:700;color:var(--success);">64%</span>
+                </div>
+                <div class="progress progress--success"><div class="progress__bar" style="width:64%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card animate-fadeInUp delay-2">
+            <h4 style="margin-bottom:1.25rem;"><i class="fa-solid fa-users" style="color:var(--brand-gold);margin-right:0.5rem;"></i> Social Metrics</h4>
+            <div style="display:flex;flex-direction:column;gap:0.875rem;">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:var(--bg-700);border-radius:var(--radius-md);">
+                <span style="font-size:0.8rem;color:var(--text-400);">Safety Compliance</span>
+                <span style="font-family:var(--font-mono);font-size:0.875rem;font-weight:700;color:var(--success);">98.4%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:var(--bg-700);border-radius:var(--radius-md);">
+                <span style="font-size:0.8rem;color:var(--text-400);">Lost Time Injuries</span>
+                <span style="font-family:var(--font-mono);font-size:0.875rem;font-weight:700;color:var(--success);">0.34 LTIFR</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:var(--bg-700);border-radius:var(--radius-md);">
+                <span style="font-size:0.8rem;color:var(--text-400);">Gender Diversity</span>
+                <span style="font-family:var(--font-mono);font-size:0.875rem;font-weight:700;color:var(--brand-cyan);">38% Women</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem;background:var(--bg-700);border-radius:var(--radius-md);">
+                <span style="font-size:0.8rem;color:var(--text-400);">Community Investment</span>
+                <span style="font-family:var(--font-mono);font-size:0.875rem;font-weight:700;color:var(--brand-gold);">$4.2M</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compliance Table -->
+      <div class="card animate-fadeInUp">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+          <h4><i class="fa-solid fa-certificate" style="color:var(--brand-gold);margin-right:0.5rem;"></i> Regulatory Compliance Status</h4>
+          <button class="btn btn--ghost btn--sm"><i class="fa-solid fa-download"></i> Export Report</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Framework</th><th>Scope</th><th>Status</th><th>Last Audit</th><th>Next Review</th><th>Score</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong style="font-size:0.875rem;">ISSB IFRS S1 & S2</strong></td>
+                <td style="font-size:0.8rem;color:var(--text-400);">Global Sustainability</td>
+                <td><span class="badge badge--success">Compliant</span></td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Apr 2026</td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Oct 2026</td>
+                <td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--success);">94/100</td>
+              </tr>
+              <tr>
+                <td><strong style="font-size:0.875rem;">GRI Standards 2021</strong></td>
+                <td style="font-size:0.8rem;color:var(--text-400);">Universal Reporting</td>
+                <td><span class="badge badge--success">Compliant</span></td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Mar 2026</td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Sep 2026</td>
+                <td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--success);">91/100</td>
+              </tr>
+              <tr>
+                <td><strong style="font-size:0.875rem;">TCFD Recommendations</strong></td>
+                <td style="font-size:0.8rem;color:var(--text-400);">Climate Risk</td>
+                <td><span class="badge badge--success">Compliant</span></td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Feb 2026</td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Aug 2026</td>
+                <td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--success);">88/100</td>
+              </tr>
+              <tr>
+                <td><strong style="font-size:0.875rem;">ISO 14001:2015</strong></td>
+                <td style="font-size:0.8rem;color:var(--text-400);">Environmental Mgmt</td>
+                <td><span class="badge badge--success">Certified</span></td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Jan 2026</td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Jan 2027</td>
+                <td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--success);">96/100</td>
+              </tr>
+              <tr>
+                <td><strong style="font-size:0.875rem;">EU Taxonomy Regulation</strong></td>
+                <td style="font-size:0.8rem;color:var(--text-400);">Sustainable Finance</td>
+                <td><span class="badge badge--warning">In Progress</span></td>
+                <td style="font-size:0.8rem;color:var(--text-500);">—</td>
+                <td style="font-size:0.8rem;color:var(--text-500);">Dec 2026</td>
+                <td style="font-family:var(--font-mono);font-size:0.875rem;color:var(--warning);">72/100</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../js/auth.js" defer></script>
+  <script src="../js/main.js" defer></script>
+  <script>
+    document.getElementById('esgLogout').addEventListener('click', e => {
+      e.preventDefault();
+      if (window.SESAuth) SESAuth.logout();
+      window.location.href = '../auth/login.html';
+    });
+
+    // Animate rings on load
+    window.addEventListener('load', () => {
+      document.querySelectorAll('circle[stroke-dashoffset]').forEach(c => {
+        const final = c.getAttribute('stroke-dashoffset');
+        c.setAttribute('stroke-dashoffset', '364');
+        c.style.transition = 'stroke-dashoffset 1.5s ease';
+        setTimeout(() => c.setAttribute('stroke-dashoffset', final), 300);
+      });
+    });
+  </script>
+</body>
+</html>
