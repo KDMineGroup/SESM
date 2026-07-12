@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cost Calculator — SESMine Intelligence</title>
+  <meta name="description" content="Model CAPEX, OPEX and total cost of ownership for mining projects. Live commodity price integration, scenario analysis and board-ready export." />
+  <link rel="canonical" href="https://www.sesmine.com/products/cost-calculator.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    .calc-panel {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+    .calc-panel__header {
+      padding: 1.125rem 1.5rem;
+      background: var(--coal-850);
+      border-bottom: 1px solid var(--border-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .calc-panel__body { padding: 1.5rem; }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+    .input-group label {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-500);
+    }
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.875rem;
+    }
+
+    .result-card {
+      background: var(--coal-850);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--ease-fast);
+    }
+    .result-card:hover { border-color: var(--border-200); }
+    .result-card--highlight {
+      background: rgba(16,185,129,0.06);
+      border-color: rgba(16,185,129,0.2);
+    }
+
+    .sensitivity-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 80px 80px 80px;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border-100);
+      font-size: 0.8125rem;
+    }
+    .sensitivity-row:last-child { border-bottom: none; }
+
+    .waterfall-bar {
+      height: 32px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      padding: 0 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      transition: width 1s cubic-bezier(0.4,0,0.2,1);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      color: var(--text-500);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all var(--ease-fast);
+    }
+    .tab-btn.active {
+      color: var(--text-100);
+      border-bottom-color: var(--cyan-500);
+    }
+    .tab-btn:hover:not(.active) { color: var(--text-300); }
+
+    .feature-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.875rem 0;
+      border-bottom: 1px solid var(--border-100);
+    }
+    .feature-check:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="../index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="../hub-preview.html">Hubs</a></li>
+        <li><a href="ai-predictor.html">AI Tools</a></li>
+        <li><a href="equipment-database.html">Equipment</a></li>
+        <li><a href="../news.html">News</a></li>
+        <li><a href="../resources.html">Resources</a></li>
+        <li><a href="../pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="../auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="../auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:4rem 0 3rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(16,185,129,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+
+      <div class="container" style="position:relative;z-index:1;">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-500);margin-bottom:1.5rem;">
+          <a href="../index.html" style="color:var(--text-500);">Home</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <a href="ai-predictor.html" style="color:var(--text-500);">Products</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <span style="color:var(--emerald-400);">Cost Calculator</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+          <div>
+            <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--emerald-400);margin-bottom:1.25rem;">
+              <i class="fa-solid fa-calculator fa-xs"></i> CAPEX · OPEX · TCO Modeller
+            </div>
+            <h1 class="animate-fadeInUp" style="font-size:clamp(1.875rem,3.5vw,2.75rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1rem;">
+              Model Every Dollar<br />
+              <span style="color:var(--emerald-400);">Before You Spend It.</span>
+            </h1>
+            <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-300);line-height:1.75;margin-bottom:1.75rem;max-width:460px;">
+              Dynamic CAPEX, OPEX and total cost of ownership models that update automatically when commodity prices move. NPV, IRR and payback period — live, not static.
+            </p>
+            <div class="animate-fadeInUp delay-2" style="display:flex;gap:0.875rem;flex-wrap:wrap;">
+              <a href="../auth/signup.html" class="btn btn--success btn--lg">
+                <i class="fa-solid fa-rocket"></i> Try Free — No Card Required
+              </a>
+              <a href="#calculator" class="btn btn--ghost btn--lg">
+                <i class="fa-solid fa-calculator"></i> Open Calculator
+              </a>
+            </div>
+          </div>
+
+          <!-- Hero metrics -->
+          <div class="animate-fadeIn delay-2">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.5rem;border-top:2px solid var(--emerald-500);">
+                <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.5rem;">NPV (10%)</div>
+                <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--emerald-400);" id="heroNPV">$1.24B</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Base case · 20yr LOM</div>
+              </div>
+              <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.5rem;border-top:2px solid var(--cyan-500);">
+                <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.5rem;">IRR</div>
+                <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--cyan-400);" id="heroIRR">28.4%</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">Pre-tax unlevered</div>
+              </div>
+              <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.5rem;border-top:2px solid var(--amber-500);">
+                <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.5rem;">Payback Period</div>
+                <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--amber-400);" id="heroPayback">3.8 yrs</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">From first production</div>
+              </div>
+              <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.5rem;border-top:2px solid var(--violet-500);">
+                <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.5rem;">AISC</div>
+                <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--violet-400);" id="heroAISC">$1,240</div>
+                <div style="font-size:0.75rem;color:var(--text-500);margin-top:4px;">All-in sustaining cost/oz</div>
+              </div>
+            </div>
+            <div class="alert alert--emerald" style="margin-top:1rem;font-size:0.8125rem;">
+              <i class="fa-solid fa-bolt alert__icon"></i>
+              <div>Live price update: Gold at $3,142/oz — NPV increased <strong>$84M</strong> vs. yesterday's close.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         LIVE CALCULATOR
+    ══════════════════════════════════════════════════════ -->
+    <section id="calculator" style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:2.5rem;">
+          <div class="section-label reveal" style="justify-content:center;">Interactive Tool</div>
+          <h2 class="section-title reveal delay-1" style="text-align:center;">Live CAPEX / OPEX Calculator</h2>
+          <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);max-width:480px;margin:0 auto;">
+            Adjust inputs below and watch results update in real time. All commodity prices are live — no manual updates needed.
+          </p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;">
+
+          <!-- Inputs panel -->
+          <div class="calc-panel reveal">
+            <div class="calc-panel__header">
+              <div style="display:flex;align-items:center;gap:0.625rem;">
+                <i class="fa-solid fa-sliders" style="color:var(--emerald-400);"></i>
+                <span style="font-size:0.875rem;font-weight:600;">Project Parameters</span>
+              </div>
+              <button class="btn btn--ghost btn--xs" onclick="resetCalc()"><i class="fa-solid fa-rotate-left fa-xs"></i> Reset</button>
+            </div>
+            <div class="calc-panel__body" style="display:flex;flex-direction:column;gap:1.25rem;">
+
+              <!-- Commodity + production -->
+              <div class="input-row">
+                <div class="input-group">
+                  <label>Commodity</label>
+                  <select class="form-select" id="calcCommodity" onchange="recalculate()">
+                    <option value="gold">Gold (XAU)</option>
+                    <option value="copper">Copper (CU)</option>
+                    <option value="lithium">Lithium</option>
+                    <option value="iron">Iron Ore</option>
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label>Mine Type</label>
+                  <select class="form-select" id="calcMineType" onchange="recalculate()">
+                    <option value="openpit">Open Pit</option>
+                    <option value="underground">Underground</option>
+                    <option value="heap">Heap Leach</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Annual production -->
+              <div class="input-group">
+                <label>Annual Production</label>
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                  <input type="range" id="productionSlider" min="50000" max="1000000" step="10000" value="250000"
+                    oninput="document.getElementById('productionVal').textContent=Number(this.value).toLocaleString();recalculate()"
+                    style="flex:1;accent-color:var(--emerald-500);" />
+                  <span style="font-family:var(--font-mono);font-size:0.875rem;color:var(--emerald-400);width:80px;text-align:right;" id="productionVal">250,000</span>
+                  <span style="font-size:0.75rem;color:var(--text-500);">oz/yr</span>
+                </div>
+              </div>
+
+              <!-- CAPEX -->
+              <div class="input-group">
+                <label>Initial CAPEX ($M)</label>
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                  <input type="range" id="capexSlider" min="50" max="2000" step="10" value="480"
+                    oninput="document.getElementById('capexVal').textContent='$'+this.value+'M';recalculate()"
+                    style="flex:1;accent-color:var(--cyan-500);" />
+                  <span style="font-family:var(--font-mono);font-size:0.875rem;color:var(--cyan-400);width:80px;text-align:right;" id="capexVal">$480M</span>
+                </div>
+              </div>
+
+              <!-- AISC -->
+              <div class="input-group">
+                <label>AISC ($/oz)</label>
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                  <input type="range" id="aiscSlider" min="600" max="2400" step="10" value="1240"
+                    oninput="document.getElementById('aiscVal').textContent='$'+Number(this.value).toLocaleString();recalculate()"
+                    style="flex:1;accent-color:var(--amber-500);" />
+                  <span style="font-family:var(--font-mono);font-size:0.875rem;color:var(--amber-400);width:80px;text-align:right;" id="aiscVal">$1,240</span>
+                </div>
+              </div>
+
+              <!-- Discount rate + LOM -->
+              <div class="input-row">
+                <div class="input-group">
+                  <label>Discount Rate</label>
+                  <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <input type="range" id="discountSlider" min="5" max="20" step="0.5" value="10"
+                      oninput="document.getElementById('discountVal').textContent=this.value+'%';recalculate()"
+                      style="flex:1;accent-color:var(--violet-500);" />
+                    <span style="font-family:var(--font-mono);font-size:0.875rem;color:var(--violet-400);width:40px;text-align:right;" id="discountVal">10%</span>
+                  </div>
+                </div>
+                <div class="input-group">
+                  <label>Mine Life (years)</label>
+                  <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <input type="range" id="lomSlider" min="5" max="30" step="1" value="20"
+                      oninput="document.getElementById('lomVal').textContent=this.value+'yr';recalculate()"
+                      style="flex:1;accent-color:var(--rose-500);" />
+                    <span style="font-family:var(--font-mono);font-size:0.875rem;color:var(--rose-400);width:40px;text-align:right;" id="lomVal">20yr</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Price scenario -->
+              <div class="input-group">
+                <label>Price Scenario</label>
+                <div style="display:flex;gap:0.5rem;">
+                  <button class="btn btn--ghost btn--sm" id="scenBull" onclick="setScenario('bull')" style="flex:1;border-color:rgba(16,185,129,0.3);color:var(--emerald-400);">Bull +15%</button>
+                  <button class="btn btn--primary btn--sm" id="scenBase" onclick="setScenario('base')" style="flex:1;">Base</button>
+                  <button class="btn btn--ghost btn--sm" id="scenBear" onclick="setScenario('bear')" style="flex:1;border-color:rgba(239,68,68,0.3);color:var(--rose-400);">Bear -15%</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Results panel -->
+          <div style="display:flex;flex-direction:column;gap:1.25rem;">
+
+            <!-- Key metrics -->
+            <div class="calc-panel reveal delay-1">
+              <div class="calc-panel__header">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <i class="fa-solid fa-chart-bar" style="color:var(--emerald-400);"></i>
+                  <span style="font-size:0.875rem;font-weight:600;">Model Output</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span class="dot-live"></span>
+                  <span style="font-size:0.6875rem;color:var(--emerald-400);font-weight:600;">Live prices</span>
+                </div>
+              </div>
+              <div class="calc-panel__body">
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.875rem;margin-bottom:1rem;">
+                  <div class="result-card result-card--highlight">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--emerald-400);margin-bottom:0.375rem;">NPV (Discount Rate)</div>
+                    <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--emerald-400);" id="outNPV">$1.24B</div>
+                  </div>
+                  <div class="result-card">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">IRR (Pre-tax)</div>
+                    <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--cyan-400);" id="outIRR">28.4%</div>
+                  </div>
+                  <div class="result-card">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Payback Period</div>
+                    <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--amber-400);" id="outPayback">3.8 yrs</div>
+                  </div>
+                  <div class="result-card">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.375rem;">Revenue (Yr 1)</div>
+                    <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:700;color:var(--text-100);" id="outRevenue">$785M</div>
+                  </div>
+                </div>
+
+                <!-- OPEX waterfall -->
+                <div style="margin-bottom:1rem;">
+                  <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-bottom:0.75rem;">OPEX Breakdown ($/oz)</div>
+                  <div style="display:flex;flex-direction:column;gap:0.375rem;" id="opexWaterfall">
+                    <!-- Populated by JS -->
+                  </div>
+                </div>
+
+                <!-- Export buttons -->
+                <div style="display:flex;gap:0.625rem;flex-wrap:wrap;">
+                  <button class="btn btn--ghost btn--sm" onclick="exportExcel()"><i class="fa-solid fa-file-excel fa-xs"></i> Excel</button>
+                  <button class="btn btn--ghost btn--sm" onclick="exportPDF()"><i class="fa-solid fa-file-pdf fa-xs"></i> PDF Report</button>
+                  <button class="btn btn--ghost btn--sm" onclick="exportPPT()"><i class="fa-solid fa-file-powerpoint fa-xs"></i> Board Deck</button>
+                  <button class="btn btn--ghost btn--sm" onclick="shareModel()"><i class="fa-solid fa-share-nodes fa-xs"></i> Share</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sensitivity table -->
+            <div class="calc-panel reveal delay-2">
+              <div class="calc-panel__header">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <i class="fa-solid fa-table-cells" style="color:var(--cyan-400);"></i>
+                  <span style="font-size:0.875rem;font-weight:600;">Sensitivity Analysis</span>
+                </div>
+              </div>
+              <div class="calc-panel__body" style="padding:0;">
+                <div style="padding:0.625rem 1rem;background:var(--coal-850);border-bottom:1px solid var(--border-100);display:grid;grid-template-columns:120px 1fr 80px 80px 80px;gap:0.5rem;font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);">
+                  <div>Variable</div>
+                  <div></div>
+                  <div style="text-align:center;">-20%</div>
+                  <div style="text-align:center;">Base</div>
+                  <div style="text-align:center;">+20%</div>
+                </div>
+                <div style="padding:0 1rem;" id="sensitivityTable">
+                  <!-- Populated by JS -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         FEATURES
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+
+          <div>
+            <div class="section-label reveal">Full Feature Set</div>
+            <h2 class="section-title reveal delay-1">Everything a Mining CFO Needs</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+              Built with input from senior mining finance professionals across 14 major mining companies. Every feature exists because a real CFO asked for it.
+            </p>
+
+            <div style="display:flex;flex-direction:column;" class="reveal delay-2">
+              <div class="feature-check">
+                <i class="fa-solid fa-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;flex-shrink:0;"></i>
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);margin-bottom:2px;">Live commodity price integration</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">Prices update automatically from LME, COMEX and SGX — no manual input required.</div>
+                </div>
+              </div>
+              <div class="feature-check">
+                <i class="fa-solid fa-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;flex-shrink:0;"></i>
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);margin-bottom:2px;">Full DCF model with NPV, IRR and payback</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">Discounted cash flow with configurable discount rate, tax rate and royalty structure.</div>
+                </div>
+              </div>
+              <div class="feature-check">
+                <i class="fa-solid fa-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;flex-shrink:0;"></i>
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);margin-bottom:2px;">Multi-variable sensitivity analysis</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">Tornado charts and spider diagrams across price, grade, recovery, CAPEX and OPEX.</div>
+                </div>
+              </div>
+              <div class="feature-check">
+                <i class="fa-solid fa-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;flex-shrink:0;"></i>
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);margin-bottom:2px;">Monte Carlo simulation</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">10,000-run simulation generates probability distributions for NPV and IRR outcomes.</div>
+                </div>
+              </div>
+              <div class="feature-check">
+                <i class="fa-solid fa-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;flex-shrink:0;"></i>
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);margin-bottom:2px;">Board-ready export in one click</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">Export to Excel, PDF or PowerPoint with branded charts and executive summary.</div>
+                </div>
+              </div>
+              <div class="feature-check">
+                <i class="fa-solid fa-check" style="color:var(--emerald-400);margin-top:2px;font-size:0.875rem;flex-shrink:0;"></i>
+                <div>
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);margin-bottom:2px;">Shareable model links</div>
+                  <div style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;">Share a live model link with your team — everyone sees the same real-time numbers.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal delay-1">
+            <div class="img-frame" style="height:300px;margin-bottom:1.25rem;">
+              <img
+                src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80"
+                alt="Mining finance team reviewing CAPEX model and project economics"
+                style="width:100%;height:100%;object-fit:cover;"
+                loading="lazy"
+              />
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.875rem;">
+              <div style="padding:1.25rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--emerald-400);">10K</div>
+                <div style="font-size:0.6875rem;color:var(--text-500);margin-top:4px;">Monte Carlo runs</div>
+              </div>
+              <div style="padding:1.25rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--cyan-400);">48</div>
+                <div style="font-size:0.6875rem;color:var(--text-500);margin-top:4px;">Live commodities</div>
+              </div>
+              <div style="padding:1.25rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--amber-400);">3</div>
+                <div style="font-size:0.6875rem;color:var(--text-500);margin-top:4px;">Export formats</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(16,185,129,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <h2 class="reveal" style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">Start Modelling Your Project Economics</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:440px;margin:0 auto 2rem;">Full CAPEX/OPEX modeller, sensitivity analysis, Monte Carlo and board exports — free for 14 days.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="../auth/signup.html" class="btn btn--success btn--xl"><i class="fa-solid fa-rocket"></i> Start Free Trial</a>
+          <a href="../pricing.html"     class="btn btn--ghost btn--xl"><i class="fa-solid fa-tag"></i> View Pricing</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="../hubs/economics-hub.html">Economics</a><a href="../hubs/engineering-hub.html">Engineering</a><a href="../hubs/innovation-hub.html">Innovation</a><a href="../hubs/procurement-hub.html">Procurement</a><a href="../hubs/safety-hub.html">Safety</a><a href="../hubs/sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="ai-predictor.html">AI Predictor</a><a href="cost-calculator.html">Cost Calculator</a><a href="equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="../news.html">News</a><a href="../pricing.html">Pricing</a><a href="../contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="../auth/login.html">Sign In</a><a href="../auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/config.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    // ── Ticker ───────────────────────────────────────────
+    const COMM = [
+      {name:'Gold',price:3142.50,chg:+0.8},{name:'Copper',price:9847,chg:+1.2},
+      {name:'Lithium',price:14200,chg:+2.1},{name:'Silver',price:31.84,chg:-0.3},
+      {name:'Nickel',price:18240,chg:+0.6},{name:'Iron Ore',price:108.40,chg:+0.5},
+      {name:'Cobalt',price:26800,chg:-1.1},{name:'Zinc',price:2840,chg:+0.4}
+    ];
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      t.innerHTML = [...COMM,...COMM].map(c => {
+        const up  = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => {
+      COMM.forEach(c => {
+        c.price = Math.max(1,c.price+(Math.random()-0.49)*c.price*0.002);
+        c.chg   = parseFloat((c.chg+(Math.random()-0.5)*0.08).toFixed(2));
+      });
+      renderTicker();
+      recalculate(); // live price update triggers recalc
+    }, 8000);
+
+    // ── Calculator state ─────────────────────────────────
+    const SPOT = { gold:3142.50, copper:9847, lithium:14200, iron:108.40 };
+    let scenario = 'base';
+
+    function setScenario(s) {
+      scenario = s;
+      ['Bull','Base','Bear'].forEach(x => {
+        const btn = document.getElementById('scen'+x);
+        if (btn) btn.className = 'btn btn--sm ' + (x.toLowerCase()===s ? 'btn--primary' : 'btn--ghost');
+      });
+      if (s==='bull') {
+        document.getElementById('scenBull').style.borderColor='rgba(16,185,129,0.5)';
+        document.getElementById('scenBull').style.color='var(--emerald-400)';
+      }
+      if (s==='bear') {
+        document.getElementById('scenBear').style.borderColor='rgba(239,68,68,0.5)';
+        document.getElementById('scenBear').style.color='var(--rose-400)';
+      }
+      recalculate();
+    }
+
+    function recalculate() {
+      const commodity  = document.getElementById('calcCommodity').value;
+      const production = parseInt(document.getElementById('productionSlider').value);
+      const capex      = parseInt(document.getElementById('capexSlider').value) * 1e6;
+      const aisc       = parseInt(document.getElementById('aiscSlider').value);
+      const discount   = parseFloat(document.getElementById('discountSlider').value) / 100;
+      const lom        = parseInt(document.getElementById('lomSlider').value);
+
+      let spotPrice = SPOT[commodity] || 3142.50;
+      if (scenario === 'bull') spotPrice *= 1.15;
+      if (scenario === 'bear') spotPrice *= 0.85;
+
+      // Revenue per year
+      const revenueYr1 = production * spotPrice;
+      // Annual cash flow (simplified)
+      const annualCF   = production * (spotPrice - aisc);
+      // Simple payback
+      const payback    = capex / Math.max(1, annualCF);
+      // NPV (annuity approximation)
+      const annuityFactor = discount > 0 ? (1 - Math.pow(1+discount,-lom)) / discount : lom;
+      const npv = annualCF * annuityFactor - capex;
+      // IRR approximation
+      const irr = annualCF > 0 ? ((annualCF / capex) * 0.85 * 100) : 0;
+
+      // Update outputs
+      const fmtM = v => v >= 1e9 ? '$'+(v/1e9).toFixed(2)+'B' : '$'+(v/1e6).toFixed(0)+'M';
+      document.getElementById('outNPV').textContent     = fmtM(npv);
+      document.getElementById('outIRR').textContent     = irr.toFixed(1)+'%';
+      document.getElementById('outPayback').textContent = payback.toFixed(1)+' yrs';
+      document.getElementById('outRevenue').textContent = fmtM(revenueYr1);
+      document.getElementById('heroNPV').textContent    = fmtM(npv);
+      document.getElementById('heroIRR').textContent    = irr.toFixed(1)+'%';
+      document.getElementById('heroPayback').textContent= payback.toFixed(1)+' yrs';
+      document.getElementById('heroAISC').textContent   = '$'+aisc.toLocaleString();
+
+      // Color NPV
+      const npvEl = document.getElementById('outNPV');
+      npvEl.style.color = npv >= 0 ? 'var(--emerald-400)' : 'var(--rose-400)';
+
+      // OPEX waterfall
+      const opexItems = [
+        {label:'Mining',      val:Math.round(aisc*0.38), color:'var(--cyan-500)'},
+        {label:'Processing',  val:Math.round(aisc*0.28), color:'var(--violet-500)'},
+        {label:'G&A',         val:Math.round(aisc*0.12), color:'var(--amber-500)'},
+        {label:'Sustaining',  val:Math.round(aisc*0.14), color:'var(--rose-500)'},
+        {label:'Royalties',   val:Math.round(aisc*0.08), color:'var(--emerald-500)'},
+      ];
+      const maxVal = Math.max(...opexItems.map(o=>o.val));
+      document.getElementById('opexWaterfall').innerHTML = opexItems.map(o => `
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:80px;font-size:0.75rem;color:var(--text-500);text-align:right;flex-shrink:0;">${o.label}</div>
+          <div class="waterfall-bar" style="width:${Math.round((o.val/maxVal)*100)}%;background:${o.color}22;border:1px solid ${o.color}44;color:${o.color};">
+            $${o.val.toLocaleString()}/oz
+          </div>
+        </div>`).join('');
+
+      // Sensitivity table
+      const sensVars = [
+        {label:'Spot Price',  base:spotPrice,  unit:'$/oz', impact: v => (production*(v-aisc)*annuityFactor-capex)},
+        {label:'AISC',        base:aisc,        unit:'$/oz', impact: v => (production*(spotPrice-v)*annuityFactor-capex)},
+        {label:'Production',  base:production,  unit:'oz',   impact: v => (v*(spotPrice-aisc)*annuityFactor-capex)},
+        {label:'CAPEX',       base:capex/1e6,   unit:'$M',   impact: v => (production*(spotPrice-aisc)*annuityFactor-v*1e6)},
+      ];
+      document.getElementById('sensitivityTable').innerHTML = sensVars.map(s => {
+        const lo = fmtM(s.impact(s.base*0.8));
+        const md = fmtM(s.impact(s.base));
+        const hi = fmtM(s.impact(s.base*1.2));
+        return `
+          <div class="sensitivity-row">
+            <div style="color:var(--text-300);font-weight:500;">${s.label}</div>
+            <div style="height:4px;background:var(--coal-700);border-radius:2px;overflow:hidden;">
+              <div style="width:60%;height:100%;background:linear-gradient(90deg,var(--rose-500),var(--emerald-500));border-radius:2px;"></div>
+            </div>
+            <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--rose-400);text-align:center;">${lo}</div>
+            <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);text-align:center;">${md}</div>
+            <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);text-align:center;">${hi}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function resetCalc() {
+      document.getElementById('productionSlider').value = 250000;
+      document.getElementById('productionVal').textContent = '250,000';
+      document.getElementById('capexSlider').value = 480;
+      document.getElementById('capexVal').textContent = '$480M';
+      document.getElementById('aiscSlider').value = 1240;
+      document.getElementById('aiscVal').textContent = '$1,240';
+      document.getElementById('discountSlider').value = 10;
+      document.getElementById('discountVal').textContent = '10%';
+      document.getElementById('lomSlider').value = 20;
+      document.getElementById('lomVal').textContent = '20yr';
+      scenario = 'base';
+      recalculate();
+    }
+
+    function exportExcel()  { window.location.href = '../auth/signup.html'; }
+    function exportPDF()    { window.location.href = '../auth/signup.html'; }
+    function exportPPT()    { window.location.href = '../auth/signup.html'; }
+    function shareModel()   {
+      navigator.clipboard?.writeText(window.location.href).then(() => {
+        alert('Model link copied to clipboard!');
+      });
+    }
+
+    // Init
+    recalculate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Predictor — SESMine Intelligence</title>
+  <meta name="description" content="SESMine's AI Predictor delivers 90-day commodity price forecasts, equipment failure predictions and production optimisation — powered by LSTM neural networks trained on 14 years of mining data." />
+  <link rel="canonical" href="https://www.sesmine.com/products/ai-predictor.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    /* Model card */
+    .model-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      transition: border-color var(--ease-base), box-shadow var(--ease-base), transform var(--ease-base);
+      position: relative;
+      overflow: hidden;
+    }
+    .model-card:hover {
+      border-color: rgba(0,188,212,0.3);
+      box-shadow: 0 12px 40px rgba(0,188,212,0.08);
+      transform: translateY(-3px);
+    }
+    .model-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan-500), var(--violet-500), transparent);
+    }
+
+    /* Accuracy ring */
+    .accuracy-ring {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+    .accuracy-ring svg { transform: rotate(-90deg); }
+    .accuracy-ring__label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Feature pill row */
+    .feature-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.4375rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-100);
+      background: var(--coal-850);
+      color: var(--text-300);
+      white-space: nowrap;
+    }
+
+    /* Signal row */
+    .signal-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-100);
+      font-size: 0.8125rem;
+    }
+    .signal-row:last-child { border-bottom: none; }
+
+    /* Live prediction card */
+    .pred-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: border-color var(--ease-base), transform var(--ease-base);
+    }
+    .pred-card:hover {
+      border-color: var(--border-cyan);
+      transform: translateY(-2px);
+    }
+    .pred-card__header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-100);
+      background: var(--coal-850);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pred-card__body { padding: 1.25rem; }
+
+    /* Comparison table */
+    .compare-col {
+      text-align: center;
+      padding: 1rem 0.5rem;
+      border-left: 1px solid var(--border-100);
+    }
+    .compare-col:first-child { border-left: none; text-align: left; padding-left: 1rem; }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="../index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="../hub-preview.html">Hubs</a></li>
+        <li><a href="ai-predictor.html" class="active">AI Tools</a></li>
+        <li><a href="equipment-database.html">Equipment</a></li>
+        <li><a href="../news.html">News</a></li>
+        <li><a href="../resources.html">Resources</a></li>
+        <li><a href="../pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="../auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="../auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:4rem 0 3rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(0,188,212,0.07) 0%,rgba(139,92,246,0.04) 50%,transparent 70%);pointer-events:none;"></div>
+
+      <div class="container" style="position:relative;z-index:1;">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-500);margin-bottom:1.5rem;">
+          <a href="../index.html" style="color:var(--text-500);">Home</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <a href="ai-predictor.html" style="color:var(--text-500);">Products</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <span style="color:var(--cyan-400);">AI Predictor</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+          <div>
+            <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(0,188,212,0.08);border:1px solid rgba(0,188,212,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan-400);margin-bottom:1.25rem;">
+              <i class="fa-solid fa-brain fa-xs"></i> AI-Powered Forecasting
+            </div>
+            <h1 class="animate-fadeInUp" style="font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1rem;line-height:1.15;">
+              The Mining Industry's<br />
+              Most Accurate<br />
+              <span style="color:var(--cyan-400);">AI Predictor.</span>
+            </h1>
+            <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-300);line-height:1.75;margin-bottom:1.75rem;max-width:480px;">
+              LSTM neural networks trained on 14 years of mining data deliver 96% accuracy on 30-day commodity forecasts, equipment failure predictions and production optimisation signals.
+            </p>
+
+            <!-- Accuracy pills -->
+            <div class="animate-fadeInUp delay-2" style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.75rem;">
+              <div class="feature-pill"><i class="fa-solid fa-chart-line fa-xs" style="color:var(--emerald-400);"></i> 96% · 30D Accuracy</div>
+              <div class="feature-pill"><i class="fa-solid fa-chart-line fa-xs" style="color:var(--cyan-400);"></i> 91% · 60D Accuracy</div>
+              <div class="feature-pill"><i class="fa-solid fa-chart-line fa-xs" style="color:var(--amber-400);"></i> 84% · 90D Accuracy</div>
+            </div>
+
+            <div class="animate-fadeInUp delay-2" style="display:flex;gap:0.875rem;flex-wrap:wrap;">
+              <a href="../auth/signup.html" class="btn btn--primary btn--lg">
+                <i class="fa-solid fa-rocket"></i> Try AI Predictor Free
+              </a>
+              <a href="#live-predictions" class="btn btn--ghost btn--lg">
+                <i class="fa-solid fa-eye"></i> See Live Predictions
+              </a>
+            </div>
+          </div>
+
+          <!-- Hero visual -->
+          <div class="animate-fadeIn delay-2">
+            <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;position:relative;">
+              <!-- Header bar -->
+              <div style="padding:0.875rem 1.25rem;background:var(--coal-850);border-bottom:1px solid var(--border-100);display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:0.625rem;">
+                  <div style="width:28px;height:28px;border-radius:6px;background:rgba(0,188,212,0.1);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-size:0.75rem;"><i class="fa-solid fa-brain"></i></div>
+                  <span style="font-size:0.875rem;font-weight:600;">AI Predictor — Live Output</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span class="dot-live"></span>
+                  <span style="font-size:0.6875rem;color:var(--emerald-400);font-weight:600;">Model Active</span>
+                </div>
+              </div>
+
+              <!-- Chart area -->
+              <div style="padding:1.25rem;">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+                  <div>
+                    <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);">Gold XAU/oz · 90-Day Forecast</div>
+                    <div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--text-50);margin-top:2px;">$3,142 <span style="font-size:0.875rem;color:var(--emerald-400);">▲ +0.8%</span></div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:0.6875rem;color:var(--text-500);">90D Target</div>
+                    <div style="font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--emerald-400);">$3,380</div>
+                    <div style="font-size:0.6875rem;color:var(--text-500);">Confidence: 82%</div>
+                  </div>
+                </div>
+
+                <svg viewBox="0 0 440 120" style="width:100%;height:120px;" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="heroHistGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%"   stop-color="rgba(0,188,212,0.2)" />
+                      <stop offset="100%" stop-color="rgba(0,188,212,0)" />
+                    </linearGradient>
+                    <linearGradient id="heroFcGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%"   stop-color="rgba(16,185,129,0.15)" />
+                      <stop offset="100%" stop-color="rgba(16,185,129,0)" />
+                    </linearGradient>
+                  </defs>
+                  <!-- Grid lines -->
+                  <line x1="0" y1="30"  x2="440" y2="30"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                  <line x1="0" y1="60"  x2="440" y2="60"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                  <line x1="0" y1="90"  x2="440" y2="90"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+                  <line x1="290" y1="0" x2="290" y2="120" stroke="rgba(255,255,255,0.06)" stroke-width="1" stroke-dasharray="4,3"/>
+                  <!-- Historical fill -->
+                  <path d="M0,85 L36,78 L72,72 L108,80 L144,68 L180,62 L216,70 L252,58 L290,54 L290,120 L0,120 Z" fill="url(#heroHistGrad)"/>
+                  <!-- Historical line -->
+                  <path d="M0,85 L36,78 L72,72 L108,80 L144,68 L180,62 L216,70 L252,58 L290,54" fill="none" stroke="var(--cyan-500)" stroke-width="1.5"/>
+                  <!-- Forecast confidence band -->
+                  <path d="M290,54 L330,44 L370,34 L410,24 L440,16 L440,36 L410,46 L370,56 L330,62 L290,54 Z" fill="rgba(16,185,129,0.08)"/>
+                  <!-- Forecast line -->
+                  <path d="M290,54 L330,44 L370,34 L410,24 L440,16" fill="none" stroke="var(--emerald-400)" stroke-width="1.5" stroke-dasharray="5,3"/>
+                  <!-- Now marker -->
+                  <circle cx="290" cy="54" r="4" fill="var(--cyan-400)"/>
+                  <circle cx="290" cy="54" r="8" fill="rgba(0,188,212,0.15)"/>
+                  <!-- Labels -->
+                  <text x="4"   y="116" font-size="8" fill="rgba(100,116,139,0.7)" font-family="monospace">Apr</text>
+                  <text x="140" y="116" font-size="8" fill="rgba(100,116,139,0.7)" font-family="monospace">Jun</text>
+                  <text x="286" y="116" font-size="8" fill="rgba(0,188,212,0.8)"   font-family="monospace">Now</text>
+                  <text x="420" y="116" font-size="8" fill="rgba(16,185,129,0.8)"  font-family="monospace">Sep</text>
+                </svg>
+
+                <!-- Signal indicators -->
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.625rem;margin-top:1rem;">
+                  <div style="padding:0.625rem;background:rgba(16,185,129,0.06);border:1px solid rgba(16,185,129,0.15);border-radius:var(--radius-md);text-align:center;">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--emerald-400);margin-bottom:2px;">Signal</div>
+                    <div style="font-size:0.8125rem;font-weight:600;color:var(--emerald-400);">BUY</div>
+                  </div>
+                  <div style="padding:0.625rem;background:var(--coal-850);border:1px solid var(--border-100);border-radius:var(--radius-md);text-align:center;">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:2px;">Momentum</div>
+                    <div style="font-size:0.8125rem;font-weight:600;color:var(--cyan-400);">Strong</div>
+                  </div>
+                  <div style="padding:0.625rem;background:var(--coal-850);border:1px solid var(--border-100);border-radius:var(--radius-md);text-align:center;">
+                    <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:2px;">Confidence</div>
+                    <div style="font-family:var(--font-mono);font-size:0.8125rem;font-weight:600;color:var(--text-100);">82%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         MODEL ACCURACY STATS
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);border-bottom:1px solid var(--border-100);padding:2.5rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0;border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;">
+          <div class="reveal" style="padding:1.5rem;border-right:1px solid var(--border-100);text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--emerald-400);">96%</div>
+            <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">30D Accuracy</div>
+          </div>
+          <div class="reveal delay-1" style="padding:1.5rem;border-right:1px solid var(--border-100);text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--cyan-400);">91%</div>
+            <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">60D Accuracy</div>
+          </div>
+          <div class="reveal delay-2" style="padding:1.5rem;border-right:1px solid var(--border-100);text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--amber-400);">84%</div>
+            <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">90D Accuracy</div>
+          </div>
+          <div class="reveal delay-3" style="padding:1.5rem;border-right:1px solid var(--border-100);text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--violet-400);">14yr</div>
+            <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">Training Data</div>
+          </div>
+          <div class="reveal delay-4" style="padding:1.5rem;border-right:1px solid var(--border-100);text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--text-200);">48</div>
+            <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">Commodities</div>
+          </div>
+          <div class="reveal delay-5" style="padding:1.5rem;text-align:center;">
+            <div style="font-family:var(--font-mono);font-size:1.75rem;font-weight:600;color:var(--text-200);">Weekly</div>
+            <div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">Model Retraining</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         THREE AI MODELS
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:4rem 0;">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:3rem;">
+          <div class="section-label reveal" style="justify-content:center;">Three Prediction Engines</div>
+          <h2 class="section-title reveal delay-1" style="text-align:center;">One Platform. Three AI Models.</h2>
+          <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);max-width:520px;margin:0 auto;">
+            Each model is purpose-built for its domain — trained on domain-specific data, optimised for domain-specific accuracy. Not a generic AI. A specialist mining intelligence system.
+          </p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+
+          <!-- Model 1: Price Forecast -->
+          <div class="model-card reveal stagger">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+              <div>
+                <div style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.25rem 0.625rem;background:rgba(0,188,212,0.08);border:1px solid rgba(0,188,212,0.2);border-radius:99px;font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--cyan-400);margin-bottom:0.875rem;">Model 01</div>
+                <h3 style="font-size:1.125rem;margin-bottom:0.375rem;">Price Forecast Engine</h3>
+                <div style="font-size:0.75rem;color:var(--text-500);">LSTM · Transformer · Ensemble</div>
+              </div>
+              <div class="accuracy-ring">
+                <svg viewBox="0 0 80 80" width="80" height="80">
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(0,188,212,0.1)" stroke-width="6"/>
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="var(--cyan-500)" stroke-width="6" stroke-dasharray="201" stroke-dashoffset="30" stroke-linecap="round"/>
+                </svg>
+                <div class="accuracy-ring__label">
+                  <span style="font-family:var(--font-mono);font-size:0.875rem;font-weight:700;color:var(--cyan-400);">96%</span>
+                  <span style="font-size:0.5rem;color:var(--text-500);text-transform:uppercase;letter-spacing:0.08em;">30D</span>
+                </div>
+              </div>
+            </div>
+
+            <p style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;margin:0;">
+              Predicts spot and forward prices for 48 commodity markets across 30, 60 and 90-day horizons. Cross-references macroeconomic indicators, supply chain signals, geopolitical risk and exchange rate data.
+            </p>
+
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Architecture</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">LSTM + Transformer Ensemble</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Training Data</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">14 years · 48 markets</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Retrain Frequency</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">Weekly</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Input Signals</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">84 features</span>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag"><i class="fa-solid fa-bolt fa-xs"></i> Bull / Base / Bear</span>
+              <span class="tag"><i class="fa-solid fa-download fa-xs"></i> API Access</span>
+              <span class="tag"><i class="fa-solid fa-bell fa-xs"></i> Price Alerts</span>
+            </div>
+
+            <a href="../auth/signup.html" class="btn btn--primary btn--sm">Try Price Forecast</a>
+          </div>
+
+          <!-- Model 2: Equipment Failure -->
+          <div class="model-card reveal stagger">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+              <div>
+                <div style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.25rem 0.625rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:99px;font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber-400);margin-bottom:0.875rem;">Model 02</div>
+                <h3 style="font-size:1.125rem;margin-bottom:0.375rem;">Equipment Failure Predictor</h3>
+                <div style="font-size:0.75rem;color:var(--text-500);">Random Forest · LSTM · Anomaly Detection</div>
+              </div>
+              <div class="accuracy-ring">
+                <svg viewBox="0 0 80 80" width="80" height="80">
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(245,158,11,0.1)" stroke-width="6"/>
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="var(--amber-500)" stroke-width="6" stroke-dasharray="201" stroke-dashoffset="24" stroke-linecap="round"/>
+                </svg>
+                <div class="accuracy-ring__label">
+                  <span style="font-family:var(--font-mono);font-size:0.875rem;font-weight:700;color:var(--amber-400);">94%</span>
+                  <span style="font-size:0.5rem;color:var(--text-500);text-transform:uppercase;letter-spacing:0.08em;">7D</span>
+                </div>
+              </div>
+            </div>
+
+            <p style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;margin:0;">
+              Predicts equipment failures up to 14 days in advance using sensor telemetry, maintenance history and OEM failure pattern databases. Reduces unplanned downtime by an average of 35%.
+            </p>
+
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Architecture</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">Random Forest + LSTM</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Prediction Window</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">1–14 days ahead</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Equipment Types</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">280+ models covered</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Avg. Downtime Reduction</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);">-35%</span>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag"><i class="fa-solid fa-gear fa-xs"></i> Sensor Integration</span>
+              <span class="tag"><i class="fa-solid fa-bell fa-xs"></i> Failure Alerts</span>
+              <span class="tag"><i class="fa-solid fa-wrench fa-xs"></i> Maintenance Scheduling</span>
+            </div>
+
+            <a href="../auth/signup.html" class="btn btn--amber btn--sm">Try Failure Predictor</a>
+          </div>
+
+          <!-- Model 3: Production Optimiser -->
+          <div class="model-card reveal stagger">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;">
+              <div>
+                <div style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.25rem 0.625rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:99px;font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--emerald-400);margin-bottom:0.875rem;">Model 03</div>
+                <h3 style="font-size:1.125rem;margin-bottom:0.375rem;">Production Optimiser</h3>
+                <div style="font-size:0.75rem;color:var(--text-500);">Reinforcement Learning · Gradient Boosting</div>
+              </div>
+              <div class="accuracy-ring">
+                <svg viewBox="0 0 80 80" width="80" height="80">
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(16,185,129,0.1)" stroke-width="6"/>
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="var(--emerald-500)" stroke-width="6" stroke-dasharray="201" stroke-dashoffset="18" stroke-linecap="round"/>
+                </svg>
+                <div class="accuracy-ring__label">
+                  <span style="font-family:var(--font-mono);font-size:0.875rem;font-weight:700;color:var(--emerald-400);">+12%</span>
+                  <span style="font-size:0.5rem;color:var(--text-500);text-transform:uppercase;letter-spacing:0.08em;">Output</span>
+                </div>
+              </div>
+            </div>
+
+            <p style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;margin:0;">
+              Reinforcement learning model that continuously optimises blast design, fleet dispatch, mill throughput and processing parameters — delivering an average 12% production uplift without additional capital.
+            </p>
+
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Architecture</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">RL + Gradient Boosting</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Optimisation Domains</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">Blast · Fleet · Mill</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Avg. Production Uplift</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--emerald-400);">+12%</span>
+              </div>
+              <div class="signal-row">
+                <span style="color:var(--text-400);">Integration</span>
+                <span style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-200);">REST API · Webhooks</span>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:0.375rem;">
+              <span class="tag"><i class="fa-solid fa-sliders fa-xs"></i> Real-time Recommendations</span>
+              <span class="tag"><i class="fa-solid fa-chart-bar fa-xs"></i> Scenario Modelling</span>
+            </div>
+
+            <a href="../auth/signup.html" class="btn btn--success btn--sm">Try Production Optimiser</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         LIVE PREDICTIONS PANEL
+    ══════════════════════════════════════════════════════ -->
+    <section id="live-predictions" style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Live Output</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0.375rem;">Today's AI Predictions</h2>
+            <p class="reveal delay-2" style="font-size:0.8125rem;color:var(--text-500);">
+              <span class="dot-live" style="display:inline-flex;margin-right:0.375rem;"></span>
+              Model last run: <span style="font-family:var(--font-mono);" id="modelRunTime">—</span> · Next run: <span style="font-family:var(--font-mono);" id="nextRunTime">—</span>
+            </p>
+          </div>
+          <div style="display:flex;gap:0.5rem;" class="reveal">
+            <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.4375rem 2rem 0.4375rem 0.75rem;" id="horizonSelect">
+              <option value="30">30-Day Horizon</option>
+              <option value="60">60-Day Horizon</option>
+              <option value="90" selected>90-Day Horizon</option>
+            </select>
+            <button class="btn btn--ghost btn--sm" onclick="exportPredictions()"><i class="fa-solid fa-download"></i> Export</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;" id="predGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         HOW IT WORKS
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:3rem;">
+          <div class="section-label reveal" style="justify-content:center;">Architecture</div>
+          <h2 class="section-title reveal delay-1" style="text-align:center;">How the AI Predictor Works</h2>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+
+          <!-- Steps -->
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div class="reveal stagger" style="display:flex;gap:1.25rem;padding:1.5rem 0;border-bottom:1px solid var(--border-100);">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,188,212,0.1);border:1px solid rgba(0,188,212,0.2);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-family:var(--font-mono);font-size:0.875rem;font-weight:700;flex-shrink:0;">01</div>
+              <div>
+                <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.375rem;">Multi-Source Data Ingestion</div>
+                <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;">84 input signals ingested in real time — LME/COMEX prices, DXY, central bank data, shipping indices, geopolitical risk scores, satellite imagery and supply chain telemetry.</div>
+              </div>
+            </div>
+            <div class="reveal stagger" style="display:flex;gap:1.25rem;padding:1.5rem 0;border-bottom:1px solid var(--border-100);">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);display:flex;align-items:center;justify-content:center;color:var(--violet-400);font-family:var(--font-mono);font-size:0.875rem;font-weight:700;flex-shrink:0;">02</div>
+              <div>
+                <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.375rem;">Feature Engineering & Normalisation</div>
+                <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;">Automated feature engineering pipeline extracts 240+ derived features — momentum indicators, cross-commodity correlations, seasonality patterns and regime detection signals.</div>
+              </div>
+            </div>
+            <div class="reveal stagger" style="display:flex;gap:1.25rem;padding:1.5rem 0;border-bottom:1px solid var(--border-100);">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;color:var(--emerald-400);font-family:var(--font-mono);font-size:0.875rem;font-weight:700;flex-shrink:0;">03</div>
+              <div>
+                <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.375rem;">Ensemble Model Inference</div>
+                <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;">LSTM, Transformer and gradient boosting models run in parallel. A meta-learner ensemble combines outputs with dynamic weighting — optimised for the current market regime.</div>
+              </div>
+            </div>
+            <div class="reveal stagger" style="display:flex;gap:1.25rem;padding:1.5rem 0;border-bottom:1px solid var(--border-100);">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;color:var(--amber-400);font-family:var(--font-mono);font-size:0.875rem;font-weight:700;flex-shrink:0;">04</div>
+              <div>
+                <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.375rem;">Scenario Generation & Confidence Scoring</div>
+                <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;">Monte Carlo simulation generates 10,000 price paths. Bull, base and bear scenarios are extracted with calibrated confidence intervals and probability-weighted price targets.</div>
+              </div>
+            </div>
+            <div class="reveal stagger" style="display:flex;gap:1.25rem;padding:1.5rem 0;">
+              <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,188,212,0.1);border:1px solid rgba(0,188,212,0.2);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-family:var(--font-mono);font-size:0.875rem;font-weight:700;flex-shrink:0;">05</div>
+              <div>
+                <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.375rem;">Weekly Retraining & Drift Detection</div>
+                <div style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;">Models retrain weekly on fresh data. Automated drift detection monitors prediction accuracy in real time — triggering emergency retraining if accuracy drops below threshold.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Architecture image + tech stack -->
+          <div>
+            <div class="reveal">
+              <div class="img-frame" style="height:260px;margin-bottom:1.5rem;">
+                <img
+                  src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=80"
+                  alt="AI neural network data processing and machine learning visualisation"
+                  style="width:100%;height:100%;object-fit:cover;"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+
+            <div style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:1.25rem;" class="reveal delay-1">
+              <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-400);margin-bottom:1rem;">Technology Stack</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.625rem;">
+                <div style="padding:0.75rem;background:var(--coal-850);border-radius:var(--radius-md);border:1px solid var(--border-100);">
+                  <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:0.25rem;">ML Framework</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-200);">PyTorch · TensorFlow</div>
+                </div>
+                <div style="padding:0.75rem;background:var(--coal-850);border-radius:var(--radius-md);border:1px solid var(--border-100);">
+                  <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:0.25rem;">Infrastructure</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-200);">AWS SageMaker</div>
+                </div>
+                <div style="padding:0.75rem;background:var(--coal-850);border-radius:var(--radius-md);border:1px solid var(--border-100);">
+                  <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:0.25rem;">Data Pipeline</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-200);">Apache Kafka · Spark</div>
+                </div>
+                <div style="padding:0.75rem;background:var(--coal-850);border-radius:var(--radius-md);border:1px solid var(--border-100);">
+                  <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:0.25rem;">API</div>
+                  <div style="font-family:var(--font-mono);font-size:0.8125rem;color:var(--text-200);">REST · WebSocket</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         CTA
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(0,188,212,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <h2 class="reveal" style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">Start Predicting With 96% Accuracy</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:440px;margin:0 auto 2rem;">14-day free trial. Full access to all three AI models. No credit card required.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="../auth/signup.html" class="btn btn--primary btn--xl"><i class="fa-solid fa-rocket"></i> Start Free Trial</a>
+          <a href="../pricing.html"     class="btn btn--ghost btn--xl"><i class="fa-solid fa-tag"></i> View Pricing</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="../hubs/economics-hub.html">Economics</a><a href="../hubs/engineering-hub.html">Engineering</a><a href="../hubs/innovation-hub.html">Innovation</a><a href="../hubs/procurement-hub.html">Procurement</a><a href="../hubs/safety-hub.html">Safety</a><a href="../hubs/sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="ai-predictor.html">AI Predictor</a><a href="cost-calculator.html">Cost Calculator</a><a href="equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="../news.html">News</a><a href="../pricing.html">Pricing</a><a href="../contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="../auth/login.html">Sign In</a><a href="../auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/config.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    // ── Ticker ───────────────────────────────────────────
+    const COMM = [
+      {name:'Gold',price:3142.50,chg:+0.8},{name:'Copper',price:9847,chg:+1.2},
+      {name:'Lithium',price:14200,chg:+2.1},{name:'Silver',price:31.84,chg:-0.3},
+      {name:'Nickel',price:18240,chg:+0.6},{name:'Iron Ore',price:108.40,chg:+0.5},
+      {name:'Cobalt',price:26800,chg:-1.1},{name:'Zinc',price:2840,chg:+0.4}
+    ];
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      t.innerHTML = [...COMM,...COMM].map(c => {
+        const up  = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => {
+      COMM.forEach(c => {
+        c.price = Math.max(1, c.price + (Math.random() - 0.49) * c.price * 0.002);
+        c.chg   = parseFloat((c.chg + (Math.random() - 0.5) * 0.08).toFixed(2));
+      });
+      renderTicker();
+    }, 8000);
+
+    // ── Model run times ──────────────────────────────────
+    const now = new Date();
+    document.getElementById('modelRunTime').textContent = now.toLocaleTimeString();
+    const next = new Date(now.getTime() + 3600000);
+    document.getElementById('nextRunTime').textContent = next.toLocaleTimeString();
+
+    // ── Live predictions grid ────────────────────────────
+    const PREDICTIONS = [
+      { name:'Gold',     sym:'XAU', unit:'oz', price:3142.50, target30:3210, target60:3280, target90:3380, signal:'BUY',  conf:82, chg:+0.8,  color:'var(--emerald-400)', scenario:'Bull' },
+      { name:'Copper',   sym:'CU',  unit:'t',  price:9847,    target30:10100,target60:10420,target90:10840,signal:'BUY',  conf:78, chg:+1.2,  color:'var(--cyan-400)',    scenario:'Bull' },
+      { name:'Lithium',  sym:'Li',  unit:'t',  price:14200,   target30:14800,target60:15400,target90:16200,signal:'BUY',  conf:71, chg:+2.1,  color:'var(--violet-400)',  scenario:'Bull' },
+      { name:'Nickel',   sym:'NI',  unit:'t',  price:18240,   target30:17800,target60:17400,target90:17100,signal:'SELL', conf:68, chg:+0.6,  color:'var(--rose-400)',    scenario:'Bear' },
+      { name:'Silver',   sym:'XAG', unit:'oz', price:31.84,   target30:32.40,target60:33.10,target90:34.20,signal:'HOLD', conf:74, chg:-0.3,  color:'var(--amber-400)',   scenario:'Base' },
+      { name:'Iron Ore', sym:'IO',  unit:'t',  price:108.40,  target30:110.20,target60:112.80,target90:115.40,signal:'HOLD',conf:76,chg:+0.5, color:'var(--amber-400)',   scenario:'Base' },
+    ];
+
+    function renderPredGrid() {
+      const horizon = parseInt(document.getElementById('horizonSelect').value);
+      const grid = document.getElementById('predGrid');
+      grid.innerHTML = PREDICTIONS.map(p => {
+        const target = horizon === 30 ? p.target30 : horizon === 60 ? p.target60 : p.target90;
+        const upside = (((target - p.price) / p.price) * 100).toFixed(1);
+        const isUp   = parseFloat(upside) >= 0;
+        const fmt    = v => v >= 1000 ? v.toLocaleString('en-US',{maximumFractionDigits:2}) : v.toFixed(2);
+        const signalColor = p.signal === 'BUY' ? 'var(--emerald-400)' : p.signal === 'SELL' ? 'var(--rose-400)' : 'var(--amber-400)';
+        const signalBg    = p.signal === 'BUY' ? 'rgba(16,185,129,0.08)' : p.signal === 'SELL' ? 'rgba(239,68,68,0.08)' : 'rgba(245,158,11,0.08)';
+        const signalBorder= p.signal === 'BUY' ? 'rgba(16,185,129,0.2)' : p.signal === 'SELL' ? 'rgba(239,68,68,0.2)' : 'rgba(245,158,11,0.2)';
+        return `
+          <div class="pred-card reveal stagger">
+            <div class="pred-card__header">
+              <div>
+                <div style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);">${p.name} · ${p.sym}</div>
+                <div style="font-family:var(--font-mono);font-size:1.125rem;font-weight:600;color:var(--text-50);">$${fmt(p.price)}<span style="font-size:0.6875rem;color:var(--text-500);">/${p.unit}</span></div>
+              </div>
+              <div style="display:inline-flex;align-items:center;gap:0.375rem;padding:0.375rem 0.75rem;background:${signalBg};border:1px solid ${signalBorder};border-radius:99px;font-size:0.75rem;font-weight:700;color:${signalColor};">
+                ${p.signal}
+              </div>
+            </div>
+            <div class="pred-card__body" style="display:flex;flex-direction:column;gap:0.875rem;">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;">
+                <div style="padding:0.625rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:2px;">${horizon}D Target</div>
+                  <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:${p.color};">$${fmt(target)}</div>
+                </div>
+                <div style="padding:0.625rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:2px;">Upside</div>
+                  <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:${isUp?'var(--emerald-400)':'var(--rose-400)'};">${isUp?'+':''}${upside}%</div>
+                </div>
+                <div style="padding:0.625rem;background:var(--coal-850);border-radius:var(--radius-md);text-align:center;">
+                  <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-500);margin-bottom:2px;">Confidence</div>
+                  <div style="font-family:var(--font-mono);font-size:0.875rem;font-weight:600;color:var(--text-200);">${p.conf}%</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <span class="badge badge--neutral" style="font-size:0.625rem;">${p.scenario} Scenario</span>
+                  <span style="font-family:var(--font-mono);font-size:0.6875rem;color:${p.chg>=0?'var(--emerald-400)':'var(--rose-400)'};">${p.chg>=0?'▲':'▼'} ${Math.abs(p.chg).toFixed(1)}% today</span>
+                </div>
+                <a href="../auth/signup.html" style="font-size:0.75rem;color:var(--cyan-400);">Full forecast <i class="fa-solid fa-arrow-right fa-xs"></i></a>
+              </div>
+              <!-- Mini confidence bar -->
+              <div style="height:3px;background:var(--coal-700);border-radius:var(--radius-full);overflow:hidden;">
+                <div style="width:${p.conf}%;height:100%;background:${p.color};border-radius:var(--radius-full);"></div>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+      document.querySelectorAll('.pred-card.reveal').forEach(el => revObs.observe(el));
+    }
+
+    renderPredGrid();
+    document.getElementById('horizonSelect').addEventListener('change', renderPredGrid);
+
+    function exportPredictions() {
+      const horizon = document.getElementById('horizonSelect').value;
+      const rows = ['Commodity,Signal,Current Price,Target,Upside,Confidence,Scenario'];
+      PREDICTIONS.forEach(p => {
+        const target = horizon == 30 ? p.target30 : horizon == 60 ? p.target60 : p.target90;
+        const upside = (((target - p.price) / p.price) * 100).toFixed(1);
+        rows.push(`${p.name},${p.signal},$${p.price},$${target},${upside}%,${p.conf}%,${p.scenario}`);
+      });
+      const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `sesmine-ai-predictions-${horizon}d-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+    }
+
+    // Live price flicker on predictions
+    setInterval(() => {
+      PREDICTIONS.forEach(p => {
+        p.price = Math.max(1, p.price + (Math.random() - 0.49) * p.price * 0.001);
+        p.chg   = parseFloat((p.chg + (Math.random() - 0.5) * 0.05).toFixed(2));
+      });
+      renderPredGrid();
+    }, 10000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Equipment Database — SESMine Intelligence</title>
+  <meta name="description" content="Search 10,000+ mining equipment specifications from 480+ global OEMs. CAD files, maintenance schedules, vendor comparisons and technical standards." />
+  <link rel="canonical" href="https://www.sesmine.com/products/equipment-database.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/animations.css" />
+  <style>
+    .db-stat {
+      padding: 1.5rem;
+      border-right: 1px solid var(--border-100);
+      text-align: center;
+    }
+    .db-stat:last-child { border-right: none; }
+
+    .oem-logo-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 64px;
+      transition: border-color var(--ease-fast), background var(--ease-fast);
+      cursor: pointer;
+    }
+    .oem-logo-card:hover {
+      border-color: var(--border-cyan);
+      background: rgba(0,188,212,0.04);
+    }
+
+    .spec-table-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border-100);
+    }
+    .spec-table-row:last-child { border-bottom: none; }
+    .spec-table-cell {
+      padding: 0.625rem 0.875rem;
+      font-size: 0.8125rem;
+      border-right: 1px solid var(--border-100);
+    }
+    .spec-table-cell:last-child { border-right: none; }
+    .spec-table-cell--label { color: var(--text-500); font-weight: 500; }
+    .spec-table-cell--val   { font-family: var(--font-mono); color: var(--text-200); font-weight: 600; }
+
+    .search-hero {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="../index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="../hub-preview.html">Hubs</a></li>
+        <li><a href="ai-predictor.html">AI Tools</a></li>
+        <li><a href="equipment-database.html" class="active">Equipment</a></li>
+        <li><a href="../news.html">News</a></li>
+        <li><a href="../resources.html">Resources</a></li>
+        <li><a href="../pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="../auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="../auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- Hero -->
+    <section style="background:var(--coal-950);padding:4rem 0 3rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(0,188,212,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+
+      <div class="container" style="position:relative;z-index:1;">
+        <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--text-500);margin-bottom:1.5rem;">
+          <a href="../index.html" style="color:var(--text-500);">Home</a>
+          <i class="fa-solid fa-chevron-right fa-xs"></i>
+          <span style="color:var(--cyan-400);">Equipment Database</span>
+        </div>
+
+        <div style="max-width:680px;margin:0 auto;text-align:center;margin-bottom:3rem;">
+          <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(0,188,212,0.08);border:1px solid rgba(0,188,212,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan-400);margin-bottom:1.25rem;">
+            <i class="fa-solid fa-database fa-xs"></i> 10,000+ Equipment Specifications
+          </div>
+          <h1 class="animate-fadeInUp" style="font-size:clamp(2rem,4vw,2.875rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1rem;">
+            The World's Largest<br />
+            <span style="color:var(--cyan-400);">Mining Equipment Database.</span>
+          </h1>
+          <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-300);line-height:1.75;margin-bottom:2rem;">
+            Search, compare and download specifications for 10,000+ pieces of mining equipment from 480+ global OEMs — including CAD files, maintenance schedules and technical standards.
+          </p>
+        </div>
+
+        <!-- Search hero -->
+        <div class="search-hero animate-fadeInUp delay-2" style="max-width:760px;margin:0 auto;">
+          <div style="display:flex;gap:0.75rem;margin-bottom:1.25rem;flex-wrap:wrap;">
+            <div class="input-wrap" style="flex:1;min-width:240px;">
+              <i class="fa-solid fa-search input-icon"></i>
+              <input type="text" class="form-input" placeholder="Search by model, OEM, category, specification…" id="heroSearch" oninput="filterResults()" style="font-size:0.9375rem;padding:0.75rem 0.75rem 0.75rem 2.5rem;" />
+            </div>
+            <select class="form-select" style="width:auto;font-size:0.875rem;padding:0.75rem 2.5rem 0.75rem 0.875rem;" id="catFilter" onchange="filterResults()">
+              <option value="">All Categories</option>
+              <option value="haulage">Haulage</option>
+              <option value="drilling">Drilling</option>
+              <option value="loading">Loading</option>
+              <option value="processing">Processing</option>
+              <option value="underground">Underground</option>
+              <option value="autonomous">Autonomous</option>
+            </select>
+            <select class="form-select" style="width:auto;font-size:0.875rem;padding:0.75rem 2.5rem 0.75rem 0.875rem;" id="oemFilter" onchange="filterResults()">
+              <option value="">All OEMs</option>
+              <option value="caterpillar">Caterpillar</option>
+              <option value="komatsu">Komatsu</option>
+              <option value="epiroc">Epiroc</option>
+              <option value="sandvik">Sandvik</option>
+              <option value="liebherr">Liebherr</option>
+              <option value="hitachi">Hitachi</option>
+            </select>
+          </div>
+          <!-- Popular searches -->
+          <div style="display:flex;align-items:center;gap:0.625rem;flex-wrap:wrap;">
+            <span style="font-size:0.75rem;color:var(--text-500);">Popular:</span>
+            <button onclick="quickSearch('797F')"        class="btn btn--ghost" style="font-size:0.75rem;padding:0.25rem 0.625rem;border-radius:99px;">Cat 797F</button>
+            <button onclick="quickSearch('930E')"        class="btn btn--ghost" style="font-size:0.75rem;padding:0.25rem 0.625rem;border-radius:99px;">Komatsu 930E</button>
+            <button onclick="quickSearch('Pit Viper')"   class="btn btn--ghost" style="font-size:0.75rem;padding:0.25rem 0.625rem;border-radius:99px;">Pit Viper 351</button>
+            <button onclick="quickSearch('SAG Mill')"    class="btn btn--ghost" style="font-size:0.75rem;padding:0.25rem 0.625rem;border-radius:99px;">SAG Mill</button>
+            <button onclick="quickSearch('autonomous')"  class="btn btn--ghost" style="font-size:0.75rem;padding:0.25rem 0.625rem;border-radius:99px;">Autonomous</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats strip -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);border-bottom:1px solid var(--border-100);padding:2rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;">
+          <div class="db-stat reveal"><div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--cyan-400);">10K+</div><div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">Equipment Specs</div></div>
+          <div class="db-stat reveal delay-1"><div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--amber-400);">480+</div><div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">Global OEMs</div></div>
+          <div class="db-stat reveal delay-2"><div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--emerald-400);">CAD</div><div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">DWG · DXF · STEP</div></div>
+          <div class="db-stat reveal delay-3"><div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--violet-400);">Weekly</div><div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">Database Updates</div></div>
+          <div class="db-stat reveal delay-4"><div style="font-family:var(--font-mono);font-size:1.5rem;font-weight:600;color:var(--text-200);">API</div><div style="font-size:0.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);margin-top:0.25rem;">REST Access</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Equipment -->
+    <section style="background:var(--coal-950);padding:4rem 0;">
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Featured Equipment</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0;" id="resultsHeading">Showing all equipment</h2>
+          </div>
+          <div style="display:flex;gap:0.5rem;" class="reveal">
+            <button class="btn btn--ghost btn--sm" onclick="setView('grid')" id="gridBtn"><i class="fa-solid fa-grid-2"></i></button>
+            <button class="btn btn--ghost btn--sm" onclick="setView('list')" id="listBtn"><i class="fa-solid fa-list"></i></button>
+            <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.4375rem 2rem 0.4375rem 0.75rem;" onchange="sortEquipment(this.value)">
+              <option value="name">Sort: Name A–Z</option>
+              <option value="payload">Sort: Payload</option>
+              <option value="oem">Sort: OEM</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;" id="eqGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div style="text-align:center;margin-top:2.5rem;" class="reveal">
+          <a href="../auth/signup.html" class="btn btn--ghost btn--lg">
+            <i class="fa-solid fa-plus"></i> Load More Equipment
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured spec detail -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+
+          <div>
+            <div class="section-label reveal">Spec Deep-Dive</div>
+            <h2 class="section-title reveal delay-1">Caterpillar 797F — Full Specification</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+              Every specification page includes 200+ technical parameters, OEM maintenance schedules, CAD file downloads, historical reliability data and side-by-side competitor comparisons.
+            </p>
+
+            <div style="background:var(--coal-850);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;" class="reveal delay-2">
+              <div style="padding:0.875rem 1rem;background:var(--coal-800);border-bottom:1px solid var(--border-200);font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);">Technical Specifications</div>
+              <div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Payload Capacity</div><div class="spec-table-cell spec-table-cell--val">363 t (400 tons)</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Gross Vehicle Weight</div><div class="spec-table-cell spec-table-cell--val">623.7 t</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Engine Model</div><div class="spec-table-cell spec-table-cell--val">Cat C175-20</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Engine Power</div><div class="spec-table-cell spec-table-cell--val">2,983 kW (4,000 HP)</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Drive System</div><div class="spec-table-cell spec-table-cell--val">AC Electric Drive</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Tyre Size</div><div class="spec-table-cell spec-table-cell--val">59/80R63</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Body Capacity (SAE 2:1)</div><div class="spec-table-cell spec-table-cell--val">218.8 m³</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Fuel Tank Capacity</div><div class="spec-table-cell spec-table-cell--val">6,814 L</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Overall Length</div><div class="spec-table-cell spec-table-cell--val">14.98 m</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Overall Width</div><div class="spec-table-cell spec-table-cell--val">9.75 m</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Overall Height (loaded)</div><div class="spec-table-cell spec-table-cell--val">7.49 m</div></div>
+                <div class="spec-table-row"><div class="spec-table-cell spec-table-cell--label">Top Speed (loaded)</div><div class="spec-table-cell spec-table-cell--val">64.4 km/h</div></div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:0.75rem;margin-top:1.25rem;flex-wrap:wrap;" class="reveal delay-3">
+              <a href="../auth/signup.html" class="btn btn--primary btn--sm"><i class="fa-solid fa-cube"></i> Download CAD Files</a>
+              <a href="../auth/signup.html" class="btn btn--ghost btn--sm"><i class="fa-solid fa-wrench"></i> Maintenance Schedule</a>
+              <a href="../auth/signup.html" class="btn btn--ghost btn--sm"><i class="fa-solid fa-scale-balanced"></i> Compare Models</a>
+            </div>
+          </div>
+
+          <div class="reveal delay-1">
+            <div class="img-frame" style="height:280px;margin-bottom:1.25rem;">
+              <img
+                src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=800&q=80"
+                alt="Caterpillar 797F ultra-class haul truck at open pit mine"
+                style="width:100%;height:100%;object-fit:cover;"
+                loading="lazy"
+              />
+            </div>
+            <!-- CAD formats -->
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.625rem;">
+              <div style="padding:0.875rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <i class="fa-solid fa-cube" style="color:var(--cyan-400);margin-bottom:0.375rem;display:block;"></i>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;font-weight:600;color:var(--text-200);">DWG</div>
+                <div style="font-size:0.6rem;color:var(--text-500);">AutoCAD</div>
+              </div>
+              <div style="padding:0.875rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <i class="fa-solid fa-cube" style="color:var(--amber-400);margin-bottom:0.375rem;display:block;"></i>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;font-weight:600;color:var(--text-200);">DXF</div>
+                <div style="font-size:0.6rem;color:var(--text-500);">Exchange</div>
+              </div>
+              <div style="padding:0.875rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <i class="fa-solid fa-cube" style="color:var(--emerald-400);margin-bottom:0.375rem;display:block;"></i>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;font-weight:600;color:var(--text-200);">STEP</div>
+                <div style="font-size:0.6rem;color:var(--text-500);">3D Model</div>
+              </div>
+              <div style="padding:0.875rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-lg);text-align:center;">
+                <i class="fa-solid fa-cube" style="color:var(--violet-400);margin-bottom:0.375rem;display:block;"></i>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;font-weight:600;color:var(--text-200);">IFC</div>
+                <div style="font-size:0.6rem;color:var(--text-500);">BIM Ready</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- OEM logos -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:2rem;">
+          <div class="section-label reveal" style="justify-content:center;">OEM Coverage</div>
+          <h2 class="section-title reveal delay-1" style="text-align:center;">480+ Manufacturers Indexed</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:0.75rem;" class="reveal delay-1">
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Caterpillar</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Komatsu</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Epiroc</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Sandvik</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Liebherr</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Hitachi</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">FLSmidth</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Metso</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Weir Group</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Volvo CE</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Terex</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Doosan</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Hexagon</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Trimble</span></div>
+          <div class="oem-logo-card"><span style="font-size:0.75rem;font-weight:700;color:var(--text-300);">Atlas Copco</span></div>
+          <div class="oem-logo-card" style="border-style:dashed;"><span style="font-size:0.75rem;color:var(--text-600);">+465 more</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;text-align:center;">
+      <div class="container">
+        <h2 class="reveal" style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">Access the Full Equipment Database</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:440px;margin:0 auto 2rem;">10,000+ specs, CAD downloads, maintenance data and OEM comparisons — free for 14 days.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="../auth/signup.html" class="btn btn--primary btn--xl"><i class="fa-solid fa-rocket"></i> Start Free Trial</a>
+          <a href="../pricing.html"     class="btn btn--ghost btn--xl"><i class="fa-solid fa-tag"></i> View Pricing</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="../hubs/economics-hub.html">Economics</a><a href="../hubs/engineering-hub.html">Engineering</a><a href="../hubs/innovation-hub.html">Innovation</a><a href="../hubs/procurement-hub.html">Procurement</a><a href="../hubs/safety-hub.html">Safety</a><a href="../hubs/sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="ai-predictor.html">AI Predictor</a><a href="cost-calculator.html">Cost Calculator</a><a href="equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="../news.html">News</a><a href="../pricing.html">Pricing</a><a href="../contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="../auth/login.html">Sign In</a><a href="../auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/config.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    // Ticker
+    const COMM = [
+      {name:'Gold',price:3142.50,chg:+0.8},{name:'Copper',price:9847,chg:+1.2},
+      {name:'Lithium',price:14200,chg:+2.1},{name:'Silver',price:31.84,chg:-0.3},
+      {name:'Nickel',price:18240,chg:+0.6},{name:'Iron Ore',price:108.40,chg:+0.5},
+      {name:'Cobalt',price:26800,chg:-1.1},{name:'Zinc',price:2840,chg:+0.4}
+    ];
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      t.innerHTML = [...COMM,...COMM].map(c => {
+        const up  = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => { COMM.forEach(c => { c.price = Math.max(1,c.price+(Math.random()-0.49)*c.price*0.002); c.chg = parseFloat((c.chg+(Math.random()-0.5)*0.08).toFixed(2)); }); renderTicker(); }, 8000);
+
+    // Equipment data
+    const EQUIPMENT = [
+      {id:1,name:'797F Haul Truck',oem:'Caterpillar',cat:'haulage',payload:'363 t',engine:'4,000 HP',img:'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=400&q=80'},
+      {id:2,name:'930E-5 AHS',oem:'Komatsu',cat:'autonomous',payload:'291 t',engine:'2,700 HP',img:'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80'},
+      {id:3,name:'Pit Viper 351',oem:'Epiroc',cat:'drilling',payload:'—',engine:'895 kW',img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80'},
+      {id:4,name:'PC8000 Excavator',oem:'Komatsu',cat:'loading',payload:'42 m³',engine:'3,880 kW',img:'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=80'},
+      {id:5,name:'T 284 Haul Truck',oem:'Liebherr',cat:'haulage',payload:'363 t',engine:'3,650 HP',img:'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=400&q=80'},
+      {id:6,name:'DR461i Rotary Drill',oem:'Sandvik',cat:'drilling',payload:'—',engine:'745 kW',img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80'},
+      {id:7,name:'EX8000 Face Shovel',oem:'Hitachi',cat:'loading',payload:'45 m³',engine:'4×1,491 kW',img:'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&q=80'},
+      {id:8,name:'SAG Mill 40×22',oem:'FLSmidth',cat:'processing',payload:'4,200 t/h',engine:'28 MW',img:'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80'},
+    ];
+
+    let currentView = 'grid';
+    let filteredData = [...EQUIPMENT];
+
+    function renderGrid() {
+      const grid = document.getElementById('eqGrid');
+      grid.style.gridTemplateColumns = currentView === 'grid' ? 'repeat(4,1fr)' : '1fr';
+      grid.innerHTML = filteredData.map(eq => `
+        <div class="reveal stagger" style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;transition:border-color var(--ease-base),transform var(--ease-base);cursor:pointer;" onmouseover="this.style.borderColor='var(--border-cyan)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+          ${currentView === 'grid' ? `<div style="height:140px;overflow:hidden;"><img src="${eq.img}" alt="${eq.name}" style="width:100%;height:100%;object-fit:cover;" loading="lazy"/></div>` : ''}
+          <div style="padding:1rem;${currentView==='list'?'display:flex;align-items:center;gap:1.5rem;':''}" >
+            ${currentView === 'list' ? `<img src="${eq.img}" alt="${eq.name}" style="width:80px;height:60px;object-fit:cover;border-radius:8px;flex-shrink:0;" loading="lazy"/>` : ''}
+            <div style="flex:1;">
+              <div style="font-size:0.6875rem;color:var(--text-500);margin-bottom:0.25rem;">${eq.oem}</div>
+              <div style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.5rem;">${eq.name}</div>
+              <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+                <span style="font-size:0.75rem;color:var(--text-400);"><i class="fa-solid fa-weight-hanging fa-xs" style="color:var(--text-600);margin-right:3px;"></i>${eq.payload}</span>
+                <span style="font-size:0.75rem;color:var(--text-400);"><i class="fa-solid fa-bolt fa-xs" style="color:var(--text-600);margin-right:3px;"></i>${eq.engine}</span>
+              </div>
+            </div>
+            <div style="${currentView==='list'?'flex-shrink:0;':'margin-top:0.875rem;'}">
+              <a href="../auth/signup.html" class="btn btn--ghost btn--xs btn--full">View Specs</a>
+            </div>
+          </div>
+        </div>`).join('');
+      document.querySelectorAll('#eqGrid .reveal').forEach(el => revObs.observe(el));
+      document.getElementById('resultsHeading').textContent = `Showing ${filteredData.length} equipment`;
+    }
+
+    function filterResults() {
+      const q   = (document.getElementById('heroSearch').value || '').toLowerCase();
+      const cat = document.getElementById('catFilter').value;
+      const oem = document.getElementById('oemFilter').value;
+      filteredData = EQUIPMENT.filter(eq => {
+        const matchQ   = !q   || eq.name.toLowerCase().includes(q) || eq.oem.toLowerCase().includes(q);
+        const matchCat = !cat || eq.cat === cat;
+        const matchOem = !oem || eq.oem.toLowerCase() === oem;
+        return matchQ && matchCat && matchOem;
+      });
+      renderGrid();
+    }
+
+    function quickSearch(q) {
+      document.getElementById('heroSearch').value = q;
+      filterResults();
+      document.getElementById('eqGrid').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function setView(v) {
+      currentView = v;
+      document.getElementById('gridBtn').classList.toggle('active', v === 'grid');
+      document.getElementById('listBtn').classList.toggle('active', v === 'list');
+      renderGrid();
+    }
+
+    function sortEquipment(key) {
+      filteredData.sort((a,b) => {
+        if (key === 'name') return a.name.localeCompare(b.name);
+        if (key === 'oem')  return a.oem.localeCompare(b.oem);
+        return 0;
+      });
+      renderGrid();
+    }
+
+    renderGrid();
+  </script>
+</body>
+</html>
