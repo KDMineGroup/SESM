@@ -1,0 +1,57 @@
+{
+  "name": "SESMine Intelligence Platform",
+  "short_name": "SESMine",
+  "description": "AI-powered mining intelligence platform for commodity analytics, ESG tracking, and procurement intelligence.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020810",
+  "theme_color": "#00C8E8",
+  "lang": "en",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/assets/img/screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "SESMine Analytics Dashboard"
+    },
+    {
+      "src": "/assets/img/screenshots/hubs.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "SESMine Intelligence Hubs"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "AI Predictor",
+      "short_name": "AI Tool",
+      "description": "Open the AI Predictor tool",
+      "url": "/products/ai-predictor.html",
+      "icons": [{ "src": "https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Open your SESMine dashboard",
+      "url": "/dashboard/main-dashboard.html",
+      "icons": [{ "src": "https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png", "sizes": "96x96" }]
+    }
+  ]
+}

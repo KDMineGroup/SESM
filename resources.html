@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources — SESMine Intelligence</title>
+  <meta name="description" content="Mining industry whitepapers, technical guides, webinar recordings, API documentation and case studies from SESMine Intelligence." />
+  <link rel="canonical" href="https://www.sesmine.com/resources.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <style>
+    .resource-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--ease-base), box-shadow var(--ease-base), transform var(--ease-base);
+      cursor: pointer;
+    }
+    .resource-card:hover {
+      border-color: var(--border-cyan);
+      box-shadow: var(--shadow-cyan);
+      transform: translateY(-3px);
+    }
+    .resource-card__thumb {
+      height: 160px;
+      position: relative;
+      overflow: hidden;
+      background: var(--coal-800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .resource-card__thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .resource-card:hover .resource-card__thumb img { transform: scale(1.04); }
+    .resource-card__body {
+      padding: 1.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+    }
+    .resource-card__footer {
+      padding: 0.875rem 1.25rem;
+      border-top: 1px solid var(--border-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .resource-type-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.125rem;
+      flex-shrink: 0;
+    }
+
+    .doc-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-100);
+      transition: background var(--ease-fast);
+      cursor: pointer;
+    }
+    .doc-row:last-child { border-bottom: none; }
+    .doc-row:hover { background: rgba(255,255,255,0.02); }
+
+    .res-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.4375rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-100);
+      background: transparent;
+      color: var(--text-400);
+      cursor: pointer;
+      transition: all var(--ease-fast);
+      white-space: nowrap;
+    }
+    .res-filter:hover  { color: var(--text-100); border-color: var(--border-200); }
+    .res-filter.active { background: var(--coal-700); color: var(--text-50); border-color: var(--border-200); }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="hub-preview.html">Hubs</a></li>
+        <li><a href="products/ai-predictor.html">AI Tools</a></li>
+        <li><a href="products/equipment-database.html">Equipment</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="resources.html" class="active">Resources</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════════════════
+         HERO
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:3.5rem 0 2.5rem;border-bottom:1px solid var(--border-100);position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:280px;background:radial-gradient(ellipse,rgba(0,188,212,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;flex-wrap:wrap;">
+          <div>
+            <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(0,188,212,0.08);border:1px solid rgba(0,188,212,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan-400);margin-bottom:1rem;">
+              <i class="fa-solid fa-book-open fa-xs"></i> Knowledge Base
+            </div>
+            <h1 class="animate-fadeInUp" style="font-size:clamp(1.875rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:0.75rem;">Resources & Documentation</h1>
+            <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:560px;line-height:1.75;">
+              Whitepapers, technical guides, API docs, webinar recordings and case studies — everything you need to get the most from SESMine Intelligence.
+            </p>
+          </div>
+          <div class="animate-fadeIn delay-1">
+            <div class="input-wrap" style="width:280px;">
+              <i class="fa-solid fa-search input-icon"></i>
+              <input type="text" class="form-input" placeholder="Search resources…" id="resSearch" oninput="filterResources()" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Type filters -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1.5rem;" class="animate-fadeInUp delay-2">
+          <button class="res-filter active" onclick="setResFilter('all',this)">All</button>
+          <button class="res-filter" onclick="setResFilter('whitepaper',this)"><i class="fa-solid fa-file-lines fa-xs"></i> Whitepapers</button>
+          <button class="res-filter" onclick="setResFilter('guide',this)"><i class="fa-solid fa-book fa-xs"></i> Guides</button>
+          <button class="res-filter" onclick="setResFilter('webinar',this)"><i class="fa-solid fa-video fa-xs"></i> Webinars</button>
+          <button class="res-filter" onclick="setResFilter('casestudy',this)"><i class="fa-solid fa-building fa-xs"></i> Case Studies</button>
+          <button class="res-filter" onclick="setResFilter('api',this)"><i class="fa-solid fa-code fa-xs"></i> API Docs</button>
+          <button class="res-filter" onclick="setResFilter('dataset',this)"><i class="fa-solid fa-database fa-xs"></i> Datasets</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         FEATURED RESOURCES
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:3.5rem 0;">
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Library</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0;" id="resHeading">All Resources</h2>
+          </div>
+          <div style="display:flex;align-items:center;gap:0.5rem;" class="reveal">
+            <select class="form-select" style="width:auto;font-size:0.8125rem;padding:0.4375rem 2rem 0.4375rem 0.75rem;" onchange="sortResources(this.value)">
+              <option value="newest">Newest First</option>
+              <option value="popular">Most Popular</option>
+              <option value="az">A–Z</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;" id="resGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <div style="text-align:center;margin-top:2.5rem;" class="reveal">
+          <button class="btn btn--ghost btn--lg" onclick="loadMoreRes()">
+            <i class="fa-solid fa-plus"></i> Load More Resources
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         API DOCUMENTATION QUICK-START
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;">
+
+          <div>
+            <div class="section-label reveal">API Documentation</div>
+            <h2 class="section-title reveal delay-1">Integrate SESMine Into Your Stack</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+              REST and WebSocket APIs for commodity prices, AI predictions, equipment specs and regulatory alerts. SDKs available for Python, JavaScript and R.
+            </p>
+
+            <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.5rem;" class="reveal delay-2">
+              <div class="doc-row" style="border:1px solid var(--border-100);border-radius:var(--radius-lg);background:var(--coal-850);" onclick="window.location.href='auth/signup.html'">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(0,188,212,0.1);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);flex-shrink:0;"><i class="fa-solid fa-plug"></i></div>
+                <div style="flex:1;">
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">REST API Reference</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Full endpoint documentation · v2.4</div>
+                </div>
+                <i class="fa-solid fa-arrow-right" style="color:var(--text-600);font-size:0.75rem;"></i>
+              </div>
+              <div class="doc-row" style="border:1px solid var(--border-100);border-radius:var(--radius-lg);background:var(--coal-850);" onclick="window.location.href='auth/signup.html'">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(16,185,129,0.1);display:flex;align-items:center;justify-content:center;color:var(--emerald-400);flex-shrink:0;"><i class="fa-solid fa-bolt"></i></div>
+                <div style="flex:1;">
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">WebSocket Streaming API</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">Real-time price and alert streams</div>
+                </div>
+                <i class="fa-solid fa-arrow-right" style="color:var(--text-600);font-size:0.75rem;"></i>
+              </div>
+              <div class="doc-row" style="border:1px solid var(--border-100);border-radius:var(--radius-lg);background:var(--coal-850);" onclick="window.location.href='auth/signup.html'">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;color:var(--amber-400);flex-shrink:0;"><i class="fa-brands fa-python"></i></div>
+                <div style="flex:1;">
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">Python SDK</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">pip install sesmine · v2.4.0</div>
+                </div>
+                <i class="fa-solid fa-arrow-right" style="color:var(--text-600);font-size:0.75rem;"></i>
+              </div>
+              <div class="doc-row" style="border:1px solid var(--border-100);border-radius:var(--radius-lg);background:var(--coal-850);" onclick="window.location.href='auth/signup.html'">
+                <div style="width:36px;height:36px;border-radius:8px;background:rgba(139,92,246,0.1);display:flex;align-items:center;justify-content:center;color:var(--violet-400);flex-shrink:0;"><i class="fa-brands fa-js"></i></div>
+                <div style="flex:1;">
+                  <div style="font-size:0.875rem;font-weight:600;color:var(--text-100);">JavaScript / Node SDK</div>
+                  <div style="font-size:0.75rem;color:var(--text-500);">npm install @sesmine/sdk · v2.4.0</div>
+                </div>
+                <i class="fa-solid fa-arrow-right" style="color:var(--text-600);font-size:0.75rem;"></i>
+              </div>
+            </div>
+
+            <a href="auth/signup.html" class="btn btn--primary btn--lg reveal delay-3">
+              <i class="fa-solid fa-key"></i> Get Your API Key
+            </a>
+          </div>
+
+          <!-- Code snippet -->
+          <div class="reveal delay-1">
+            <div style="background:var(--coal-950);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;">
+              <div style="padding:0.875rem 1.25rem;background:var(--coal-850);border-bottom:1px solid var(--border-100);display:flex;align-items:center;justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                  <div style="width:10px;height:10px;border-radius:50%;background:#ef4444;"></div>
+                  <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;"></div>
+                  <div style="width:10px;height:10px;border-radius:50%;background:#22c55e;"></div>
+                  <span style="font-size:0.75rem;color:var(--text-500);margin-left:0.5rem;font-family:var(--font-mono);">quick_start.py</span>
+                </div>
+                <button onclick="SESMINE.copyToClipboard(document.getElementById('codeSnippet').textContent,'Code copied!')" class="btn btn--ghost btn--xs"><i class="fa-solid fa-copy fa-xs"></i> Copy</button>
+              </div>
+              <pre id="codeSnippet" style="padding:1.5rem;font-family:var(--font-mono);font-size:0.8125rem;line-height:1.75;color:var(--text-300);overflow-x:auto;margin:0;"><span style="color:#64748b;"># Install: pip install sesmine</span>
+<span style="color:#22d3ee;">import</span> sesmine <span style="color:#22d3ee;">as</span> sm
+
+<span style="color:#64748b;"># Authenticate</span>
+client = sm.Client(api_key=<span style="color:#a3e635;">"YOUR_API_KEY"</span>)
+
+<span style="color:#64748b;"># Get live commodity prices</span>
+prices = client.prices.get_spot(
+    commodities=[<span style="color:#a3e635;">"gold"</span>, <span style="color:#a3e635;">"copper"</span>, <span style="color:#a3e635;">"lithium"</span>]
+)
+<span style="color:#22d3ee;">print</span>(prices.gold.spot)   <span style="color:#64748b;"># 3142.50</span>
+
+<span style="color:#64748b;"># Get AI price forecast</span>
+forecast = client.ai.price_forecast(
+    commodity=<span style="color:#a3e635;">"gold"</span>,
+    horizon=<span style="color:#fb923c;">90</span>,
+    scenario=<span style="color:#a3e635;">"base"</span>
+)
+<span style="color:#22d3ee;">print</span>(forecast.target)    <span style="color:#64748b;"># 3380.00</span>
+<span style="color:#22d3ee;">print</span>(forecast.confidence) <span style="color:#64748b;"># 0.82</span>
+
+<span style="color:#64748b;"># Stream live prices via WebSocket</span>
+<span style="color:#22d3ee;">async with</span> client.stream.prices() <span style="color:#22d3ee;">as</span> ws:
+    <span style="color:#22d3ee;">async for</span> tick <span style="color:#22d3ee;">in</span> ws:
+        <span style="color:#22d3ee;">print</span>(tick.commodity, tick.price)</pre>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         UPCOMING WEBINARS
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+          <div>
+            <div class="section-label reveal">Live Events</div>
+            <h2 class="section-title reveal delay-1" style="margin-bottom:0;">Upcoming Webinars</h2>
+          </div>
+          <a href="auth/signup.html" class="btn btn--ghost btn--sm reveal"><i class="fa-solid fa-calendar"></i> View All Events</a>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;">
+          <div class="reveal stagger" style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;transition:border-color var(--ease-base),transform var(--ease-base);" onmouseover="this.style.borderColor='var(--border-cyan)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+            <div style="padding:0.625rem 1.25rem;background:rgba(0,188,212,0.08);border-bottom:1px solid rgba(0,188,212,0.15);display:flex;align-items:center;gap:0.5rem;">
+              <span class="dot-live"></span>
+              <span style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--cyan-400);">Upcoming · Jul 15, 2026</span>
+            </div>
+            <div style="padding:1.25rem;">
+              <h3 style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.5rem;line-height:1.4;">AI Price Forecasting: How the LSTM Model Works</h3>
+              <p style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;margin-bottom:1rem;">A deep-dive into the architecture, training data and validation methodology behind SESMine's 96% accuracy commodity forecasting model.</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+                <div style="font-size:0.75rem;color:var(--text-500);"><i class="fa-solid fa-clock fa-xs" style="margin-right:4px;"></i>60 min · 10:00 AM AEST</div>
+                <a href="auth/signup.html" class="btn btn--primary btn--sm">Register</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal stagger" style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;transition:border-color var(--ease-base),transform var(--ease-base);" onmouseover="this.style.borderColor='var(--border-cyan)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+            <div style="padding:0.625rem 1.25rem;background:rgba(139,92,246,0.08);border-bottom:1px solid rgba(139,92,246,0.15);display:flex;align-items:center;gap:0.5rem;">
+              <span style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--violet-400);">Upcoming · Jul 22, 2026</span>
+            </div>
+            <div style="padding:1.25rem;">
+              <h3 style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.5rem;line-height:1.4;">ISSB S1 & S2 Reporting: Automating ESG Disclosure</h3>
+              <p style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;margin-bottom:1rem;">Step-by-step walkthrough of the Sustainability Hub's automated ISSB reporting engine — from data mapping to final disclosure output.</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+                <div style="font-size:0.75rem;color:var(--text-500);"><i class="fa-solid fa-clock fa-xs" style="margin-right:4px;"></i>45 min · 2:00 PM AEST</div>
+                <a href="auth/signup.html" class="btn btn--primary btn--sm">Register</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal stagger" style="background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-xl);overflow:hidden;transition:border-color var(--ease-base),transform var(--ease-base);" onmouseover="this.style.borderColor='var(--border-cyan)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+            <div style="padding:0.625rem 1.25rem;background:rgba(16,185,129,0.08);border-bottom:1px solid rgba(16,185,129,0.15);display:flex;align-items:center;gap:0.5rem;">
+              <span style="font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--emerald-400);">Upcoming · Aug 5, 2026</span>
+            </div>
+            <div style="padding:1.25rem;">
+              <h3 style="font-size:0.9375rem;font-weight:600;color:var(--text-100);margin-bottom:0.5rem;line-height:1.4;">CAPEX Modelling Masterclass: From Scoping to Board Approval</h3>
+              <p style="font-size:0.8125rem;color:var(--text-500);line-height:1.6;margin-bottom:1rem;">Live walkthrough of the Cost Calculator — building a full project economics model from scratch with sensitivity analysis and board export.</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+                <div style="font-size:0.75rem;color:var(--text-500);"><i class="fa-solid fa-clock fa-xs" style="margin-right:4px;"></i>90 min · 10:00 AM AEST</div>
+                <a href="auth/signup.html" class="btn btn--primary btn--sm">Register</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(0,188,212,0.05) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <h2 class="reveal" style="font-size:clamp(1.5rem,2.5vw,2.25rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">Access the Full Resource Library</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:440px;margin:0 auto 2rem;">Whitepapers, guides, API docs, webinar recordings and datasets — all unlocked with a free trial.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="auth/signup.html" class="btn btn--primary btn--xl"><i class="fa-solid fa-rocket"></i> Start Free Trial</a>
+          <a href="contact.html"     class="btn btn--ghost btn--xl"><i class="fa-solid fa-envelope"></i> Contact Sales</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="hubs/economics-hub.html">Economics</a><a href="hubs/engineering-hub.html">Engineering</a><a href="hubs/innovation-hub.html">Innovation</a><a href="hubs/procurement-hub.html">Procurement</a><a href="hubs/safety-hub.html">Safety</a><a href="hubs/sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="products/ai-predictor.html">AI Predictor</a><a href="products/cost-calculator.html">Cost Calculator</a><a href="products/equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="news.html">News</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="auth/login.html">Sign In</a><a href="auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/main.js"   defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    // ── Ticker ───────────────────────────────────────────
+    const COMM = [
+      {name:'Gold',price:3142.50,chg:+0.8},{name:'Copper',price:9847,chg:+1.2},
+      {name:'Lithium',price:14200,chg:+2.1},{name:'Silver',price:31.84,chg:-0.3},
+      {name:'Nickel',price:18240,chg:+0.6},{name:'Iron Ore',price:108.40,chg:+0.5},
+      {name:'Cobalt',price:26800,chg:-1.1},{name:'Zinc',price:2840,chg:+0.4}
+    ];
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      t.innerHTML = [...COMM,...COMM].map(c => {
+        const up  = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => { COMM.forEach(c => { c.price=Math.max(1,c.price+(Math.random()-0.49)*c.price*0.002); c.chg=parseFloat((c.chg+(Math.random()-0.5)*0.08).toFixed(2)); }); renderTicker(); }, 8000);
+
+    // ── Resources data ────────────────────────────────────
+    const RESOURCES = [
+      { id:1,  type:'whitepaper', title:'The State of Mining AI: 2026 Industry Report',         summary:'Comprehensive analysis of AI adoption across 240 mining operations globally — covering predictive maintenance, price forecasting and autonomous systems.',  img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80', badge:'Whitepaper', badgeColor:'var(--cyan-400)',    badgeBg:'rgba(0,188,212,0.1)',    pages:'48 pages',  date:'Jun 2026', downloads:'3,420', free:true  },
+      { id:2,  type:'guide',      title:'ISSB S1 & S2 Compliance Guide for Mining Companies',   summary:'Step-by-step implementation guide for ISSB IFRS S1 and S2 sustainability disclosure requirements — with mining-specific worked examples.',                   img:'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80', badge:'Guide',      badgeColor:'var(--emerald-400)', badgeBg:'rgba(16,185,129,0.1)',   pages:'32 pages',  date:'May 2026', downloads:'2,180', free:true  },
+      { id:3,  type:'casestudy',  title:'How Fortescue Cut OPEX by $84M Using SESMine AI',      summary:'Case study detailing how Fortescue Metals Group deployed SESMine\'s Production Optimiser across three Pilbara operations to reduce OPEX by $84M in FY2025.',  img:'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?w=400&q=80', badge:'Case Study',  badgeColor:'var(--amber-400)',   badgeBg:'rgba(245,158,11,0.1)',   pages:'12 pages',  date:'Apr 2026', downloads:'4,840', free:false },
+      { id:4,  type:'webinar',    title:'Copper Supply Deficit: What It Means for Project IRRs', summary:'Recording of our April 2026 webinar with Goldman Sachs commodity analysts discussing the structural copper supply deficit and its impact on project economics.',  img:'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=400&q=80', badge:'Webinar',     badgeColor:'var(--violet-400)', badgeBg:'rgba(139,92,246,0.1)',   pages:'62 min',    date:'Apr 2026', downloads:'1,920', free:false },
+      { id:5,  type:'api',        title:'SESMine REST API v2.4 — Full Reference Documentation',  summary:'Complete reference documentation for all API endpoints — commodity prices, AI forecasts, equipment specs, regulatory alerts and ESG data.',                      img:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&q=80', badge:'API Docs',    badgeColor:'var(--rose-400)',    badgeBg:'rgba(239,68,68,0.1)',    pages:'Online',    date:'Jul 2026', downloads:'6,200', free:false },
+      { id:6,  type:'dataset',    title:'Global Mining CAPEX Dataset 2010–2025',                 summary:'Structured dataset of 4,800+ mining project CAPEX figures across 68 countries — normalised by commodity, mine type, capacity and year.',                       img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80', badge:'Dataset',     badgeColor:'var(--amber-400)',   badgeBg:'rgba(245,158,11,0.1)',   pages:'CSV · XLSX',date:'Mar 2026', downloads:'2,640', free:false },
+      { id:7,  type:'whitepaper', title:'Autonomous Haulage Systems: Safety, ROI and Adoption',  summary:'Technical whitepaper examining AHS deployment outcomes across 18 open-pit operations — including safety incident data, productivity gains and total cost of ownership.', img:'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80', badge:'Whitepaper', badgeColor:'var(--cyan-400)',    badgeBg:'rgba(0,188,212,0.1)',    pages:'56 pages',  date:'Feb 2026', downloads:'3,100', free:false },
+      { id:8,  type:'guide',      title:'Mining CAPEX Estimation: Class 1–5 Cost Guide',         summary:'Practical guide to AACE International cost estimate classification for mining projects — with benchmarks, contingency ranges and common error patterns.',          img:'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&q=80', badge:'Guide',      badgeColor:'var(--emerald-400)', badgeBg:'rgba(16,185,129,0.1)',   pages:'28 pages',  date:'Jan 2026', downloads:'5,380', free:true  },
+      { id:9,  type:'casestudy',  title:'BHP Pilbara Hybrid Microgrid: 72% Diesel Displacement', summary:'Detailed case study of BHP\'s 132 MW solar-wind-BESS hybrid microgrid at its Pilbara iron ore operations — covering design, commissioning and first-year results.', img:'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=400&q=80', badge:'Case Study',  badgeColor:'var(--amber-400)',   badgeBg:'rgba(245,158,11,0.1)',   pages:'18 pages',  date:'Jun 2026', downloads:'2,890', free:false },
+    ];
+
+    let activeResFilter = 'all';
+    let visibleResCount = 9;
+    let sortMode        = 'newest';
+
+    function renderResources() {
+      const q = (document.getElementById('resSearch').value || '').toLowerCase();
+      let filtered = RESOURCES.filter(r => {
+        const matchType = activeResFilter === 'all' || r.type === activeResFilter;
+        const matchQ    = !q || r.title.toLowerCase().includes(q) || r.summary.toLowerCase().includes(q);
+        return matchType && matchQ;
+      });
+
+      if (sortMode === 'popular') filtered.sort((a,b) => parseInt(b.downloads) - parseInt(a.downloads));
+      if (sortMode === 'az')      filtered.sort((a,b) => a.title.localeCompare(b.title));
+
+      const visible = filtered.slice(0, visibleResCount);
+      document.getElementById('resHeading').textContent =
+        activeResFilter === 'all' ? `All Resources (${filtered.length})` :
+        `${visible[0]?.badge || ''} Resources (${filtered.length})`;
+
+      const grid = document.getElementById('resGrid');
+      grid.innerHTML = visible.map((r, i) => `
+        <div class="resource-card reveal stagger" onclick="window.location.href='auth/signup.html'">
+          <div class="resource-card__thumb">
+            <img src="${r.img}" alt="${r.title}" loading="${i < 3 ? 'eager' : 'lazy'}" />
+            <div style="position:absolute;top:0.75rem;left:0.75rem;display:flex;gap:0.375rem;flex-wrap:wrap;">
+              <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.25rem 0.625rem;background:${r.badgeBg};border:1px solid ${r.badgeColor}33;border-radius:99px;font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:${r.badgeColor};backdrop-filter:blur(8px);">${r.badge}</span>
+              ${r.free ? '<span style="display:inline-flex;padding:0.25rem 0.5rem;background:rgba(16,185,129,0.9);border-radius:99px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#fff;">FREE</span>' : ''}
+            </div>
+          </div>
+          <div class="resource-card__body">
+            <h3 style="font-size:0.9375rem;font-weight:600;color:var(--text-50);line-height:1.4;margin:0;">${r.title}</h3>
+            <p style="font-size:0.8125rem;color:var(--text-400);line-height:1.6;margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">${r.summary}</p>
+          </div>
+          <div class="resource-card__footer">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <span style="font-size:0.6875rem;color:var(--text-600);"><i class="fa-solid fa-file-lines fa-xs" style="margin-right:3px;"></i>${r.pages}</span>
+              <span style="font-size:0.6875rem;color:var(--text-600);">· ${r.date}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.375rem;font-size:0.6875rem;color:var(--text-600);">
+              <i class="fa-solid fa-download fa-xs"></i> ${parseInt(r.downloads).toLocaleString()}
+            </div>
+          </div>
+        </div>`).join('');
+
+      document.querySelectorAll('#resGrid .reveal').forEach(el => revObs.observe(el));
+    }
+
+    function setResFilter(type, btn) {
+      activeResFilter = type;
+      document.querySelectorAll('.res-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      visibleResCount = 9;
+      renderResources();
+    }
+
+    function filterResources() { renderResources(); }
+
+    function sortResources(val) {
+      sortMode = val;
+      renderResources();
+    }
+
+    function loadMoreRes() {
+      visibleResCount += 6;
+      renderResources();
+    }
+
+    renderResources();
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+# ════════════════════════════════════════════════════════
+#  SESMine Intelligence Platform — robots.txt
+#  Updated: 2026-07-01
+# ════════════════════════════════════════════════════════
+
+User-agent: *
+
+# Allow all public-facing pages
+Allow: /
+Allow: /index.html
+Allow: /pricing.html
+Allow: /news.html
+Allow: /resources.html
+Allow: /contact.html
+Allow: /hub-preview.html
+Allow: /hubs/
+Allow: /products/
+Allow: /assets/css/
+Allow: /assets/img/
+
+# Block private & authenticated areas
+Disallow: /auth/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /config/
+Disallow: /js/auth.js
+Disallow: /js/config.js
+Disallow: /build-manifest.json
+Disallow: /*.min.js$
+Disallow: /dist/
+
+# Block search & filter query strings
+Disallow: /*?*filter=
+Disallow: /*?*search=
+Disallow: /*?*sort=
+Disallow: /*?*page=
+
+# Specific bot rules
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 3
+
+# Sitemap declaration
+Sitemap: https://www.sesmine.com/sitemap.xml

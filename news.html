@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mining News & Intelligence — SESMine</title>
+  <meta name="description" content="Latest mining industry news, commodity market updates, regulatory changes and technology developments — curated and analysed by SESMine Intelligence." />
+  <link rel="canonical" href="https://www.sesmine.com/news.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <style>
+    .news-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--ease-base), box-shadow var(--ease-base), transform var(--ease-base);
+      cursor: pointer;
+    }
+    .news-card:hover {
+      border-color: var(--border-cyan);
+      box-shadow: var(--shadow-cyan);
+      transform: translateY(-2px);
+    }
+    .news-card__img {
+      height: 180px;
+      overflow: hidden;
+      position: relative;
+    }
+    .news-card__img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .news-card:hover .news-card__img img { transform: scale(1.04); }
+    .news-card__body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      flex: 1;
+    }
+    .news-card__footer {
+      padding: 0.875rem 1.25rem;
+      border-top: 1px solid var(--border-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .news-card--featured {
+      grid-column: span 2;
+      flex-direction: row;
+    }
+    .news-card--featured .news-card__img {
+      width: 45%;
+      height: auto;
+      min-height: 260px;
+      flex-shrink: 0;
+    }
+    .news-card--featured .news-card__body { padding: 2rem; }
+
+    .category-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.4375rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-100);
+      background: transparent;
+      color: var(--text-400);
+      cursor: pointer;
+      transition: all var(--ease-fast);
+      white-space: nowrap;
+    }
+    .category-filter:hover  { color: var(--text-100); border-color: var(--border-200); background: rgba(255,255,255,0.04); }
+    .category-filter.active { background: var(--coal-700); color: var(--text-50); border-color: var(--border-200); }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="hub-preview.html">Hubs</a></li>
+        <li><a href="products/ai-predictor.html">AI Tools</a></li>
+        <li><a href="products/equipment-database.html">Equipment</a></li>
+        <li><a href="news.html" class="active">News</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <span class="navbar__live">Live</span>
+        <div class="navbar__divider"></div>
+        <a href="auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="ticker-bar" style="margin-top:60px;">
+    <div class="ticker-label"><i class="fa-solid fa-bolt fa-xs"></i> LIVE</div>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main>
+
+    <!-- Hero -->
+    <section style="background:var(--coal-950);padding:3.5rem 0 2.5rem;border-bottom:1px solid var(--border-100);">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;flex-wrap:wrap;">
+          <div>
+            <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(0,188,212,0.08);border:1px solid rgba(0,188,212,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan-400);margin-bottom:1rem;">
+              <span class="dot-live"></span> Live Intelligence Feed
+            </div>
+            <h1 class="animate-fadeInUp" style="font-size:clamp(1.875rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:0.75rem;">Mining News & Market Intelligence</h1>
+            <p class="animate-fadeInUp delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:560px;line-height:1.75;">
+              Curated, analysed and contextualised mining intelligence — covering commodities, regulations, technology and M&A. Updated continuously.
+            </p>
+          </div>
+          <div class="animate-fadeIn delay-1">
+            <div class="input-wrap" style="width:280px;">
+              <i class="fa-solid fa-search input-icon"></i>
+              <input type="text" class="form-input" placeholder="Search news…" id="newsSearch" oninput="filterNews()" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Category filters -->
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:1.5rem;" class="animate-fadeInUp delay-2">
+          <button class="category-filter active" onclick="setCategory('all',this)">All</button>
+          <button class="category-filter" onclick="setCategory('markets',this)"><i class="fa-solid fa-chart-line fa-xs"></i> Markets</button>
+          <button class="category-filter" onclick="setCategory('regulation',this)"><i class="fa-solid fa-gavel fa-xs"></i> Regulation</button>
+          <button class="category-filter" onclick="setCategory('technology',this)"><i class="fa-solid fa-microchip fa-xs"></i> Technology</button>
+          <button class="category-filter" onclick="setCategory('ma',this)"><i class="fa-solid fa-handshake fa-xs"></i> M&A</button>
+          <button class="category-filter" onclick="setCategory('sustainability',this)"><i class="fa-solid fa-leaf fa-xs"></i> Sustainability</button>
+          <button class="category-filter" onclick="setCategory('safety',this)"><i class="fa-solid fa-shield-halved fa-xs"></i> Safety</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         NEWS GRID
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-950);padding:3rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;" id="newsGrid">
+          <!-- Populated by JS -->
+        </div>
+        <div style="text-align:center;margin-top:2.5rem;" class="reveal">
+          <button class="btn btn--ghost btn--lg" onclick="loadMore()">
+            <i class="fa-solid fa-plus"></i> Load More Stories
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════
+         NEWSLETTER
+    ══════════════════════════════════════════════════════ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="max-width:560px;margin:0 auto;text-align:center;">
+          <div class="section-label reveal" style="justify-content:center;">Daily Briefing</div>
+          <h2 class="section-title reveal delay-1" style="text-align:center;">Get the SESMine Morning Brief</h2>
+          <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;margin-bottom:1.5rem;">
+            Five key mining intelligence stories, three commodity price moves and one regulatory alert — delivered to your inbox every weekday at 6:00 AM AEST.
+          </p>
+          <form class="reveal delay-2" style="display:flex;gap:0.75rem;max-width:420px;margin:0 auto;" onsubmit="subscribeNewsletter(event)">
+            <input type="email" class="form-input" placeholder="your@email.com" required style="flex:1;" id="newsletterEmail" />
+            <button type="submit" class="btn btn--primary btn--md">Subscribe</button>
+          </form>
+          <p class="reveal delay-3" style="font-size:0.75rem;color:var(--text-600);margin-top:0.75rem;">
+            14,200+ mining professionals subscribed. Unsubscribe any time.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="hubs/economics-hub.html">Economics</a><a href="hubs/engineering-hub.html">Engineering</a><a href="hubs/innovation-hub.html">Innovation</a><a href="hubs/procurement-hub.html">Procurement</a><a href="hubs/safety-hub.html">Safety</a><a href="hubs/sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="products/ai-predictor.html">AI Predictor</a><a href="products/cost-calculator.html">Cost Calculator</a><a href="products/equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="news.html">News</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="auth/login.html">Sign In</a><a href="auth/signup.html">Free Trial</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd.</span>
+        <div style="display:flex;gap:1.5rem;"><a href="#" style="color:var(--text-500);">Privacy</a><a href="#" style="color:var(--text-500);">Terms</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    const revObs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }), { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => revObs.observe(el));
+
+    // ── Ticker ───────────────────────────────────────────
+    const COMM = [
+      {name:'Gold',price:3142.50,chg:+0.8},{name:'Copper',price:9847,chg:+1.2},
+      {name:'Lithium',price:14200,chg:+2.1},{name:'Silver',price:31.84,chg:-0.3},
+      {name:'Nickel',price:18240,chg:+0.6},{name:'Iron Ore',price:108.40,chg:+0.5},
+      {name:'Cobalt',price:26800,chg:-1.1},{name:'Zinc',price:2840,chg:+0.4}
+    ];
+    function renderTicker() {
+      const t = document.getElementById('tickerTrack');
+      if (!t) return;
+      t.innerHTML = [...COMM,...COMM].map(c => {
+        const up  = c.chg >= 0;
+        const fmt = c.price >= 1000 ? c.price.toLocaleString('en-US',{maximumFractionDigits:2}) : c.price.toFixed(2);
+        return `<div class="ticker-item"><span class="ticker-item__name">${c.name}</span><span class="ticker-item__price">$${fmt}</span><span class="ticker-item__change ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(c.chg).toFixed(1)}%</span></div>`;
+      }).join('');
+    }
+    renderTicker();
+    setInterval(() => {
+      COMM.forEach(c => { c.price=Math.max(1,c.price+(Math.random()-0.49)*c.price*0.002); c.chg=parseFloat((c.chg+(Math.random()-0.5)*0.08).toFixed(2)); });
+      renderTicker();
+    }, 8000);
+
+    // ── News data ────────────────────────────────────────
+    const NEWS = [
+      {
+        id:1, featured:true, cat:'markets',
+        title:'Gold Breaks $3,150 as Fed Signals Rate Pause Through Q3 2026',
+        summary:'Spot gold surged to a six-week high of $3,154/oz on Wednesday after Federal Reserve minutes revealed a consensus to hold rates steady through September, weakening the DXY index by 0.6% and driving safe-haven demand.',
+        img:'https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&q=80',
+        author:'SESMine Markets Desk', time:'2h ago', readTime:'4 min', badge:'Markets', badgeColor:'var(--emerald-400)', badgeBg:'rgba(16,185,129,0.1)'
+      },
+      {
+        id:2, cat:'technology',
+        title:'Komatsu Unveils 930E-6 AHS With Onboard LiDAR Fusion Stack',
+        summary:'The 930E-6 autonomous haul truck features a new 128-channel LiDAR array fused with radar and camera inputs, enabling operation in dust and low-visibility conditions previously requiring human intervention.',
+        img:'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80',
+        author:'SESMine Engineering', time:'4h ago', readTime:'3 min', badge:'Technology', badgeColor:'var(--violet-400)', badgeBg:'rgba(139,92,246,0.1)'
+      },
+      {
+        id:3, cat:'regulation',
+        title:'MSHA Final Rule Cuts Silica PEL to 50 µg/m³ — Compliance by Jan 2027',
+        summary:'The Mine Safety and Health Administration has published its final rule halving the permissible exposure limit for respirable crystalline silica. All metal and non-metal mines must comply by January 1, 2027.',
+        img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80',
+        author:'SESMine Safety Desk', time:'6h ago', readTime:'5 min', badge:'Regulation', badgeColor:'var(--rose-400)', badgeBg:'rgba(239,68,68,0.1)'
+      },
+      {
+        id:4, cat:'ma',
+        title:'Rio Tinto Acquires Arcadium Lithium Integration Complete — Output Target Raised to 110Kt LCE',
+        summary:'Rio Tinto has completed the operational integration of Arcadium Lithium assets, raising its 2027 lithium carbonate equivalent production target to 110,000 tonnes — a 38% increase on prior guidance.',
+        img:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80',
+        author:'SESMine M&A Desk', time:'8h ago', readTime:'4 min', badge:'M&A', badgeColor:'var(--amber-400)', badgeBg:'rgba(245,158,11,0.1)'
+      },
+      {
+        id:5, cat:'sustainability',
+        title:'BHP Pilbara Solar-Wind Hybrid Microgrid Achieves 72% Diesel Displacement',
+        summary:'BHP\'s 132 MW hybrid microgrid at its Pilbara iron ore operations has achieved 72% diesel displacement in its first full quarter of operation, reducing Scope 1 emissions by 184,000 tCO₂e annually.',
+        img:'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800&q=80',
+        author:'SESMine Sustainability', time:'10h ago', readTime:'3 min', badge:'Sustainability', badgeColor:'var(--cyan-400)', badgeBg:'rgba(0,188,212,0.1)'
+      },
+      {
+        id:6, cat:'markets',
+        title:'Copper Deficit Widens to 380Kt in H1 2026 — Goldman Raises 12M Target to $11,200/t',
+        summary:'Goldman Sachs has raised its 12-month copper price target to $11,200/t citing a widening supply deficit, delayed project ramp-ups in Peru and Chile, and accelerating EV and grid infrastructure demand.',
+        img:'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=800&q=80',
+        author:'SESMine Markets Desk', time:'12h ago', readTime:'4 min', badge:'Markets', badgeColor:'var(--emerald-400)', badgeBg:'rgba(16,185,129,0.1)'
+      },
+      {
+        id:7, cat:'technology',
+        title:'Epiroc Launches SmartROC D65 With AI-Driven Drill Parameter Optimisation',
+        summary:'The SmartROC D65 surface drill rig uses onboard AI to continuously optimise penetration rate, bit pressure and rotation speed — delivering a 14% improvement in metres drilled per shift in field trials.',
+        img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80',
+        author:'SESMine Engineering', time:'1d ago', readTime:'3 min', badge:'Technology', badgeColor:'var(--violet-400)', badgeBg:'rgba(139,92,246,0.1)'
+      },
+      {
+        id:8, cat:'regulation',
+        title:'Queensland Fatigue Management Standard Effective Immediately — Key Obligations Explained',
+        summary:'The Queensland Mines Inspectorate\'s amended fatigue management standard mandates electronic monitoring for all FIFO workers on 12-hour shifts. Here is what operations teams need to action before September 1.',
+        img:'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80',
+        author:'SESMine Safety Desk', time:'1d ago', readTime:'6 min', badge:'Regulation', badgeColor:'var(--rose-400)', badgeBg:'rgba(239,68,68,0.1)'
+      },
+      {
+        id:9, cat:'markets',
+        title:'Lithium Spot Price Recovers 18% in June on Chinese Battery Restocking Wave',
+        summary:'Lithium carbonate prices in China recovered sharply through June, rising 18% to ¥95,400/t as battery manufacturers rebuilt depleted inventories ahead of the H2 EV production ramp. SESMine AI model signals continued upside.',
+        img:'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80',
+        author:'SESMine Markets Desk', time:'2d ago', readTime:'4 min', badge:'Markets', badgeColor:'var(--emerald-400)', badgeBg:'rgba(16,185,129,0.1)'
+      },
+    ];
+
+    let activeCategory = 'all';
+    let visibleCount   = 9;
+
+    function renderNews() {
+      const q = (document.getElementById('newsSearch').value || '').toLowerCase();
+      let filtered = NEWS.filter(n => {
+        const matchCat = activeCategory === 'all' || n.cat === activeCategory;
+        const matchQ   = !q || n.title.toLowerCase().includes(q) || n.summary.toLowerCase().includes(q);
+        return matchCat && matchQ;
+      }).slice(0, visibleCount);
+
+      const grid = document.getElementById('newsGrid');
+      grid.innerHTML = filtered.map((n, i) => {
+        const featured = n.featured && i === 0 && activeCategory === 'all' && !q;
+        return `
+          <div class="news-card ${featured ? 'news-card--featured' : ''} reveal stagger" onclick="window.location.href='auth/signup.html'">
+            <div class="news-card__img">
+              <img src="${n.img}" alt="${n.title}" loading="${i < 3 ? 'eager' : 'lazy'}" />
+              <div style="position:absolute;top:0.75rem;left:0.75rem;">
+                <span style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.25rem 0.625rem;background:${n.badgeBg};border:1px solid ${n.badgeColor}33;border-radius:99px;font-size:0.625rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:${n.badgeColor};backdrop-filter:blur(8px);">${n.badge}</span>
+              </div>
+            </div>
+            <div class="news-card__body">
+              <h3 style="font-size:${featured?'1.125rem':'0.9375rem'};font-weight:600;color:var(--text-50);line-height:1.45;margin:0;">${n.title}</h3>
+              <p style="font-size:0.8125rem;color:var(--text-400);line-height:1.65;margin:0;${featured?'':'display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;'}">${n.summary}</p>
+            </div>
+            <div class="news-card__footer">
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <div style="width:24px;height:24px;border-radius:50%;background:var(--coal-700);display:flex;align-items:center;justify-content:center;font-size:0.5rem;color:var(--text-400);"><i class="fa-solid fa-user"></i></div>
+                <span style="font-size:0.75rem;color:var(--text-500);">${n.author}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.75rem;">
+                <span style="font-size:0.6875rem;color:var(--text-600);font-family:var(--font-mono);">${n.time}</span>
+                <span style="font-size:0.6875rem;color:var(--text-600);">· ${n.readTime} read</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+      document.querySelectorAll('#newsGrid .reveal').forEach(el => revObs.observe(el));
+    }
+
+    function setCategory(cat, btn) {
+      activeCategory = cat;
+      document.querySelectorAll('.category-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      visibleCount = 9;
+      renderNews();
+    }
+
+    function filterNews() { renderNews(); }
+
+    function loadMore() {
+      visibleCount += 6;
+      renderNews();
+    }
+
+    function subscribeNewsletter(e) {
+      e.preventDefault();
+      const email = document.getElementById('newsletterEmail').value;
+      alert(`Thanks! ${email} has been subscribed to the SESMine Morning Brief.`);
+      document.getElementById('newsletterEmail').value = '';
+    }
+
+    renderNews();
+  </script>
+</body>
+</html>

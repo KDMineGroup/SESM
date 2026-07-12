@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — SESMine Intelligence</title>
+  <meta name="description" content="Transparent pricing for mining professionals. Start free, scale with your team. All plans include a 14-day full-access trial." />
+  <link rel="canonical" href="https://www.sesmine.com/pricing.html" />
+  <link rel="icon" type="image/png" href="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <style>
+    .plan-card {
+      background: var(--coal-900);
+      border: 1px solid var(--border-100);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: relative;
+      transition: border-color var(--ease-base), box-shadow var(--ease-base);
+    }
+    .plan-card:hover { border-color: var(--border-200); }
+    .plan-card--featured {
+      border-color: var(--border-cyan);
+      background: linear-gradient(160deg, var(--coal-900) 0%, rgba(0,188,212,0.04) 100%);
+      box-shadow: var(--shadow-cyan);
+    }
+    .plan-card--featured:hover { box-shadow: 0 0 40px rgba(0,188,212,0.25); }
+
+    .feature-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-100);
+      font-size: 0.8125rem;
+    }
+    .feature-row:last-child { border-bottom: none; }
+    .feature-row__label { color: var(--text-300); display: flex; align-items: center; gap: 0.5rem; }
+    .feature-row__label i { color: var(--text-500); width: 14px; font-size: 0.75rem; }
+
+    .check-yes  { color: var(--emerald-400); font-size: 0.875rem; }
+    .check-no   { color: var(--text-600);    font-size: 0.875rem; }
+    .check-val  { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 600; color: var(--text-200); }
+
+    .faq-item {
+      border-bottom: 1px solid var(--border-100);
+      overflow: hidden;
+    }
+    .faq-item:last-child { border-bottom: none; }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-100);
+      gap: 1rem;
+      transition: color var(--ease-fast);
+    }
+    .faq-question:hover { color: var(--cyan-400); }
+    .faq-question i { flex-shrink: 0; color: var(--text-500); transition: transform var(--ease-fast); font-size: 0.75rem; }
+    .faq-item.open .faq-question i { transform: rotate(180deg); color: var(--cyan-400); }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .faq-item.open .faq-answer { max-height: 300px; }
+    .faq-answer p {
+      padding-bottom: 1.25rem;
+      font-size: 0.875rem;
+      color: var(--text-400);
+      line-height: 1.75;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <img class="page-loader__logo" src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="64" height="64" />
+    <div class="page-loader__bar"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo">
+        <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="130" height="34" loading="eager" />
+      </a>
+      <ul class="navbar__links">
+        <li><a href="hub-preview.html">Hubs</a></li>
+        <li><a href="products/ai-predictor.html">AI Tools</a></li>
+        <li><a href="products/equipment-database.html">Equipment</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="pricing.html" class="active">Pricing</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <a href="auth/login.html"  class="btn btn--ghost btn--sm">Sign In</a>
+        <a href="auth/signup.html" class="btn btn--primary btn--sm">Start Free Trial</a>
+      </div>
+    </div>
+  </nav>
+
+  <main style="padding-top:60px;">
+
+    <!-- Hero -->
+    <section style="background:var(--coal-950);padding:5rem 0 3rem;position:relative;overflow:hidden;">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent);pointer-events:none;"></div>
+      <div style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(0,188,212,0.07) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;text-align:center;">
+        <div class="animate-fadeInDown" style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.3rem 0.875rem;background:rgba(0,188,212,0.08);border:1px solid rgba(0,188,212,0.2);border-radius:99px;font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan-400);margin-bottom:1.5rem;">
+          <i class="fa-solid fa-tag fa-xs"></i> Transparent Pricing
+        </div>
+        <h1 class="animate-fadeInUp" style="font-size:clamp(2rem,4vw,3rem);font-weight:700;letter-spacing:-0.03em;margin-bottom:1rem;">
+          Plans for Every Scale of Operation
+        </h1>
+        <p class="animate-fadeInUp delay-1" style="font-size:1rem;color:var(--text-400);max-width:520px;margin:0 auto 2.5rem;line-height:1.75;">
+          From independent consultants to global mining majors — start free and scale as your intelligence needs grow.
+        </p>
+
+        <!-- Billing toggle -->
+        <div class="animate-fadeInUp delay-2" style="display:inline-flex;align-items:center;gap:1rem;padding:0.5rem 1rem;background:var(--coal-900);border:1px solid var(--border-100);border-radius:var(--radius-full);">
+          <span id="lblMonthly" style="font-size:0.8125rem;font-weight:600;color:var(--text-100);">Monthly</span>
+          <label class="toggle">
+            <input type="checkbox" id="billingToggle" onchange="toggleBilling(this)" />
+            <span class="toggle__slider"></span>
+          </label>
+          <span id="lblAnnual" style="font-size:0.8125rem;font-weight:500;color:var(--text-400);">
+            Annual
+            <span style="margin-left:0.375rem;font-size:0.6875rem;font-weight:700;padding:0.15rem 0.5rem;background:rgba(16,185,129,0.12);color:var(--emerald-400);border-radius:var(--radius-full);border:1px solid rgba(16,185,129,0.2);">Save 20%</span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Cards -->
+    <section style="background:var(--coal-950);padding:2rem 0 5rem;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:1080px;margin:0 auto;">
+
+          <!-- Explorer -->
+          <div class="plan-card reveal">
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(100,116,139,0.1);display:flex;align-items:center;justify-content:center;color:var(--text-400);font-size:1rem;"><i class="fa-solid fa-compass"></i></div>
+                <span class="badge badge--neutral">Free Forever</span>
+              </div>
+              <h3 style="font-size:1.125rem;margin-bottom:0.375rem;">Explorer</h3>
+              <p style="font-size:0.8125rem;color:var(--text-500);margin-bottom:1.5rem;">For individuals getting started with mining intelligence.</p>
+              <div style="display:flex;align-items:baseline;gap:0.375rem;margin-bottom:0.375rem;">
+                <span style="font-family:var(--font-mono);font-size:2.75rem;font-weight:600;color:var(--text-50);">$0</span>
+                <span style="font-size:0.875rem;color:var(--text-500);">/month</span>
+              </div>
+              <p style="font-size:0.75rem;color:var(--text-600);">No credit card required</p>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> 2 Intelligence Hubs</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> 50 AI Predictions / month</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Basic commodity data (15-min delay)</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> 1 user seat</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-400);"><i class="fa-solid fa-xmark check-no"></i> Real-time feeds</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-400);"><i class="fa-solid fa-xmark check-no"></i> Equipment Database</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-400);"><i class="fa-solid fa-xmark check-no"></i> API access</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-400);"><i class="fa-solid fa-xmark check-no"></i> Priority support</div>
+            </div>
+
+            <a href="auth/signup.html" class="btn btn--ghost btn--full btn--lg" style="margin-top:auto;">Get Started Free</a>
+          </div>
+
+          <!-- Professional -->
+          <div class="plan-card plan-card--featured reveal delay-1">
+            <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--cyan-500);color:var(--coal-950);font-size:0.625rem;font-weight:800;text-transform:uppercase;letter-spacing:0.14em;padding:0.3rem 1rem;border-radius:0 0 var(--radius-md) var(--radius-md);white-space:nowrap;">Most Popular</div>
+            <div style="margin-top:0.75rem;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(0,188,212,0.12);display:flex;align-items:center;justify-content:center;color:var(--cyan-400);font-size:1rem;"><i class="fa-solid fa-layer-group"></i></div>
+                <span class="badge badge--cyan">Pro Plan</span>
+              </div>
+              <h3 style="font-size:1.125rem;margin-bottom:0.375rem;">Professional</h3>
+              <p style="font-size:0.8125rem;color:var(--text-500);margin-bottom:1.5rem;">For mining professionals and small teams.</p>
+              <div style="display:flex;align-items:baseline;gap:0.375rem;margin-bottom:0.375rem;">
+                <span style="font-family:var(--font-mono);font-size:2.75rem;font-weight:600;color:var(--text-50);" id="proPrice">$149</span>
+                <span style="font-size:0.875rem;color:var(--text-500);">/month</span>
+              </div>
+              <p style="font-size:0.75rem;color:var(--text-500);" id="proSub">Billed monthly · $1,788/year</p>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> All 6 Intelligence Hubs</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> 500 AI Predictions / month</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Real-time commodity feeds (8s refresh)</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Up to 5 user seats</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Cost Calculator & Equipment Database</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> ESG Dashboard & ISSB reporting</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Priority email support</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-400);"><i class="fa-solid fa-xmark check-no"></i> API access</div>
+            </div>
+
+            <a href="auth/signup.html" class="btn btn--primary btn--full btn--lg" style="margin-top:auto;" data-track="pricing-pro-cta">
+              <i class="fa-solid fa-rocket"></i> Start 14-Day Free Trial
+            </a>
+            <p style="font-size:0.75rem;color:var(--text-500);text-align:center;margin-top:-0.5rem;">No credit card required</p>
+          </div>
+
+          <!-- Enterprise -->
+          <div class="plan-card reveal delay-2">
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+                <div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;color:var(--amber-400);font-size:1rem;"><i class="fa-solid fa-building"></i></div>
+                <span class="badge badge--amber">Enterprise</span>
+              </div>
+              <h3 style="font-size:1.125rem;margin-bottom:0.375rem;">Enterprise</h3>
+              <p style="font-size:0.8125rem;color:var(--text-500);margin-bottom:1.5rem;">For mining companies and large organisations.</p>
+              <div style="display:flex;align-items:baseline;gap:0.375rem;margin-bottom:0.375rem;">
+                <span style="font-family:var(--font-mono);font-size:2.75rem;font-weight:600;color:var(--text-50);">Custom</span>
+              </div>
+              <p style="font-size:0.75rem;color:var(--text-600);">Volume pricing available</p>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Everything in Professional</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Unlimited users & AI predictions</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> REST API + Webhook access</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Custom data integrations (ERP/SAP)</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Dedicated account manager</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> 99.9% SLA + SSO / SAML</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> On-premise deployment option</div>
+              <div style="display:flex;align-items:center;gap:0.75rem;font-size:0.8125rem;color:var(--text-300);"><i class="fa-solid fa-check check-yes"></i> Custom AI model training</div>
+            </div>
+
+            <a href="contact.html" class="btn btn--amber btn--full btn--lg" style="margin-top:auto;" data-track="pricing-enterprise-cta">
+              <i class="fa-solid fa-phone"></i> Contact Sales
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Comparison Table -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:5rem 0;">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:3rem;">
+          <div class="section-label reveal" style="justify-content:center;">Full Comparison</div>
+          <h2 class="section-title reveal delay-1" style="text-align:center;">Compare All Features</h2>
+        </div>
+
+        <div class="data-table-wrap reveal delay-2" style="max-width:900px;margin:0 auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:40%;">Feature</th>
+                <th style="text-align:center;">Explorer</th>
+                <th style="text-align:center;color:var(--cyan-400);">Professional</th>
+                <th style="text-align:center;color:var(--amber-400);">Enterprise</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="4" style="background:var(--coal-850);font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);padding:0.625rem 1rem;">Intelligence Hubs</td></tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-chart-line"></i> Economics Hub</td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-gear"></i> Engineering Hub</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-microchip"></i> Innovation Hub</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-boxes-stacked"></i> Procurement Hub</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-shield-halved"></i> Safety Hub</td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-leaf"></i> Sustainability Hub</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+
+              <tr><td colspan="4" style="background:var(--coal-850);font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);padding:0.625rem 1rem;">AI & Data</td></tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-brain"></i> AI Predictions / month</td>
+                <td style="text-align:center;" class="check-val">50</td>
+                <td style="text-align:center;" class="check-val" style="color:var(--cyan-400);">500</td>
+                <td style="text-align:center;" class="check-val">Unlimited</td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-bolt"></i> Real-time commodity feeds</td>
+                <td style="text-align:center;"><span style="font-size:0.75rem;color:var(--text-500);">15-min delay</span></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-calendar"></i> Forecast horizon</td>
+                <td style="text-align:center;" class="check-val">7-day</td>
+                <td style="text-align:center;" class="check-val">90-day</td>
+                <td style="text-align:center;" class="check-val">Custom</td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-code"></i> API access</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+
+              <tr><td colspan="4" style="background:var(--coal-850);font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);padding:0.625rem 1rem;">Tools & Products</td></tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-calculator"></i> CAPEX/OPEX Calculator</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-database"></i> Equipment Database</td>
+                <td style="text-align:center;"><span style="font-size:0.75rem;color:var(--text-500);">Limited</span></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-leaf"></i> ESG Dashboard</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-file-export"></i> Data export (CSV/PDF)</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+
+              <tr><td colspan="4" style="background:var(--coal-850);font-size:0.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-500);padding:0.625rem 1rem;">Team & Support</td></tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-users"></i> User seats</td>
+                <td style="text-align:center;" class="check-val">1</td>
+                <td style="text-align:center;" class="check-val">Up to 5</td>
+                <td style="text-align:center;" class="check-val">Unlimited</td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-headset"></i> Support</td>
+                <td style="text-align:center;"><span style="font-size:0.75rem;color:var(--text-500);">Email</span></td>
+                <td style="text-align:center;"><span style="font-size:0.75rem;color:var(--text-300);">Priority email</span></td>
+                <td style="text-align:center;"><span style="font-size:0.75rem;color:var(--text-300);">Dedicated AM</span></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-shield-check"></i> SLA guarantee</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+              <tr>
+                <td class="feature-row__label"><i class="fa-solid fa-key"></i> SSO / SAML</td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-xmark check-no"></i></td>
+                <td style="text-align:center;"><i class="fa-solid fa-check check-yes"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Social Proof Strip -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:4rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center;">
+          <div class="reveal">
+            <div style="font-family:var(--font-mono);font-size:2rem;font-weight:600;color:var(--cyan-400);margin-bottom:0.5rem;">2,400+</div>
+            <div style="font-size:0.8125rem;color:var(--text-400);">Active professionals</div>
+          </div>
+          <div class="reveal delay-1">
+            <div style="font-family:var(--font-mono);font-size:2rem;font-weight:600;color:var(--emerald-400);margin-bottom:0.5rem;">4.9/5</div>
+            <div style="font-size:0.8125rem;color:var(--text-400);">Average rating</div>
+          </div>
+          <div class="reveal delay-2">
+            <div style="font-family:var(--font-mono);font-size:2rem;font-weight:600;color:var(--amber-400);margin-bottom:0.5rem;">98%</div>
+            <div style="font-size:0.8125rem;color:var(--text-400);">Trial-to-paid conversion</div>
+          </div>
+          <div class="reveal delay-3">
+            <div style="font-family:var(--font-mono);font-size:2rem;font-weight:600;color:var(--violet-400);margin-bottom:0.5rem;">14-day</div>
+            <div style="font-size:0.8125rem;color:var(--text-400);">Full-access free trial</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section style="background:var(--coal-900);border-top:1px solid var(--border-100);padding:5rem 0;">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:4rem;align-items:start;">
+          <div>
+            <div class="section-label reveal">FAQ</div>
+            <h2 class="section-title reveal delay-1">Frequently Asked Questions</h2>
+            <p class="reveal delay-2" style="font-size:0.875rem;color:var(--text-400);line-height:1.75;">Can't find your answer? <a href="contact.html" style="color:var(--cyan-400);">Contact our team</a> — we respond within 2 business hours.</p>
+          </div>
+          <div class="reveal delay-1">
+            <div style="background:var(--coal-850);border:1px solid var(--border-100);border-radius:var(--radius-xl);padding:0 1.5rem;">
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  Do I need a credit card to start the free trial?
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer"><p>No credit card required. Sign up with your email address and you'll get immediate full access to the Professional plan for 14 days. You only need to add payment details if you choose to continue after the trial.</p></div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  What happens when my trial ends?
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer"><p>At the end of your 14-day trial, your account automatically moves to the Explorer (free) plan. You won't lose any saved data — you'll simply have reduced access until you choose to upgrade. We'll send you a reminder 3 days before your trial ends.</p></div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  Can I change plans at any time?
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer"><p>Yes. You can upgrade or downgrade your plan at any time from your account settings. Upgrades take effect immediately and are prorated. Downgrades take effect at the end of your current billing period.</p></div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  How accurate are the AI price forecasts?
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer"><p>Our models achieve 96% directional accuracy on 30-day forecasts across our 8 tracked commodities, validated against 14 years of historical data. We publish our model performance metrics monthly in the platform. Forecasts include confidence intervals and bull/base/bear scenarios.</p></div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  Is there a discount for annual billing?
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer"><p>Yes — annual billing saves you 20% compared to monthly. The Professional plan drops from $149/month to $119/month ($1,428/year) when billed annually. Enterprise plans include custom volume pricing for multi-year commitments.</p></div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  Does the Enterprise plan support SAP or ERP integration?
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer"><p>Yes. Enterprise plans include custom data integration support for SAP, Oracle, and other ERP systems via our REST API and webhook infrastructure. Our integration team works directly with your IT department to configure the connection.</p></div>
+              </div>
+
+              <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                  What data sources power the commodity prices?
+                  <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer"><p>Our commodity data is sourced from the London Metal Exchange (LME), COMEX, Singapore Exchange (SGX), and multiple spot market providers. Prices refresh every 8 seconds during market hours. We also integrate macroeconomic data from the IMF, World Bank and central bank publications.</p></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--coal-950);border-top:1px solid var(--border-100);padding:5rem 0;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(0,188,212,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
+        <h2 class="reveal" style="font-size:clamp(1.75rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.025em;margin-bottom:1rem;">Ready to Get Started?</h2>
+        <p class="reveal delay-1" style="font-size:0.9375rem;color:var(--text-400);max-width:440px;margin:0 auto 2rem;">Join 2,400+ mining professionals already using SESMine to make better decisions.</p>
+        <div class="reveal delay-2" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+          <a href="auth/signup.html" class="btn btn--primary btn--xl" data-track="pricing-final-cta">
+            <i class="fa-solid fa-rocket"></i> Start Free Trial
+          </a>
+          <a href="contact.html" class="btn btn--ghost btn--xl">
+            <i class="fa-solid fa-phone"></i> Talk to Sales
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__main">
+        <div class="footer__brand">
+          <img src="https://cdn.grapesjs.com/workspaces/cmjdh0oo603xm12grpuiruk7p/assets/f6b95b3d-49d1-4e77-b952-49ed80c4befa__image-9-14-1404-ap-at-8.42-pm.png" alt="SESMine" width="120" height="36" loading="lazy" />
+          <p>AI-powered intelligence for the global mining and industrial sector.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer__col"><h6>Hubs</h6><a href="hubs/economics-hub.html">Economics</a><a href="hubs/engineering-hub.html">Engineering</a><a href="hubs/safety-hub.html">Safety</a><a href="hubs/sustainability-hub.html">Sustainability</a></div>
+        <div class="footer__col"><h6>Products</h6><a href="products/ai-predictor.html">AI Predictor</a><a href="products/cost-calculator.html">Cost Calculator</a><a href="products/equipment-database.html">Equipment DB</a></div>
+        <div class="footer__col"><h6>Company</h6><a href="news.html">News</a><a href="resources.html">Resources</a><a href="contact.html">Contact</a></div>
+        <div class="footer__col"><h6>Account</h6><a href="auth/login.html">Sign In</a><a href="auth/signup.html">Free Trial</a><a href="pricing.html">Pricing</a></div>
+      </div>
+      <div class="footer__bottom">
+        <span>© 2026 SESMine Intelligence Pty Ltd. All rights reserved.</span>
+        <div style="display:flex;gap:1.5rem;">
+          <a href="#" style="color:var(--text-500);">Privacy</a>
+          <a href="#" style="color:var(--text-500);">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/config.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script>
+    window.addEventListener('load', () => { setTimeout(() => document.getElementById('pageLoader').classList.add('hidden'), 500); });
+    window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 10); }, { passive: true });
+    document.querySelectorAll('.reveal').forEach(el => new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) { x.target.classList.add('visible'); } }), { threshold: 0.08 }).observe(el));
+
+    // Billing toggle
+    function toggleBilling(cb) {
+      const annual = cb.checked;
+      document.getElementById('proPrice').textContent = annual ? '$119' : '$149';
+      document.getElementById('proSub').textContent   = annual ? 'Billed annually · $1,428/year · Save $360' : 'Billed monthly · $1,788/year';
+      document.getElementById('lblMonthly').style.color = annual ? 'var(--text-400)' : 'var(--text-100)';
+      document.getElementById('lblAnnual').style.color  = annual ? 'var(--text-100)' : 'var(--text-400)';
+    }
+
+    // FAQ accordion
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+  </script>
+</body>
+</html>
